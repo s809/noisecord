@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+
+    "removeComments": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+
+    "outDir": "./build",
+    "sourceMap": true,
+    "incremental": true,
+    "declaration": true,
+
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": [
+      "ESNext"
+    ]
+  },
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    ".vscode",
+    ".git",
+    "build",
+    "node_modules"
+  ]
+}
