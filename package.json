@@ -1,7 +1,7 @@
 {
   "name": "noisecord",
   "type": "module",
-  "version": "0.1",
+  "version": "0.0.1",
   "scripts": {
     "test": "tsc && node ./build/test.js",
     "clean": "rimraf ./build"

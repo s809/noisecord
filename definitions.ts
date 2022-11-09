@@ -3,8 +3,7 @@
  */
 
 import { ApplicationCommandData, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, Role, Snowflake, User } from "discord.js";
-import { ArrayElement, DistributiveOmit, Overwrite } from "../../util";
-import { CommandMessage } from "./CommandMessage";
+import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
 import { CommandCondition } from "./conditions";
 
 export const textChannels = [

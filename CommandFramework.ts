@@ -2,13 +2,14 @@ import { pathToFileURL } from "url";
 import { importModules } from "./importHelper";
 import { Command, CommandDefinition } from "./definitions";
 import { LocaleString } from "discord.js";
-import { PrefixedTranslator, Translator } from "./Translator";
+import { Translator } from "./Translator";
 import { prepareSubcommands } from "./prepareSubcommands";
+import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager";
 
 interface CommandFrameworkOptions {
-    translationFileDirectory: string;
     commandModuleDirectory: string;
     contextMenuModuleDirectory: string;
+    translationOptions: TranslatorManagerOptions;
 }
 
 export class CommandFramework {
@@ -20,12 +21,15 @@ export class CommandFramework {
     private _commands?: Map<string, Command>;
     private commandsByLocale = {} as Command["subcommandsByLocale"];
 
-    constructor(private options: CommandFrameworkOptions) { }
+    private translatorManager?: TranslatorManager;
+
+    constructor(private options: CommandFrameworkOptions) {}
 
     async init() {
         const rootDefinitions = await importModules<CommandDefinition>(pathToFileURL(`${this.options.commandModuleDirectory}/*`).toString());
         this._commands = await prepareSubcommands(rootDefinitions);
         this.prepareSubcommandsByLocale(this._commands, this.commandsByLocale);
+        this.translatorManager = await new TranslatorManager(this.options.translationOptions).init();
         return this;
     }
 
@@ -49,21 +53,23 @@ export class CommandFramework {
         }
     }
 
-    resolveCommand(path: string | string[], allowPartialResolve: boolean = false): Command | null {
+    resolveCommandByPath(path: string | string[], allowPartialResolve: boolean = false): Command | null {
         return this.resolveCommandInternal(path,
             this.commands,
             command => command.subcommands,
             allowPartialResolve);
     }
 
-    resolveCommandLocalized(path: string | string[], translator: Translator | PrefixedTranslator): Command | null {
+    resolveCommandByLocalizedPath(path: string | string[], translator: Translator): Command | null {
+        const { fallbackTranslator } = this.translatorManager!;
+
         return this.resolveCommandInternal(path,
             translator.getTranslationFromRecord(this.commandsByLocale),
             command => translator.getTranslationFromRecord(command.subcommandsByLocale),
             true)
             ?? this.resolveCommandInternal(path,
-                this.commandsByLocale[defaults.locale],
-                command => command.subcommandsByLocale[defaults.locale],
+                fallbackTranslator.getTranslationFromRecord(this.commandsByLocale),
+                command => fallbackTranslator.getTranslationFromRecord(command.subcommandsByLocale),
                 true);
     }
 
