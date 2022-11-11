@@ -5,6 +5,7 @@
 import { ApplicationCommandData, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, Role, Snowflake, User } from "discord.js";
 import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
 import { CommandCondition } from "./conditions";
+import { CommandMessage } from "./CommandMessage";
 
 export const textChannels = [
     ChannelType.GuildAnnouncement,
@@ -62,7 +63,6 @@ export type Command = Overwrite<{
     handler: CommandHandler | null;
 
     subcommands: Map<string, Command>;
-    subcommandsByLocale: Record<LocaleString, Command["subcommands"]>;
 }>
 
 export type CommandHandler = (

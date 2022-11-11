@@ -13,6 +13,9 @@ export interface TranslatorManagerOptions {
 export class TranslatorManager {
     private translators = new Map<LocaleString, Map<string | null, Translator>>();
     
+    public get fallbackLocale() {
+        return this.fallbackTranslator.localeString;
+    }
     public get fallbackTranslator(): Translator {
         if (!this._fallbackTranslator)
             throw new Error(`${this.init.name}() was not called before use of ${this.constructor.name} instance.`);

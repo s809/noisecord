@@ -11,29 +11,33 @@ export class Translator {
     readonly setLanguageRegex: RegExp;
     readonly booleanValues: [string[], string[]];
 
-    private prefix: string | null;
+    private data: object;
+    private prefix: string | null = null;
     
     /** Translator of same locale without prefix. */
-    readonly root: Translator | null;
+    readonly root: Translator | null = null;
     /** Translator of fallback locale with same prefix. */
-    readonly fallback: Translator | null;
+    readonly fallback: Translator | null = null;
 
     constructor(data: object);
-    constructor(data: object, prefix: string, root: Translator);
-    constructor(data: object, fallback: Translator, root: Translator);
-    constructor(data: object, prefixOrFallback: string | Translator, root: Translator);
-    constructor(private data: object, prefixOrFallback?: string | Translator, root?: Translator) {
+    constructor(root: Translator, prefix: string);
+    constructor(root: Translator, fallback: Translator);
+    constructor(root: Translator, prefixOrFallback: string | Translator);
+    constructor(dataOrRoot: object | Translator, prefixOrFallback?: string | Translator) {
+        if (dataOrRoot instanceof Translator) {
+            this.data = dataOrRoot.data;
+            this.root = dataOrRoot;
+        } else {
+            this.data = dataOrRoot;
+        }
+        
         this.localeString = get(this.data, "locale_string")!;
         this.setLanguageRegex = new RegExp(`^${get(this.data, "set_language_regex")}$`, "iu");
         this.booleanValues = get(this.data, "boolean_values")!;
 
-        this.root = root ?? null;
-
-        this.fallback = null;
-        this.prefix = null;
         if (prefixOrFallback instanceof Translator) {
-            this.fallback = prefixOrFallback;
             this.prefix = prefixOrFallback.prefix;
+            this.fallback = prefixOrFallback;
         } else if (prefixOrFallback) {
             this.prefix = prefixOrFallback;
         }
@@ -135,6 +139,6 @@ export class Translator {
     }
 
     makePrefixed(prefixOrFallback: string | Translator) {
-        return new Translator(this.data, prefixOrFallback, this);
+        return new Translator(this.root ?? this, prefixOrFallback);
     }
 }

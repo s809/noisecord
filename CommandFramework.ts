@@ -3,33 +3,31 @@ import { importModules } from "./importHelper";
 import { Command, CommandDefinition } from "./definitions";
 import { LocaleString } from "discord.js";
 import { Translator } from "./Translator";
-import { prepareSubcommands } from "./prepareSubcommands";
+import { CommandRegistry, CommandRegistryOptions } from "./CommandRegistry";
 import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager";
 
 interface CommandFrameworkOptions {
-    commandModuleDirectory: string;
-    contextMenuModuleDirectory: string;
+    commandRegistryOptions: CommandRegistryOptions;
     translationOptions: TranslatorManagerOptions;
 }
 
 export class CommandFramework {
     get commands(): ReadonlyMap<string, Readonly<Command>> {
-        if (!this._commands)
+        if (!this.commandRegistry)
             throw new Error(`${this.init.name}() was not called before use of ${this.constructor.name} instance.`);
-        return this._commands;
+        return this.commandRegistry.commands;
     }
-    private _commands?: Map<string, Command>;
-    private commandsByLocale = {} as Command["subcommandsByLocale"];
+    private commandRegistry?: CommandRegistry;
 
     private translatorManager?: TranslatorManager;
 
     constructor(private options: CommandFrameworkOptions) {}
 
     async init() {
-        const rootDefinitions = await importModules<CommandDefinition>(pathToFileURL(`${this.options.commandModuleDirectory}/*`).toString());
-        this._commands = await prepareSubcommands(rootDefinitions);
-        this.prepareSubcommandsByLocale(this._commands, this.commandsByLocale);
         this.translatorManager = await new TranslatorManager(this.options.translationOptions).init();
+        this.commandRegistry = await new CommandRegistry(this.options.commandRegistryOptions, this.translatorManager).initCommands();
+        this.prepareSubcommandsByLocale(this.commandRegistry, this.commandsByLocale);
+
         return this;
     }
 
