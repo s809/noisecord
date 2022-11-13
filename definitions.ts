@@ -2,10 +2,11 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandData, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, Role, Snowflake, User } from "discord.js";
+import { ApplicationCommandData, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, MessageContextMenuCommandInteraction, Role, Snowflake, User, UserContextMenuCommandInteraction } from "discord.js";
 import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
 import { CommandCondition } from "./conditions";
 import { CommandMessage } from "./CommandMessage";
+import { Translator } from "./Translator";
 
 export const textChannels = [
     ChannelType.GuildAnnouncement,
@@ -69,3 +70,15 @@ export type CommandHandler = (
     msg: CommandMessage,
     args: Record<string, string | string[] | number | boolean | User | Channel | Role>
 ) => Awaitable<string | void>;
+
+type ContextMenuCommandInteractions = UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction;
+export interface ContextMenuCommandDefinition<T extends ContextMenuCommandInteractions = ContextMenuCommandInteractions> {
+    key: string;
+    type: T["commandType"];
+    handler: (interaction: T, translator: Translator) => void;
+}
+
+export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = ContextMenuCommandInteractions> extends ContextMenuCommandDefinition<T> {
+    appCommandId: Snowflake | null;
+    appCommandData: ApplicationCommandData;
+}

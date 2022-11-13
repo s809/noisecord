@@ -1,17 +1,17 @@
 import { CommandInteraction, Guild, GuildMember, If, InteractionReplyOptions, InteractionResponse, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, TextBasedChannel, WebhookEditMessageOptions, GuildTextBasedChannel, MessageCreateOptions, MessageReplyOptions, User, Snowflake, InteractionCollector, CollectedInteraction, MappedInteractionTypes } from 'discord.js';
-import { PrefixedTranslator } from './Translator';
+import { Translator } from './Translator';
 import { Command } from './definitions';
 
 export abstract class CommandMessage<InGuild extends boolean = boolean> {
     readonly command: Command;
-    readonly translator: PrefixedTranslator;
+    readonly translator: Translator;
     
     get response() {
         return this._response;
     }
     _response: CommandResponse | null = null;
 
-    constructor(command: Command, translator: PrefixedTranslator) {
+    constructor(command: Command, translator: Translator) {
         this.command = command;
         this.translator = translator;
     }
@@ -53,7 +53,7 @@ export abstract class CommandMessage<InGuild extends boolean = boolean> {
 export class InteractionCommandMessage<InGuild extends boolean = boolean> extends CommandMessage<InGuild> {
     readonly interaction: CommandInteraction;
 
-    constructor(command: Command, translator: PrefixedTranslator, interaction: CommandInteraction) {
+    constructor(command: Command, translator: Translator, interaction: CommandInteraction) {
         super(command, translator);
         
         this.interaction = interaction;
@@ -119,7 +119,7 @@ export class InteractionCommandMessage<InGuild extends boolean = boolean> extend
 export class MessageCommandMessage<InGuild extends boolean = boolean> extends CommandMessage<InGuild> {
     readonly message: Message;
 
-    constructor(command: Command, translator: PrefixedTranslator, message: Message) {
+    constructor(command: Command, translator: Translator, message: Message) {
         super(command, translator);
 
         this.message = message;

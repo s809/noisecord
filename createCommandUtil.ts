@@ -180,23 +180,3 @@ export function fillArguments(partialCommand: Partial<Command>,
         lastArgAsExtras
     };
 }
-
-export function prepareSubcommandsByLocale(map: Map<string, Command>, toFill: Command["subcommandsByLocale"]) {
-    for (const command of map.values()) {
-        for (const [locale, name] of Object.entries(command.nameTranslations)) {
-            (toFill[locale as LocaleString] ??= new Map()).set(name, command);
-
-            let map2 = this.commands;
-            const localizedCommandPath = command.path.split("/").map(a => {
-                const c = map2.get(a)!;
-                map2 = c.subcommands;
-                return c.nameTranslations[locale as LocaleString];
-            }).join(" ");
-
-            const localizedArgs = command.args.stringTranslations[locale as LocaleString] ?? "";
-            command.args.stringTranslations[locale as LocaleString] = `${localizedCommandPath} ${localizedArgs}`.trimEnd();
-        }
-
-        this.prepareSubcommandsByLocale(command.subcommands, command.subcommandsByLocale);
-    }
-}
