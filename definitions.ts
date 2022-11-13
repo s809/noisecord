@@ -2,7 +2,7 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandData, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, MessageContextMenuCommandInteraction, Role, Snowflake, User, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandData, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, MessageApplicationCommandData, MessageContextMenuCommandInteraction, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
 import { CommandCondition } from "./conditions";
 import { CommandMessage } from "./CommandMessage";
@@ -80,5 +80,5 @@ export interface ContextMenuCommandDefinition<T extends ContextMenuCommandIntera
 
 export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = ContextMenuCommandInteractions> extends ContextMenuCommandDefinition<T> {
     appCommandId: Snowflake | null;
-    appCommandData: ApplicationCommandData;
+    appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
 }

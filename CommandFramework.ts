@@ -27,7 +27,7 @@ export class CommandFramework {
 
     async init() {
         this.translatorManager = await new TranslatorManager(this.options.translationOptions).init();
-        this.commandRegistry = await new CommandRegistry(this.options.commandModuleDirectory, this.translatorManager).init();
+        this.commandRegistry = await new CommandRegistry(this.options.commandModuleDirectory, this.translatorManager).createCommands();
         this.applicationCommandManager = await new ApplicationCommandManager(this.options.contextMenuModuleDirectory, this.translatorManager).init();
 
         return this;

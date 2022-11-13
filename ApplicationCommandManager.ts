@@ -1,11 +1,7 @@
 import assert from 'assert';
-import { ChatInputApplicationCommandData, ApplicationCommandType, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandDataResolvable, Client, Snowflake } from 'discord.js';
+import { ChatInputApplicationCommandData, ApplicationCommandType, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandDataResolvable, Client } from 'discord.js';
 import { defaults } from 'lodash-es';
-import { pathToFileURL } from 'url';
 import { CommandRegistry } from './CommandRegistry';
-import { Command, ContextMenuCommand, ContextMenuCommandDefinition } from './definitions';
-import { importModules } from './importHelper';
-import { Translator } from './Translator';
 
 export class ApplicationCommandManager {
     constructor(private readonly commandRegistry: CommandRegistry) { }
