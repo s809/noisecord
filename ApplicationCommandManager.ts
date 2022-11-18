@@ -2,14 +2,64 @@ import assert from 'assert';
 import { ChatInputApplicationCommandData, ApplicationCommandType, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandDataResolvable, Client } from 'discord.js';
 import { defaults } from 'lodash-es';
 import { CommandRegistry } from './CommandRegistry';
+import { TranslatorManager } from './TranslatorManager';
+
+/*
+    for testing later
+    application: {
+        commands: {
+            set: sinon.fake(async (commands: ApplicationCommandDataResolvable[]) =>
+                commands.map((command, i) => ({ ...command, id: i.toString() })))
+        }
+    },
+*/
 
 export class ApplicationCommandManager {
-    constructor(private readonly commandRegistry: CommandRegistry) { }
+    private readonly translatorManager: TranslatorManager;
 
-    async init(client: Client) {
+    constructor(private readonly commandRegistry: CommandRegistry) {
+        this.translatorManager = commandRegistry.translatorManager;
+     }
+
+    async init(client: Client<true>) {
+        const chatCommands = this.makeChatCommands();
+        const contextMenuCommands = await this.commandRegistry.createContextMenuCommands();
+
+        const result = await client.application.commands.set(
+            (chatCommands as ApplicationCommandDataResolvable[])
+                .concat(contextMenuCommands.map(({ appCommandData }) => appCommandData))
+        );
+
+        const rootCommands = [...this.commandRegistry.commands.values()];
+        for (const appCommand of result.values()) {
+            switch (appCommand.type) {
+                case ApplicationCommandType.ChatInput: {
+                    const command = rootCommands.find(x => x.nameTranslations[this.translatorManager.fallbackLocale] === appCommand.name);
+                    assert(command, `Failed to find source command for ${appCommand.name}`);
+                    command.appCommandId = appCommand.id;
+
+                    for (const childCommand of this.commandRegistry.iterateSubcommands(command.subcommands)) {
+                        if (childCommand.usableAsAppCommand)
+                            childCommand.appCommandId = appCommand.id;
+                    }
+                    break;
+                }
+                case ApplicationCommandType.Message:
+                case ApplicationCommandType.User: {
+                    const command = contextMenuCommands.find(command => appCommand.name === command.appCommandData.name);
+                    if (command)
+                        command.appCommandId = appCommand.id;
+                    break;
+                }
+            }
+        }
+
+        return this;
+    }
+
+    private makeChatCommands() {
         const commands: ChatInputApplicationCommandData[] = [];
 
-        // Chat commands
         for (const command of this.commandRegistry.iterateCommands()) {
             if (!command.usableAsAppCommand)
                 continue;
@@ -21,8 +71,8 @@ export class ApplicationCommandManager {
                 const data: ChatInputApplicationCommandData & {
                     options: typeof command.args.list;
                 } = {
-                    name: command.nameTranslations[defaults.locale],
-                    description: command.descriptionTranslations[defaults.locale],
+                    name: command.nameTranslations[this.translatorManager.fallbackLocale],
+                    description: command.descriptionTranslations[this.translatorManager.fallbackLocale],
                     nameLocalizations: command.nameTranslations,
                     descriptionLocalizations: command.descriptionTranslations,
                     options: command.args.list,
@@ -65,39 +115,6 @@ export class ApplicationCommandManager {
             }
         }
 
-        // Context menu commands
-        const contextMenuCommands = await this.getContextMenuCommands();
-
-        const result = await client.application?.commands.set(
-            (commands as ApplicationCommandDataResolvable[])
-                .concat(contextMenuCommands.map(({ appCommandData }) => appCommandData))
-        );
-        if (!result) return;
-
-        const rootCommands = [...this.commandRegistry.commands.values()];
-        for (const appCommand of result.values()) {
-            switch (appCommand.type) {
-                case ApplicationCommandType.ChatInput:
-                    const rootCommand = rootCommands.find(x => x.nameTranslations[defaults.locale] === appCommand.name);
-                    assert(rootCommand, `Failed to find source command for ${appCommand.name}`);
-                    rootCommand.appCommandId = appCommand.id;
-
-                    for (const command of this.commandRegistry.iterateSubcommands(rootCommand.subcommands)) {
-                        if (command.usableAsAppCommand)
-                            command.appCommandId = appCommand.id;
-                    }
-                    break;
-                case ApplicationCommandType.Message:
-                case ApplicationCommandType.User:
-                    const command = contextMenuCommands.find(command => appCommand.name === command.appCommandData.name);
-                    if (command)
-                        command.appCommandId = appCommand.id;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        return this;
+        return commands;
     }
 }

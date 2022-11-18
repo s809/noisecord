@@ -47,6 +47,7 @@ export function createCommand(definition: CommandDefinition): Partial<Command> {
         ownerOnly: definition.ownerOnly
     };
 }
+
 export function fillInheritableOptions(partialCommand: Partial<Command>, inheritedOptions?: InheritableOptions) {
     if (inheritedOptions) {
         partialCommand.path = `${inheritedOptions.path}/${partialCommand.key}`;
@@ -79,6 +80,7 @@ export function fillInheritableOptions(partialCommand: Partial<Command>, inherit
     if (partialCommand.ownerOnly && partialCommand.usableAsAppCommand)
         throw new Error("Owner-only commands cannot be usable as app commands.");
 }
+
 export function fillTranslations(partialCommand: Partial<Command>, translatorManager: TranslatorManager) {
     const translationPath = `commands.${partialCommand.path!.replaceAll("/", "_")}`;
     partialCommand.translationPath = translationPath;
@@ -89,6 +91,7 @@ export function fillTranslations(partialCommand: Partial<Command>, translatorMan
     if (!nameTranslations[translatorManager.fallbackLocale])
         throw new Error("Command is not translated to the default locale.");
 }
+
 export function fillArguments(partialCommand: Partial<Command>,
     args: CommandDefinition["args"],
     translatorManager: TranslatorManager) {
@@ -173,7 +176,7 @@ export function fillArguments(partialCommand: Partial<Command>,
     }) as Command["args"]["list"] ?? [];
 
     return {
-        list: convertedArgs ?? [],
+        list: convertedArgs,
         min: minArgs,
         max: maxArgs,
         stringTranslations: argStringTranslations,

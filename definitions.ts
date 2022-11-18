@@ -2,7 +2,7 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandData, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, MessageApplicationCommandData, MessageContextMenuCommandInteraction, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
 import { CommandCondition } from "./conditions";
 import { CommandMessage } from "./CommandMessage";
@@ -12,13 +12,13 @@ export const textChannels = [
     ChannelType.GuildAnnouncement,
     ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread,
     ChannelType.GuildText
-];
+] as const;
 
 export interface CommandDefinition {
     key: string;
 
     ownerOnly?: boolean;
-    defaultMemberPermissions?: ApplicationCommandData["defaultMemberPermissions"];
+    defaultMemberPermissions?: PermissionResolvable | null;
     allowDMs?: boolean;
     conditions?: CommandCondition | CommandCondition[];
     usableAsAppCommand?: boolean;
@@ -39,17 +39,21 @@ export interface CommandDefinition {
     alwaysReactOnSuccess?: boolean;
 }
 
-export type Command = Overwrite<{
-    [K in keyof CommandDefinition]-?: NonNullable<CommandDefinition[K]>;
-}, {
+export type Command = Overwrite<Required<CommandDefinition>, {
     path: string;
+    key: string;
     translationPath: string;
 
     nameTranslations: Record<LocaleString, string>;
     descriptionTranslations: Record<LocaleString, string>;
     usageTranslations: Record<LocaleString, string>;
 
-    conditions: CommandCondition[]
+    ownerOnly: boolean;
+    defaultMemberPermissions: PermissionResolvable;
+    allowDMs: boolean;
+    conditions: CommandCondition[];
+
+    usableAsAppCommand: boolean;
     appCommandId: Snowflake | null;
 
     args: {

@@ -13,7 +13,7 @@ export async function importModules<T>(modulePath: string): Promise<[string, T][
     const dir = dirname(modulePath);
     const modules = [];
 
-    for (const entry of (await readdir(fileURLToPath(dir), { withFileTypes: true }))) {
+    for (const entry of (await readdir(dir, { withFileTypes: true }))) {
         if (!entry.isDirectory() && (entry.name === "index.js" || !entry.name.endsWith(".js")))
             continue;
         

@@ -3,7 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "test": "tsc && node ./build/test.js",
+    "test": "mocha",
     "clean": "rimraf ./build"
   },
   "dependencies": {
@@ -15,7 +15,12 @@
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
+    "@types/mocha": "^10.0.0",
     "@types/node": "^18.8.3",
-    "@types/string-format": "^2.0.0"
+    "@types/sinon": "^10.0.13",
+    "@types/string-format": "^2.0.0",
+    "mocha": "^10.1.0",
+    "sinon": "^14.0.2",
+    "ts-node": "^10.9.1"
   }
 }

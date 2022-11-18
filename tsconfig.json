@@ -11,8 +11,7 @@
     "noImplicitOverride": true,
 
     "outDir": "./build",
-    "sourceMap": true,
-    "incremental": true,
+    "inlineSourceMap": true,
     "declaration": true,
 
     "target": "ESNext",
@@ -28,6 +27,9 @@
     ".vscode",
     ".git",
     "build",
-    "node_modules"
+    "node_modules",
+
+    "testData",
+    "**/*.spec.ts"
   ]
 }

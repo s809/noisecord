@@ -20,7 +20,7 @@ export class CommandRegistry {
     readonly contextMenuCommands: ContextMenuCommand[] = [];
     readonly commandsById: Map<Snowflake, Map<string, Command> | ContextMenuCommand> = new Map();
 
-    constructor(private options: CommandRegistryOptions, private translatorManager: TranslatorManager) { }
+    constructor(private options: CommandRegistryOptions, readonly translatorManager: TranslatorManager) { }
 
     async createCommands() {
         if (!this.options.commandModuleDirectory) return;
@@ -40,7 +40,7 @@ export class CommandRegistry {
             const commandPath = path.relative(this.options.commandModuleDirectory, filePath).split(".")[0];
 
             const commandChain: Command[] = [];
-            const dest = commandPath.split("/").slice(0, -1).reduce(
+            const parentSubcommands = commandPath.split("/").slice(0, -1).reduce(
                 (map, key) => {
                     const command = map.get(key)!;
                     commandChain.push(command);
@@ -67,7 +67,7 @@ export class CommandRegistry {
             fillArguments(partialCommand, definition.args, this.translatorManager);
 
             const command = partialCommand as Command;
-            dest.set(partialCommand.key!, command);
+            parentSubcommands.set(partialCommand.key!, command);
 
             // Add to commandsByLocale tree
             for (const [locale, translation] of Object.entries(command.nameTranslations)) {
@@ -97,7 +97,8 @@ export class CommandRegistry {
     }
 
     async createContextMenuCommands() {
-        if (!this.options.contextMenuModuleDirectory) return;
+        if (!this.options.contextMenuModuleDirectory)
+            return this.contextMenuCommands;
 
         const definitions = await importModules<ContextMenuCommandDefinition>(path.join(this.options.contextMenuModuleDirectory, "*"));
         
@@ -117,6 +118,8 @@ export class CommandRegistry {
                 }
             });
         }
+        
+        return this.contextMenuCommands;
     }
 
     /**
