@@ -1,7 +1,9 @@
-import { Guild, LocaleString, User } from "discord.js";
+import { CommandInteraction, Guild, GuildResolvable, LocaleString, Message, User } from "discord.js";
 import { readdir, readFile } from "fs/promises";
 import path from "path";
-import { NameOrContext, Translator } from "./Translator";
+import { Translator } from "./Translator";
+
+const defaultDiscordLocale: LocaleString = "en-US";
 
 export interface TranslatorManagerOptions {
     translationFileDirectory: string;
@@ -10,6 +12,7 @@ export interface TranslatorManagerOptions {
     getGuildLanguage: (guild: Guild) => Promise<LocaleString>;
 }
 
+export type NameOrContext = string | Message | CommandInteraction | GuildResolvable | User;
 export class TranslatorManager {
     private translators = new Map<LocaleString, Map<string | null, Translator>>();
     
@@ -42,8 +45,62 @@ export class TranslatorManager {
         return this;
     }
 
+    async getLanguage(nameOrContext: NameOrContext): Promise<string | null> {
+        if (typeof nameOrContext === "string")
+            return nameOrContext;
+
+        /*
+        if should use guild:
+            use guild's locale ?? owner's locale
+        if shoule use user:
+            if overridden:
+                use override
+            else:
+                if provided == default discord:
+                    use default bot // need of use provided == default solved by override
+                else:
+                    use provided ?? default bot
+        */
+
+        let user: User | undefined;
+        let interactionLocale: LocaleString | undefined;
+        let guild: Guild | null | undefined;
+
+        if (nameOrContext instanceof CommandInteraction) {
+            if (!guild || (nameOrContext.ephemeral ?? true)) {
+                user = nameOrContext.user;
+                interactionLocale = nameOrContext.locale;
+            } else {
+                guild = nameOrContext.guild;
+            }
+        } else if (nameOrContext instanceof Guild) {
+            guild = nameOrContext;
+        } else if (nameOrContext instanceof User) {
+            user = nameOrContext;
+        } else if (nameOrContext instanceof Message) {
+            if (nameOrContext.channel.isDMBased())
+                user = nameOrContext.author;
+            else
+                guild = nameOrContext.guild;
+        } else if (nameOrContext.guild) {
+            guild = nameOrContext.guild as Guild;
+        }
+
+        if (user) {
+            return (await this.options.getUserLanguage(user))
+                ?? (interactionLocale !== defaultDiscordLocale
+                    ? interactionLocale
+                    : null);
+        } else if (guild) {
+            return (await this.options.getGuildLanguage(guild))
+                ?? this.getLanguage((await guild.fetchOwner()).user);
+        } else {
+            throw new Error("Invalid context.");
+        }
+    }
+
     async getTranslator(nameOrContext: NameOrContext, prefix?: string) {
-        const language = (await Translator.getLanguage(nameOrContext, this.options.getUserLanguage, this.options.getGuildLanguage)) ?? this.options.defaultLocale;
+        const language = (await this.getLanguage(nameOrContext)) ?? this.options.defaultLocale;
 
         let usingFallback = false;
         const translatorsInLocale = this.translators.get(language as LocaleString)

@@ -1,5 +1,5 @@
 import assert from "assert";
-import { Client } from "discord.js";
+import { Client, Collection } from "discord.js";
 import sinon from "sinon";
 import { CommandFramework, CommandFrameworkOptions } from ".";
 
@@ -18,10 +18,9 @@ const options: CommandFrameworkOptions = {
 
 describe("CommandFramework", () => {
     it("when client is not ready", async () => {
-        const client = {
-            isReady: sinon.fake.returns(false),
-            once: sinon.fake()
-        };
+        const client = sinon.createStubInstance(Client, {
+            isReady: false
+        });
 
         const commandFramework = new CommandFramework(options);
         await commandFramework.init(client as unknown as Client);
@@ -31,14 +30,14 @@ describe("CommandFramework", () => {
 
     it("when client is ready", async () => {
         const client = {
-            isReady: sinon.fake.returns(true),
-            once: sinon.fake(),
+            isReady: () => true,
+            once: sinon.stub(),
             application: {
                 commands: {
-                    set: sinon.fake.resolves([])
+                    set: async () => new Collection()
                 }
-            },
-        };
+            }
+        }
 
         const commandFramework = new CommandFramework(options);
         await commandFramework.init(client as unknown as Client);
