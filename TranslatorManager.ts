@@ -46,8 +46,7 @@ export class TranslatorManager {
     }
 
     async getLanguage(nameOrContext: NameOrContext): Promise<string | null> {
-        if (typeof nameOrContext === "string")
-            return nameOrContext;
+        if (typeof nameOrContext === "string") return nameOrContext;
 
         /*
         if should use guild:
@@ -67,32 +66,29 @@ export class TranslatorManager {
         let guild: Guild | null | undefined;
 
         if (nameOrContext instanceof CommandInteraction) {
-            if (!guild || (nameOrContext.ephemeral ?? true)) {
+            if (nameOrContext.guild && !(nameOrContext.ephemeral ?? true)) {
+                guild = nameOrContext.guild;
+            } else {
                 user = nameOrContext.user;
                 interactionLocale = nameOrContext.locale;
-            } else {
-                guild = nameOrContext.guild;
             }
         } else if (nameOrContext instanceof Guild) {
             guild = nameOrContext;
         } else if (nameOrContext instanceof User) {
             user = nameOrContext;
-        } else if (nameOrContext instanceof Message) {
-            if (nameOrContext.channel.isDMBased())
-                user = nameOrContext.author;
-            else
-                guild = nameOrContext.guild;
+        } else if (nameOrContext instanceof Message && nameOrContext.channel.isDMBased()) {
+            user = nameOrContext.author;
         } else if (nameOrContext.guild) {
             guild = nameOrContext.guild as Guild;
         }
 
         if (user) {
-            return (await this.options.getUserLanguage(user))
+            return await this.options.getUserLanguage(user)
                 ?? (interactionLocale !== defaultDiscordLocale
                     ? interactionLocale
                     : null);
         } else if (guild) {
-            return (await this.options.getGuildLanguage(guild))
+            return await this.options.getGuildLanguage(guild)
                 ?? this.getLanguage((await guild.fetchOwner()).user);
         } else {
             throw new Error("Invalid context.");
