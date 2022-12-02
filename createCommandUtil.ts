@@ -87,9 +87,9 @@ export function fillTranslations(partialCommand: Partial<Command>, translatorMan
 
     const nameTranslations = translatorManager.getLocalizations(`${translationPath}.name`);
     const descriptionTranslations = translatorManager.getLocalizations(`${translationPath}.description`);
-    checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
     if (!nameTranslations[translatorManager.fallbackLocale])
-        throw new Error("Command is not translated to the default locale.");
+        throw new Error(`Command "${partialCommand.path}" is missing a name in default locale (${translatorManager.fallbackLocale}).`);
+    checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
 }
 
 export function fillArguments(partialCommand: Partial<Command>,

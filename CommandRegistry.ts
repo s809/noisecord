@@ -5,7 +5,7 @@ import {
     fillTranslations, InheritableOptions
 } from "./createCommandUtil";
 import { Command, CommandDefinition, ContextMenuCommand, ContextMenuCommandDefinition } from "./definitions";
-import { importModules } from "./importHelper";
+import { importModules, isTsNode } from "./importHelper";
 import { TranslatorManager } from "./TranslatorManager";
 import { DeeplyNestedMap } from "./util";
 
@@ -23,15 +23,15 @@ export class CommandRegistry {
     constructor(private options: CommandRegistryOptions, readonly translatorManager: TranslatorManager) { }
 
     async createCommands() {
-        if (!this.options.commandModuleDirectory) return;
+        if (!this.options.commandModuleDirectory) return this;
 
-        const queue = await importModules<CommandDefinition>(path.join(this.options.commandModuleDirectory, "*"));
+        const queue = await importModules<CommandDefinition>(path.resolve(this.options.commandModuleDirectory, "*"));
         
         // Add modules from directory recursively
         for (let i = 0; i < queue.length; i++) {
             const modulePath = queue[i][0];
-            if (!modulePath.endsWith(".js"))
-                queue.push(...(await importModules<CommandDefinition>(path.join(modulePath, "*"))));
+            if (!modulePath.endsWith(isTsNode ? ".ts" : ".js"))
+                queue.push(...await importModules<CommandDefinition>(path.resolve(modulePath, "*")));
         }
 
         // Create and add commands to tree
@@ -100,7 +100,7 @@ export class CommandRegistry {
         if (!this.options.contextMenuModuleDirectory)
             return this.contextMenuCommands;
 
-        const definitions = await importModules<ContextMenuCommandDefinition>(path.join(this.options.contextMenuModuleDirectory, "*"));
+        const definitions = await importModules<ContextMenuCommandDefinition>(path.resolve(this.options.contextMenuModuleDirectory, "*"));
         
         for (const [, definition] of definitions) {
             const nameLocalizations = this.translatorManager.getLocalizations(`contextMenuCommands.${definition.key}.name`);

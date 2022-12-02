@@ -86,3 +86,10 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = C
     appCommandId: Snowflake | null;
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
 }
+
+/**
+ * This function is just for convenience.
+ */
+export function defineCommand(definition: CommandDefinition) {
+    return definition;
+}

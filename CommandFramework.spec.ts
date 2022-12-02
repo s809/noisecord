@@ -5,11 +5,11 @@ import { CommandFramework, CommandFrameworkOptions } from ".";
 
 const options: CommandFrameworkOptions = {
     commandRegistryOptions: {
-        commandModuleDirectory: "./testData/normal/commands",
-        contextMenuModuleDirectory: "./testData/normal/contextMenuCommands"
+        commandModuleDirectory: "./testData/commands/normal",
+        contextMenuModuleDirectory: "./testData/contextMenuCommands/normal"
     },
     translationOptions: {
-        translationFileDirectory: "./testData/normal/translations",
+        translationFileDirectory: "./testData/translations/normal",
         defaultLocale: "en-US",
         getUserLanguage: async () => "en-US",
         getGuildLanguage: async () => "en-US",

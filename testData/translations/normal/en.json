@@ -1,0 +1,14 @@
+{
+  "locale_string": "en-US",
+  "commands": {
+    "parent": {
+      "name": "parent"
+    },
+    "parent_test": {
+      "name": "test"
+    },
+    "test": {
+      "name": "test"
+    }
+  }
+}
