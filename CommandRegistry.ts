@@ -1,8 +1,8 @@
 import { LocaleString, Snowflake } from "discord.js";
 import path from "path";
 import {
-    createCommand, fillArguments, fillInheritableOptions,
-    fillTranslations, InheritableOptions
+    createCommand,
+    CreateCommandUtil, InheritableOptions
 } from "./createCommandUtil";
 import { Command, CommandDefinition, ContextMenuCommand, ContextMenuCommandDefinition } from "./definitions";
 import { importModules, isTsNode } from "./importHelper";
@@ -34,23 +34,29 @@ export class CommandRegistry {
                 queue.push(...await importModules<CommandDefinition>(path.resolve(modulePath, "*")));
         }
 
-        // Create and add commands to tree
-        for (const [filePath, definition] of queue) {
-            const partialCommand = createCommand(definition);
-            const commandPath = path.relative(this.options.commandModuleDirectory, filePath).split(".")[0];
-
-            const commandChain: Command[] = [];
-            const parentSubcommands = commandPath.split("/").slice(0, -1).reduce(
+        const getParentChain = (path: string) => {
+            const chain: Command[] = [];
+            path.split("/").slice(0, -1).reduce(
                 (map, key) => {
                     const command = map.get(key)!;
-                    commandChain.push(command);
+                    chain.push(command);
 
                     return command.subcommands;
                 },
                 this.commands
             );
+            return chain;
+        }
+        const createCommandUtil = new CreateCommandUtil();
 
-            const lastParent = commandChain[commandChain.length - 1];
+        // Create and add commands to tree
+        for (const [filePath, definition] of queue) {
+            const partialCommand = createCommand(definition);
+            const commandPath = path.relative(this.options.commandModuleDirectory, filePath).split(".")[0];
+
+            const parentChain = getParentChain(commandPath);
+            const lastParent = parentChain[parentChain.length - 1];
+            
             const inheritedOptions = lastParent
                 ? {
                     path: lastParent.path,
@@ -61,15 +67,32 @@ export class CommandRegistry {
                     allowDMs: lastParent.allowDMs
                 } as InheritableOptions
                 : undefined;
-            
-            fillInheritableOptions(partialCommand, inheritedOptions);
-            fillTranslations(partialCommand, this.translatorManager);
-            fillArguments(partialCommand, definition.args, this.translatorManager);
+
+            if (inheritedOptions)
+                partialCommand.path = `${inheritedOptions.path}/${partialCommand.key}`;
+            else
+                partialCommand.path = partialCommand.key;
+            createCommandUtil.setHeader(0, `"${partialCommand.path}"`)
+
+            createCommandUtil.setHeader(1, "Command config");
+            createCommandUtil.fillInheritableOptions(partialCommand, inheritedOptions);
+
+            createCommandUtil.setHeader(1, "Command translations");
+            createCommandUtil.fillTranslations(partialCommand, this.translatorManager);
+
+            createCommandUtil.setHeader(1, "Command arguments");
+            createCommandUtil.fillArguments(partialCommand, definition.args, this.translatorManager);
 
             const command = partialCommand as Command;
-            parentSubcommands.set(partialCommand.key!, command);
+            (lastParent?.subcommands ?? this.commands).set(command.key, command);
+        }
 
-            // Add to commandsByLocale tree
+        createCommandUtil.throwIfErrors();
+
+        // Fill commandsByLocale
+        for (const command of this.iterateCommands()) {
+            const parentChain = getParentChain(command.path);
+
             for (const [locale, translation] of Object.entries(command.nameTranslations)) {
                 let localeCommands = this.commandsByLocale.get(locale as LocaleString);
                 if (!localeCommands) {
@@ -77,7 +100,9 @@ export class CommandRegistry {
                     this.commandsByLocale.set(locale as LocaleString, localeCommands);
                 }
 
-                commandChain.map(command => command.nameTranslations[locale as LocaleString])
+                // *reminder that commandsByLocale is a separate tree
+                // since it isn't really used anywhere besides resolving commands
+                parentChain.map(command => command.nameTranslations[locale as LocaleString])
                     .reduce(
                         (map, key) => {
                             let subMap = map.get(key) as typeof map;

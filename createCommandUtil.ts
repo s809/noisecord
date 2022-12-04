@@ -13,18 +13,7 @@ export interface InheritableOptions {
     allowDMs: boolean;
 }
 
-function checkLocalizations(a: any, b: any, name: string, name2?: string) {
-    for (const key of Object.keys(b)) {
-        if (!(key in a))
-            throw new Error(`Missing ${name} in locale ${key}`);
-    }
-    for (const key of Object.keys(a)) {
-        if (!(key in b))
-            throw new Error(`Missing ${name2 ?? name} in locale ${key}`);
-    }
-};
-
-export function createCommand(definition: CommandDefinition): Partial<Command> {
+export function createCommand(definition: CommandDefinition): Partial < Command > {
     return {
         // Specific to this command
         key: definition.key,
@@ -48,86 +37,132 @@ export function createCommand(definition: CommandDefinition): Partial<Command> {
     };
 }
 
-export function fillInheritableOptions(partialCommand: Partial<Command>, inheritedOptions?: InheritableOptions) {
-    if (inheritedOptions) {
-        partialCommand.path = `${inheritedOptions.path}/${partialCommand.key}`;
+export class CreateCommandUtil {
+    private errorContents = "";
+    private errorCount = 0;
 
-        partialCommand.conditions!.push(...inheritedOptions.conditions);
+    private headerChain: string[] = [];
+    private indent = 0;
 
-        if (partialCommand.usableAsAppCommand)
-            throw new Error("Subcommands can only be unmarked as usable as app commands.");
-        partialCommand.usableAsAppCommand = inheritedOptions.usableAsAppCommand;
+    throwIfErrors() {
+        if (!this.errorContents.length) return;
 
-        if (partialCommand.defaultMemberPermissions)
-            throw new Error("Subcommands cannot define default member permissions.");
-        partialCommand.defaultMemberPermissions = inheritedOptions.defaultMemberPermissions;
-
-        if (partialCommand.allowDMs !== undefined)
-            throw new Error("Subcommands cannot define DM permission.");
-        partialCommand.allowDMs = inheritedOptions.allowDMs;
-
-        if (!partialCommand.ownerOnly && inheritedOptions.ownerOnly)
-            throw new Error("Owner-only category cannot contain not owner-only commands.");
-        partialCommand.ownerOnly = inheritedOptions.ownerOnly;
-    } else {
-        partialCommand.path = partialCommand.key;
-        partialCommand.usableAsAppCommand ??= false;
-        partialCommand.defaultMemberPermissions ??= PermissionFlagsBits.UseApplicationCommands;
-        partialCommand.allowDMs ??= true;
-        partialCommand.ownerOnly ??= false;
+        throw new Error(
+            "Failed to initialize commands.\n" +
+            this.errorContents +
+            `Errors generated: ${this.errorCount}`
+        );
     }
 
-    if (partialCommand.ownerOnly && partialCommand.usableAsAppCommand)
-        throw new Error("Owner-only commands cannot be usable as app commands.");
-}
+    setHeader(level: number, header: string) {
+        this.headerChain.splice(level, this.headerChain.length, header);
+        if (this.indent > level)
+            this.indent = level;
+    }
 
-export function fillTranslations(partialCommand: Partial<Command>, translatorManager: TranslatorManager) {
-    const translationPath = `commands.${partialCommand.path!.replaceAll("/", "_")}`;
-    partialCommand.translationPath = translationPath;
+    private addError(message: string) {
+        const indentString = "    ";
 
-    const nameTranslations = translatorManager.getLocalizations(`${translationPath}.name`);
-    const descriptionTranslations = translatorManager.getLocalizations(`${translationPath}.description`);
-    if (!nameTranslations[translatorManager.fallbackLocale])
-        throw new Error(`Command "${partialCommand.path}" is missing a name in default locale (${translatorManager.fallbackLocale}).`);
-    checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
-}
+        for (const header of this.headerChain.slice(this.indent)) {
 
-export function fillArguments(partialCommand: Partial<Command>,
-    args: CommandDefinition["args"],
-    translatorManager: TranslatorManager) {
-    let minArgs = 0;
-    let maxArgs = 0;
-    let lastArgAsExtras = false;
-    let optionalArgsStarted = false;
+            this.errorContents += indentString.repeat(this.indent) + header + ":\n";
+            this.indent++;
+        }
 
-    const argStringTranslations = {} as Record<LocaleString, string>;
+        this.errorContents += indentString.repeat(this.indent) + message + "\n";
+        this.errorCount++;
+    }
 
-    const convertedArgs = args?.map(arg => {
-        try {
+    private checkLocalizations(a: any, b: any, name: string, name2?: string) {
+        for (const key of Object.keys(b)) {
+            if (!(key in a))
+                this.addError(`Missing ${name} in locale ${key}`);
+        }
+        for (const key of Object.keys(a)) {
+            if (!(key in b))
+                this.addError(`Missing ${name2 ?? name} in locale ${key}`);
+        }
+    };
+
+    fillInheritableOptions(partialCommand: Partial<Command>, inheritedOptions?: InheritableOptions) {
+        if (inheritedOptions) {
+            partialCommand.conditions!.push(...inheritedOptions.conditions);
+
+            if (partialCommand.usableAsAppCommand)
+                this.addError("Subcommands can only be unmarked as usable as application commands.");
+            partialCommand.usableAsAppCommand = inheritedOptions.usableAsAppCommand;
+
+            if (partialCommand.defaultMemberPermissions)
+                this.addError("Subcommands cannot define default member permissions.");
+            partialCommand.defaultMemberPermissions = inheritedOptions.defaultMemberPermissions;
+
+            if (partialCommand.allowDMs !== undefined)
+                this.addError("Subcommands cannot define DM permission.");
+            partialCommand.allowDMs = inheritedOptions.allowDMs;
+
+            if (!partialCommand.ownerOnly && inheritedOptions.ownerOnly)
+                this.addError("Owner-only category cannot contain not owner-only commands.");
+            partialCommand.ownerOnly = inheritedOptions.ownerOnly;
+        } else {
+            partialCommand.usableAsAppCommand ??= false;
+            partialCommand.defaultMemberPermissions ??= PermissionFlagsBits.UseApplicationCommands;
+            partialCommand.allowDMs ??= true;
+            partialCommand.ownerOnly ??= false;
+        }
+
+        if (partialCommand.ownerOnly && partialCommand.usableAsAppCommand)
+            this.addError("Owner-only commands cannot be usable as app commands.");
+    }
+
+    fillTranslations(partialCommand: Partial<Command>, translatorManager: TranslatorManager) {
+        const translationPath = `commands.${partialCommand.path!.replaceAll("/", "_")}`;
+        partialCommand.translationPath = translationPath;
+
+        const nameTranslations = translatorManager.getLocalizations(`${translationPath}.name`);
+        const descriptionTranslations = translatorManager.getLocalizations(`${translationPath}.description`);
+        if (!nameTranslations[translatorManager.fallbackLocale])
+            this.addError(`Command "${partialCommand.path}" is missing a name in default locale (${translatorManager.fallbackLocale}).`);
+        this.checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
+    }
+
+    fillArguments(partialCommand: Partial<Command>,
+        args: CommandDefinition["args"],
+        translatorManager: TranslatorManager) {        
+        let minArgs = 0;
+        let maxArgs = 0;
+        let lastArgAsExtras = false;
+        let optionalArgsStarted = false;
+
+        const argStringTranslations = {} as Record<LocaleString, string>;
+
+        const lastLevel = this.headerChain.length;
+        const convertedArgs = args?.map(arg => {
+            this.setHeader(lastLevel, `Argument key: ${arg.translationKey}`);
+
             const argTranslationPath = `${partialCommand.translationPath}.args.${arg.translationKey}`;
 
             // Make sure that argument's translation is consistent with command's translation.
             const nameLocalizations = translatorManager.getLocalizations(`${argTranslationPath}.name`);
             const descriptionLocalizations = translatorManager.getLocalizations(`${argTranslationPath}.description`);
-            checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "argument name");
-            checkLocalizations(partialCommand.nameTranslations, descriptionLocalizations, "argument description");
+            this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "argument name");
+            this.checkLocalizations(partialCommand.nameTranslations, descriptionLocalizations, "argument description");
 
             if (arg.required === false)
                 optionalArgsStarted = true; // If an optional argument is found, all following arguments are optional.
             else if (optionalArgsStarted)
-                throw new Error("Optional arguments must be defined after all required arguments.");
+                this.addError("Optional arguments must be defined after all required arguments.");
 
             else
                 minArgs++;
             maxArgs++;
 
             if (lastArgAsExtras)
-                throw new Error("Extras argument must be the last argument.");
+                this.addError("Extras argument must be the last argument.");
             if (arg.isExtras) {
                 if (arg.type !== ApplicationCommandOptionType.String)
-                    throw new Error("Extras argument type must be a string.");
+                    this.addError("Extras argument type must be a string.");
                 if (arg.required === false)
-                    throw new Error("Command with extras argument cannot have optional arguments.");
+                    this.addError("Command with extras argument cannot have optional arguments.");
 
                 lastArgAsExtras = true;
                 maxArgs = Infinity;
@@ -155,7 +190,7 @@ export function fillArguments(partialCommand: Partial<Command>,
                 choices: arg.choices?.map(choice => {
                     try {
                         const nameLocalizations = translatorManager.getLocalizations(`${argTranslationPath}.choices.${choice.translationKey}.name`);
-                        checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "choice name");
+                        this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "choice name");
 
                         return {
                             name: nameLocalizations[translatorManager.fallbackLocale],
@@ -169,17 +204,14 @@ export function fillArguments(partialCommand: Partial<Command>,
                 }),
                 required: arg.required ?? true,
             };
-        } catch (e) {
-            e.message += `\nArgument: ${arg.translationKey}`;
-            throw e;
-        }
-    }) as Command["args"]["list"] ?? [];
+        }) as Command["args"]["list"] ?? [];
 
-    return {
-        list: convertedArgs,
-        min: minArgs,
-        max: maxArgs,
-        stringTranslations: argStringTranslations,
-        lastArgAsExtras
-    };
+        return {
+            list: convertedArgs,
+            min: minArgs,
+            max: maxArgs,
+            stringTranslations: argStringTranslations,
+            lastArgAsExtras
+        };
+    }
 }
