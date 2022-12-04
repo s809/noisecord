@@ -138,9 +138,9 @@ export class CreateCommandUtil {
 
         const argStringTranslations = {} as Record<LocaleString, string>;
 
-        const lastLevel = this.headerChain.length;
+        const nextLevel = this.headerChain.length;
         const convertedArgs = args?.map(arg => {
-            this.setHeader(lastLevel, `Argument key: ${arg.translationKey}`);
+            this.setHeader(nextLevel, `Argument: ${arg.translationKey}`);
 
             const argTranslationPath = `${partialCommand.translationPath}.args.${arg.translationKey}`;
 
@@ -191,19 +191,16 @@ export class CreateCommandUtil {
                 description: descriptionLocalizations[translatorManager.fallbackLocale],
                 descriptionLocalizations,
                 choices: arg.choices?.map(choice => {
-                    try {
-                        const nameLocalizations = translatorManager.getLocalizations(`${argTranslationPath}.choices.${choice.translationKey}.name`);
-                        this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "choice name");
+                    this.setHeader(nextLevel + 1, `Choice: ${choice.translationKey}`);
 
-                        return {
-                            name: nameLocalizations[translatorManager.fallbackLocale],
-                            nameLocalizations,
-                            value: choice.value
-                        };
-                    } catch (e) {
-                        e.message += `\nChoice: ${choice.translationKey}`;
-                        throw e;
-                    }
+                    const nameLocalizations = translatorManager.getLocalizations(`${argTranslationPath}.choices.${choice.translationKey}.name`);
+                    this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "choice name");
+
+                    return {
+                        name: nameLocalizations[translatorManager.fallbackLocale],
+                        nameLocalizations,
+                        value: choice.value
+                    };
                 }),
                 required: arg.required ?? true,
             };
