@@ -114,7 +114,9 @@ export class CommandRegistry {
                         },
                         localeCommands
                     )
-                    .set(translation, command);
+                    .set(translation, command.subcommands.size
+                        ? new Map()
+                        : command);
             }
         }
 

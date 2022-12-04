@@ -2,13 +2,16 @@
   "locale_string": "en-US",
   "commands": {
     "parent": {
-      "name": "parent"
+      "name": "parent",
+      "description": "parent"
     },
     "parent_test": {
-      "name": "test"
+      "name": "test",
+      "description": "test"
     },
     "test": {
-      "name": "test"
+      "name": "test",
+      "description": "test"
     }
   }
 }

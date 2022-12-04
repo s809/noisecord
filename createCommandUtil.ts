@@ -75,11 +75,11 @@ export class CreateCommandUtil {
 
     private checkLocalizations(a: any, b: any, name: string, name2?: string) {
         for (const key of Object.keys(b)) {
-            if (!(key in a))
+            if (!a[key])
                 this.addError(`Missing ${name} in locale ${key}`);
         }
         for (const key of Object.keys(a)) {
-            if (!(key in b))
+            if (!b[key])
                 this.addError(`Missing ${name2 ?? name} in locale ${key}`);
         }
     };
@@ -123,6 +123,9 @@ export class CreateCommandUtil {
         if (!nameTranslations[translatorManager.fallbackLocale])
             this.addError(`Command "${partialCommand.path}" is missing a name in default locale (${translatorManager.fallbackLocale}).`);
         this.checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
+
+        partialCommand.nameTranslations = nameTranslations as any;
+        partialCommand.descriptionTranslations = descriptionTranslations as any;
     }
 
     fillArguments(partialCommand: Partial<Command>,
