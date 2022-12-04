@@ -25,13 +25,13 @@ export class CommandRegistry {
     async createCommands() {
         if (!this.options.commandModuleDirectory) return this;
 
-        const queue = await importModules<CommandDefinition>(path.resolve(this.options.commandModuleDirectory, "*"));
+        const queue = await importModules<CommandDefinition>(this.options.commandModuleDirectory);
         
         // Add modules from directory recursively
         for (let i = 0; i < queue.length; i++) {
             const modulePath = queue[i][0];
             if (!modulePath.endsWith(isTsNode ? ".ts" : ".js"))
-                queue.push(...await importModules<CommandDefinition>(path.resolve(modulePath, "*")));
+                queue.push(...await importModules<CommandDefinition>(modulePath));
         }
 
         const getParentChain = (path: string) => {
@@ -121,7 +121,7 @@ export class CommandRegistry {
         if (!this.options.contextMenuModuleDirectory)
             return this.contextMenuCommands;
 
-        const definitions = await importModules<ContextMenuCommandDefinition>(path.resolve(this.options.contextMenuModuleDirectory, "*"));
+        const definitions = await importModules<ContextMenuCommandDefinition>(this.options.contextMenuModuleDirectory);
         
         for (const [, definition] of definitions) {
             const nameLocalizations = this.translatorManager.getLocalizations(`contextMenuCommands.${definition.key}.name`);

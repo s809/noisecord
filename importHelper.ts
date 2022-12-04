@@ -4,14 +4,13 @@ import { dirname } from "path";
 export const isTsNode = !!(process as any)[Symbol.for("ts-node.register.instance")];
 
 /**
- * Imports modules in directory of {@link modulePath}.
- * Ignores index.js.
+ * Imports modules in a given directory.
+ * Ignores index.js/ts (depends on whether running in ts-node).
  * 
- * @param modulePath Path to module.
+ * @param dir Path to directory.
  * @returns Imported modules.
  */
-export async function importModules<T>(modulePath: string): Promise<[string, T][]> {
-    const dir = dirname(modulePath);
+export async function importModules<T>(dir: string): Promise<[string, T][]> {
     const modules = [];
 
     for (const entry of await readdir(dir, { withFileTypes: true })) {
