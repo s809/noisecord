@@ -51,13 +51,13 @@ describe("TranslatorManager", () => {
         describe("by message", () => {
             function getMessage(isDMBased: boolean) {
                 const message = sinon.createStubInstance(Message);
-                sinon.stub(message, "channel").get(() =>
+                sinon.stub(message, "channel").value(
                     sinon.createStubInstance(TextChannel, {
                         isDMBased
                     } as any)
                 );
                 message.author = sinon.createStubInstance(User);
-                sinon.stub(message, "guild").get(() => !isDMBased
+                sinon.stub(message, "guild").value(!isDMBased
                     ? sinon.createStubInstance(Guild)
                     : null);
                 return message;
@@ -72,7 +72,7 @@ describe("TranslatorManager", () => {
                 const commandInteraction = sinon.createStubInstance(CommandInteraction);
                 commandInteraction.user = sinon.createStubInstance(User);
                 commandInteraction.ephemeral = ephemeral;
-                sinon.stub(commandInteraction, "guild").get(() => guild
+                sinon.stub(commandInteraction, "guild").value(guild
                     ? sinon.createStubInstance(Guild)
                     : null);
                 return commandInteraction;

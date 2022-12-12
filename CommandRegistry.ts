@@ -3,7 +3,7 @@ import path from "path";
 import {
     createCommand,
     CreateCommandUtil, InheritableOptions
-} from "./createCommandUtil";
+} from "./CreateCommandUtil";
 import { Command, CommandDefinition, ContextMenuCommand, ContextMenuCommandDefinition } from "./definitions";
 import { importModules, isTsNode } from "./importHelper";
 import { TranslatorManager } from "./TranslatorManager";
@@ -47,7 +47,7 @@ export class CommandRegistry {
             );
             return chain;
         }
-        const createCommandUtil = new CreateCommandUtil();
+        const createCommandUtil = new CreateCommandUtil(this.translatorManager);
 
         // Create and add commands to tree
         for (const [filePath, definition] of queue) {
@@ -72,16 +72,16 @@ export class CommandRegistry {
                 partialCommand.path = `${inheritedOptions.path}/${partialCommand.key}`;
             else
                 partialCommand.path = partialCommand.key;
-            createCommandUtil.setHeader(0, `"${partialCommand.path}"`)
+            createCommandUtil.setHeader(0, partialCommand.path!)
 
             createCommandUtil.setHeader(1, "Command config");
             createCommandUtil.fillInheritableOptions(partialCommand, inheritedOptions);
 
             createCommandUtil.setHeader(1, "Command translations");
-            createCommandUtil.fillTranslations(partialCommand, this.translatorManager);
+            createCommandUtil.fillTranslations(partialCommand);
 
             createCommandUtil.setHeader(1, "Command arguments");
-            createCommandUtil.fillArguments(partialCommand, definition.args, this.translatorManager);
+            createCommandUtil.fillArguments(partialCommand, definition.args);
 
             const command = partialCommand as Command;
             (lastParent?.subcommands ?? this.commands).set(command.key, command);
@@ -135,7 +135,7 @@ export class CommandRegistry {
                     type: definition.type,
                     name: nameLocalizations[this.translatorManager.fallbackLocale]!,
                     nameLocalizations,
-                    dmPermission: false // Not supported yet
+                    dmPermission: false // TODO Not supported yet
                 }
             });
         }

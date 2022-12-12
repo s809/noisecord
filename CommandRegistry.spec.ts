@@ -1,3 +1,4 @@
+import assert from "assert";
 import { CommandRegistry, CommandRegistryOptions } from "./CommandRegistry";
 import { TranslatorManager } from "./TranslatorManager";
 
@@ -21,4 +22,20 @@ describe("CommandRegistry", () => {
     });
 
     it("normal", () => commandRegistry.createCommands());
+
+    it("errors", async () => {
+        const translatorManager = await new TranslatorManager({
+            translationFileDirectory: "./testData/translations/normal",
+            defaultLocale: "en-US",
+            getUserLanguage: async () => "ru",
+            getGuildLanguage: async () => "ru",
+        }).init();
+
+        const promise = new CommandRegistry({
+            commandModuleDirectory: "./testData/commands/errors",
+            contextMenuModuleDirectory: "./testData/contextMenuCommands/normal"
+        }, translatorManager).createCommands();
+
+        assert.rejects(promise);
+    });
 });

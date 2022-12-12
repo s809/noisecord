@@ -44,12 +44,14 @@ export class CreateCommandUtil {
     private headerChain: string[] = [];
     private indent = 0;
 
+    constructor(private translatorManager: TranslatorManager) { }
+
     throwIfErrors() {
         if (!this.errorContents.length) return;
 
         throw new Error(
             "Failed to initialize commands.\n" +
-            this.errorContents +
+            this.errorContents + "\n" +
             `Errors generated: ${this.errorCount}`
         );
     }
@@ -64,12 +66,14 @@ export class CreateCommandUtil {
         const indentString = "    ";
 
         for (const header of this.headerChain.slice(this.indent)) {
+            if (this.indent === 0)
+                this.errorContents += "\n";
 
             this.errorContents += indentString.repeat(this.indent) + header + ":\n";
             this.indent++;
         }
 
-        this.errorContents += indentString.repeat(this.indent) + message + "\n";
+        this.errorContents += indentString.repeat(this.indent - 1) + "  - " + message + "\n";
         this.errorCount++;
     }
 
@@ -114,14 +118,14 @@ export class CreateCommandUtil {
             this.addError("Owner-only commands cannot be usable as app commands.");
     }
 
-    fillTranslations(partialCommand: Partial<Command>, translatorManager: TranslatorManager) {
+    fillTranslations(partialCommand: Partial<Command>) {
         const translationPath = `commands.${partialCommand.path!.replaceAll("/", "_")}`;
         partialCommand.translationPath = translationPath;
 
-        const nameTranslations = translatorManager.getLocalizations(`${translationPath}.name`);
-        const descriptionTranslations = translatorManager.getLocalizations(`${translationPath}.description`);
-        if (!nameTranslations[translatorManager.fallbackLocale])
-            this.addError(`Command "${partialCommand.path}" is missing a name in default locale (${translatorManager.fallbackLocale}).`);
+        const nameTranslations = this.translatorManager.getLocalizations(`${translationPath}.name`);
+        const descriptionTranslations = this.translatorManager.getLocalizations(`${translationPath}.description`);
+        if (!nameTranslations[this.translatorManager.fallbackLocale])
+            this.addError(`Command is missing a name in default locale (${this.translatorManager.fallbackLocale}).`);
         this.checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
 
         partialCommand.nameTranslations = nameTranslations as any;
@@ -129,8 +133,7 @@ export class CreateCommandUtil {
     }
 
     fillArguments(partialCommand: Partial<Command>,
-        args: CommandDefinition["args"],
-        translatorManager: TranslatorManager) {        
+        args: CommandDefinition["args"]) {        
         let minArgs = 0;
         let maxArgs = 0;
         let lastArgAsExtras = false;
@@ -145,8 +148,8 @@ export class CreateCommandUtil {
             const argTranslationPath = `${partialCommand.translationPath}.args.${arg.translationKey}`;
 
             // Make sure that argument's translation is consistent with command's translation.
-            const nameLocalizations = translatorManager.getLocalizations(`${argTranslationPath}.name`);
-            const descriptionLocalizations = translatorManager.getLocalizations(`${argTranslationPath}.description`);
+            const nameLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.name`);
+            const descriptionLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.description`);
             this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "argument name");
             this.checkLocalizations(partialCommand.nameTranslations, descriptionLocalizations, "argument description");
 
@@ -186,18 +189,18 @@ export class CreateCommandUtil {
             return {
                 ...arg,
 
-                name: nameLocalizations[translatorManager.fallbackLocale],
+                name: nameLocalizations[this.translatorManager.fallbackLocale],
                 nameLocalizations,
-                description: descriptionLocalizations[translatorManager.fallbackLocale],
+                description: descriptionLocalizations[this.translatorManager.fallbackLocale],
                 descriptionLocalizations,
                 choices: arg.choices?.map(choice => {
                     this.setHeader(nextLevel + 1, `Choice: ${choice.translationKey}`);
 
-                    const nameLocalizations = translatorManager.getLocalizations(`${argTranslationPath}.choices.${choice.translationKey}.name`);
+                    const nameLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.choices.${choice.translationKey}.name`);
                     this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "choice name");
 
                     return {
-                        name: nameLocalizations[translatorManager.fallbackLocale],
+                        name: nameLocalizations[this.translatorManager.fallbackLocale],
                         nameLocalizations,
                         value: choice.value
                     };
