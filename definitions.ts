@@ -2,7 +2,7 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
 import { CommandCondition } from "./conditions";
 import { CommandMessage } from "./CommandMessage";
@@ -28,9 +28,9 @@ export interface CommandDefinition {
         "name" | "nameLocalizations" | "description" | "descriptionLocalizations" |
         "choices"
     > & {
-        translationKey: string;
+        key: string;
         choices?: {
-            translationKey: string;
+            key: string;
             value: string | number;
         }[];
         isExtras?: boolean;
@@ -44,9 +44,9 @@ export type Command = Overwrite<Required<CommandDefinition>, {
     key: string;
     translationPath: string;
 
-    nameTranslations: Record<LocaleString, string>;
-    descriptionTranslations: Record<LocaleString, string>;
-    usageTranslations: Record<LocaleString, string>;
+    nameTranslations: LocalizationMap;
+    descriptionTranslations: LocalizationMap;
+    usageTranslations: LocalizationMap;
 
     ownerOnly: boolean;
     defaultMemberPermissions: PermissionResolvable;
@@ -59,9 +59,9 @@ export type Command = Overwrite<Required<CommandDefinition>, {
     args: {
         min: number;
         max: number;
-        stringTranslations: Record<LocaleString, string>;
+        stringTranslations: LocalizationMap;
         list: (ArrayElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
-            translationKey: string;
+            key: string;
         })[],
         lastArgAsExtras: boolean;
     };

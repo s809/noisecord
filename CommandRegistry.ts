@@ -102,13 +102,13 @@ export class CommandRegistry {
 
                 // *reminder that commandsByLocale is a separate tree
                 // since it isn't really used anywhere besides resolving commands
-                parentChain.map(command => command.nameTranslations[locale as LocaleString])
+                parentChain.map(command => command.nameTranslations[locale as LocaleString]!)
                     .reduce(
                         // TODO Unsafely assumes that entire chain has localization for current locale
                         (map, key) => map.get(key)! as DeeplyNestedMap<Command>,
                         localeCommands
                     )
-                    .set(translation, command.subcommands.size
+                    .set(translation!, command.subcommands.size
                         ? new Map()
                         : command);
             }

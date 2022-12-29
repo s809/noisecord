@@ -71,8 +71,8 @@ export class ApplicationCommandManager {
                 const data: ChatInputApplicationCommandData & {
                     options: typeof command.args.list;
                 } = {
-                    name: command.nameTranslations[this.translatorManager.fallbackLocale],
-                    description: command.descriptionTranslations[this.translatorManager.fallbackLocale],
+                    name: command.nameTranslations[this.translatorManager.fallbackLocale]!,
+                    description: command.descriptionTranslations[this.translatorManager.fallbackLocale]!,
                     nameLocalizations: command.nameTranslations,
                     descriptionLocalizations: command.descriptionTranslations,
                     options: command.args.list,

@@ -41,7 +41,7 @@ export class CreateCommandUtil {
     private errorContents = "";
     private errorCount = 0;
 
-    private headerChain: string[] = [];
+    private headerChain: string[] = ["(vibe check)"];
     private indent = 0;
 
     constructor(private translatorManager: TranslatorManager) { }
@@ -79,12 +79,16 @@ export class CreateCommandUtil {
 
     private checkLocalizations(a: any, b: any, name: string, name2?: string) {
         for (const key of Object.keys(b)) {
-            if (!a[key])
+            if (!a[key]) {
                 this.addError(`Missing ${name} in locale ${key}`);
+                a[key] = "_MISSING";
+            }
         }
         for (const key of Object.keys(a)) {
-            if (!b[key])
+            if (!b[key]) {
                 this.addError(`Missing ${name2 ?? name} in locale ${key}`);
+                b[key] = "_MISSING";
+            }
         }
     };
 
@@ -93,7 +97,7 @@ export class CreateCommandUtil {
             partialCommand.conditions!.push(...inheritedOptions.conditions);
 
             if (partialCommand.usableAsAppCommand)
-                this.addError("Subcommands can only be unmarked as usable as application commands.");
+                this.addError("Subcommands cannot be explicitly set as usable as application commands.");
             partialCommand.usableAsAppCommand = inheritedOptions.usableAsAppCommand;
 
             if (partialCommand.defaultMemberPermissions)
@@ -105,7 +109,7 @@ export class CreateCommandUtil {
             partialCommand.allowDMs = inheritedOptions.allowDMs;
 
             if (!partialCommand.ownerOnly && inheritedOptions.ownerOnly)
-                this.addError("Owner-only category cannot contain not owner-only commands.");
+                this.addError("Owner-only categories cannot contain not owner-only commands.");
             partialCommand.ownerOnly = inheritedOptions.ownerOnly;
         } else {
             partialCommand.usableAsAppCommand ??= false;
@@ -115,7 +119,7 @@ export class CreateCommandUtil {
         }
 
         if (partialCommand.ownerOnly && partialCommand.usableAsAppCommand)
-            this.addError("Owner-only commands cannot be usable as app commands.");
+            this.addError("Owner-only commands cannot be usable as application commands.");
     }
 
     fillTranslations(partialCommand: Partial<Command>) {
@@ -124,8 +128,11 @@ export class CreateCommandUtil {
 
         const nameTranslations = this.translatorManager.getLocalizations(`${translationPath}.name`);
         const descriptionTranslations = this.translatorManager.getLocalizations(`${translationPath}.description`);
-        if (!nameTranslations[this.translatorManager.fallbackLocale])
-            this.addError(`Command is missing a name in default locale (${this.translatorManager.fallbackLocale}).`);
+        if (!nameTranslations[this.translatorManager.fallbackLocale] && !descriptionTranslations[this.translatorManager.fallbackLocale]) {
+            this.addError(`Command is missing a name and description in default locale (${this.translatorManager.fallbackLocale}).`);
+            nameTranslations[this.translatorManager.fallbackLocale] = "_MISSING";
+            descriptionTranslations[this.translatorManager.fallbackLocale] = "_MISSING";
+        }
         this.checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
 
         partialCommand.nameTranslations = nameTranslations as any;
@@ -143,9 +150,9 @@ export class CreateCommandUtil {
 
         const nextLevel = this.headerChain.length;
         const convertedArgs = args?.map(arg => {
-            this.setHeader(nextLevel, `Argument: ${arg.translationKey}`);
+            this.setHeader(nextLevel, `Argument: ${arg.key}`);
 
-            const argTranslationPath = `${partialCommand.translationPath}.args.${arg.translationKey}`;
+            const argTranslationPath = `${partialCommand.translationPath}.args.${arg.key}`;
 
             // Make sure that argument's translation is consistent with command's translation.
             const nameLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.name`);
@@ -157,7 +164,6 @@ export class CreateCommandUtil {
                 optionalArgsStarted = true; // If an optional argument is found, all following arguments are optional.
             else if (optionalArgsStarted)
                 this.addError("Optional arguments must be defined after all required arguments.");
-
             else
                 minArgs++;
             maxArgs++;
@@ -166,9 +172,9 @@ export class CreateCommandUtil {
                 this.addError("Extras argument must be the last argument.");
             if (arg.isExtras) {
                 if (arg.type !== ApplicationCommandOptionType.String)
-                    this.addError("Extras argument type must be a string.");
+                    this.addError("Extras argument must be of a string type.");
                 if (arg.required === false)
-                    this.addError("Command with extras argument cannot have optional arguments.");
+                    this.addError("Extras argument cannot be optional.");
 
                 lastArgAsExtras = true;
                 maxArgs = Infinity;
@@ -181,7 +187,6 @@ export class CreateCommandUtil {
 
                 if (!argStringTranslations[locale as LocaleString])
                     argStringTranslations[locale as LocaleString] = argString;
-
                 else
                     argStringTranslations[locale as LocaleString] += ` ${argString}`;
             }
@@ -194,9 +199,9 @@ export class CreateCommandUtil {
                 description: descriptionLocalizations[this.translatorManager.fallbackLocale],
                 descriptionLocalizations,
                 choices: arg.choices?.map(choice => {
-                    this.setHeader(nextLevel + 1, `Choice: ${choice.translationKey}`);
+                    this.setHeader(nextLevel + 1, `Choice: ${choice.key}`);
 
-                    const nameLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.choices.${choice.translationKey}.name`);
+                    const nameLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.choices.${choice.key}.name`);
                     this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "choice name");
 
                     return {
