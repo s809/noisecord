@@ -5,7 +5,7 @@
 import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
 import { CommandCondition } from "./conditions";
-import { CommandMessage } from "./CommandMessage";
+import { CommandMessage } from "./messageTypes/CommandMessage";
 import { Translator } from "./Translator";
 
 export const textChannels = [
@@ -88,7 +88,7 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = C
 }
 
 /**
- * This function is just for convenience.
+ * This function is just for convenience/type checking.
  */
 export function defineCommand(definition: CommandDefinition) {
     return definition;

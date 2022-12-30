@@ -1,5 +1,5 @@
 import { CommandInteraction, Message } from "discord.js";
-import { CommandMessage } from "../CommandMessage";
+import { CommandMessage } from "../messageTypes/CommandMessage";
 import { Command } from "../definitions";
 
 export interface CommandCondition {
