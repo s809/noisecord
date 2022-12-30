@@ -24,7 +24,7 @@ describe("TranslatorManager", () => {
 
     it("empty translation directory", async () => {
         const promise = new TranslatorManager(translationOptionsEmpty).init();
-        assert.rejects(promise);
+        await assert.rejects(promise);
     });
 
     it("#fallbackLocale", async () => {

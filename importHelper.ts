@@ -1,10 +1,9 @@
 import { readdir } from "fs/promises";
-import { dirname } from "path";
 
 export const isTsNode = !!(process as any)[Symbol.for("ts-node.register.instance")];
 
 /**
- * Imports modules in a given directory.
+ * Imports modules in a given directory. \
  * Ignores index.js/ts (depends on whether running in ts-node).
  * 
  * @param dir Path to directory.

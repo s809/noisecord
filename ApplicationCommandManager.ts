@@ -1,25 +1,14 @@
 import assert from 'assert';
 import { ChatInputApplicationCommandData, ApplicationCommandType, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandDataResolvable, Client } from 'discord.js';
-import { defaults } from 'lodash-es';
 import { CommandRegistry } from './CommandRegistry';
 import { TranslatorManager } from './TranslatorManager';
-
-/*
-    for testing later
-    application: {
-        commands: {
-            set: sinon.fake(async (commands: ApplicationCommandDataResolvable[]) =>
-                commands.map((command, i) => ({ ...command, id: i.toString() })))
-        }
-    },
-*/
 
 export class ApplicationCommandManager {
     private readonly translatorManager: TranslatorManager;
 
     constructor(private readonly commandRegistry: CommandRegistry) {
         this.translatorManager = commandRegistry.translatorManager;
-     }
+    }
 
     async init(client: Client<true>) {
         const chatCommands = this.makeChatCommands();
@@ -61,12 +50,14 @@ export class ApplicationCommandManager {
         const commands: ChatInputApplicationCommandData[] = [];
 
         for (const command of this.commandRegistry.iterateCommands()) {
-            if (!command.usableAsAppCommand)
-                continue;
-
             try {
                 if (command.handler && command.subcommands.size)
-                    throw new Error("Commands with subcommands cannot be run on their own.");
+                    throw new Error("Commands with subcommands cannot have a handler.");
+                if (!command.handler && !command.subcommands.size)
+                    throw new Error("Commands without subcommands must have a handler.");
+                
+                if (!command.usableAsAppCommand)
+                    continue;
 
                 const data: ChatInputApplicationCommandData & {
                     options: typeof command.args.list;

@@ -10,6 +10,7 @@ export interface CommandFrameworkOptions {
     commandRegistryOptions: CommandRegistryOptions;
     translationOptions: TranslatorManagerOptions;
     registerApplicationCommands?: boolean;
+    autoAttachCommandHandlers?: boolean;
 }
 
 export class CommandFramework {

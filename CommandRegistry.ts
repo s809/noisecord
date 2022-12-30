@@ -158,9 +158,7 @@ export class CommandRegistry {
     *iterateSubcommands(list: ReadonlyMap<string, Command>): Iterable<Command> {
         for (const command of list.values()) {
             yield command;
-
-            if (command.subcommands)
-                yield* this.iterateSubcommands(command.subcommands);
+            yield* this.iterateSubcommands(command.subcommands);
         }
     }
 }

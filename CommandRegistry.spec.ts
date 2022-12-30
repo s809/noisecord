@@ -36,6 +36,6 @@ describe("CommandRegistry", () => {
             contextMenuModuleDirectory: "./testData/contextMenuCommands/normal"
         }, translatorManager).createCommands();
 
-        assert.rejects(promise);
+        await assert.rejects(promise);
     });
 });
