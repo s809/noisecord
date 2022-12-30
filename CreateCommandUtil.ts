@@ -128,12 +128,23 @@ export class CreateCommandUtil {
 
         const nameTranslations = this.translatorManager.getLocalizations(`${translationPath}.name`);
         const descriptionTranslations = this.translatorManager.getLocalizations(`${translationPath}.description`);
+        
         if (!nameTranslations[this.translatorManager.fallbackLocale] && !descriptionTranslations[this.translatorManager.fallbackLocale]) {
             this.addError(`Command is missing a name and description in default locale (${this.translatorManager.fallbackLocale}).`);
             nameTranslations[this.translatorManager.fallbackLocale] = "_MISSING";
             descriptionTranslations[this.translatorManager.fallbackLocale] = "_MISSING";
         }
         this.checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
+
+        let nextLevel = this.headerChain.length;
+        this.setHeader(nextLevel++, "Name translations");
+        for (const [localeString, nameTranslation] of Object.entries(nameTranslations)) {
+            this.setHeader(nextLevel, localeString);
+
+            const regex = /^[-_\p{L}\p{N}\p{sc=Deva}\p{sc=Thai}]{1,32}$/u;
+            if (!nameTranslation.match(regex))
+                this.addError(`Name translation "${nameTranslation}" does not match the regex: ${regex}`);
+        }
 
         partialCommand.nameTranslations = nameTranslations as any;
         partialCommand.descriptionTranslations = descriptionTranslations as any;

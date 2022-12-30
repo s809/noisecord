@@ -135,7 +135,7 @@ describe("CreateCommandUtil", () => {
                     description: {
                         "en-US": "test"
                     },
-                    check: /names must match/
+                    check: /does not match.*generated: 1/s
                 }
             ] as const) {
                 it(inputs.title, () => {
