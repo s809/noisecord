@@ -3,34 +3,35 @@ import { CommandCondition } from "./conditions";
 import { Command, CommandDefinition } from "./definitions";
 import { ApplicationCommandOptionType, LocaleString, PermissionFlagsBits } from "discord.js";
 import { TranslatorManager } from "./TranslatorManager";
+import { castArray, isNil } from "lodash-es";
 
 export interface InheritableOptions {
     path: string;
     conditions: CommandCondition[];
-    usableAsAppCommand: boolean;
+    interactionCommand: Command["interactionCommand"];
     ownerOnly: boolean;
     defaultMemberPermissions: PermissionResolvable;
     allowDMs: boolean;
 }
 
-export function createCommand(definition: CommandDefinition): Partial < Command > {
+export function createCommand(definition: CommandDefinition): Partial<Command> {
     return {
         // Specific to this command
         key: definition.key,
 
-        appCommandId: null,
-
         handler: definition.handler ?? null,
         alwaysReactOnSuccess: definition.alwaysReactOnSuccess ?? false,
 
-        conditions: Array.isArray(definition.conditions)
-            ? definition.conditions
-            : definition.conditions ? [definition.conditions] : [],
+        conditions: castArray(definition.conditions),
 
         subcommands: new Map(),
 
         // Inherited
-        usableAsAppCommand: definition.usableAsAppCommand,
+        interactionCommand: !isNil(definition.interactionCommand)
+            ? {
+                id: null
+            }
+            : definition.interactionCommand,
         defaultMemberPermissions: definition.defaultMemberPermissions!,
         allowDMs: definition.allowDMs,
         ownerOnly: definition.ownerOnly
@@ -96,9 +97,9 @@ export class CreateCommandUtil {
         if (inheritedOptions) {
             partialCommand.conditions!.push(...inheritedOptions.conditions);
 
-            if (partialCommand.usableAsAppCommand)
-                this.addError("Subcommands cannot be explicitly set as usable as application commands.");
-            partialCommand.usableAsAppCommand = inheritedOptions.usableAsAppCommand;
+            if (partialCommand.interactionCommand && !inheritedOptions.interactionCommand)
+                this.addError("Subcommands cannot be explicitly set as usable as interaction commands.");
+            partialCommand.interactionCommand = inheritedOptions.interactionCommand;
 
             if (partialCommand.defaultMemberPermissions)
                 this.addError("Subcommands cannot define default member permissions.");
@@ -112,13 +113,12 @@ export class CreateCommandUtil {
                 this.addError("Owner-only categories cannot contain not owner-only commands.");
             partialCommand.ownerOnly = inheritedOptions.ownerOnly;
         } else {
-            partialCommand.usableAsAppCommand ??= false;
             partialCommand.defaultMemberPermissions ??= PermissionFlagsBits.UseApplicationCommands;
             partialCommand.allowDMs ??= true;
             partialCommand.ownerOnly ??= false;
         }
 
-        if (partialCommand.ownerOnly && partialCommand.usableAsAppCommand)
+        if (partialCommand.ownerOnly && partialCommand.interactionCommand)
             this.addError("Owner-only commands cannot be usable as application commands.");
     }
 

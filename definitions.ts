@@ -2,7 +2,7 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocaleString, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
 import { CommandCondition } from "./conditions";
 import { CommandMessage } from "./messageTypes/CommandMessage";
@@ -21,7 +21,8 @@ export interface CommandDefinition {
     defaultMemberPermissions?: PermissionResolvable | null;
     allowDMs?: boolean;
     conditions?: CommandCondition | CommandCondition[];
-    usableAsAppCommand?: boolean;
+    
+    interactionCommand?: boolean;
 
     args?: (DistributiveOmit<
         ArrayElement<NonNullable<ApplicationCommandSubCommandData["options"]>>,
@@ -53,8 +54,9 @@ export type Command = Overwrite<Required<CommandDefinition>, {
     allowDMs: boolean;
     conditions: CommandCondition[];
 
-    usableAsAppCommand: boolean;
-    appCommandId: Snowflake | null;
+    interactionCommand: {
+        id: Snowflake | null
+    } | null;
 
     args: {
         min: number;
@@ -70,9 +72,11 @@ export type Command = Overwrite<Required<CommandDefinition>, {
     subcommands: Map<string, Command>;
 }>
 
+export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role>;
+
 export type CommandHandler = (
     msg: CommandMessage,
-    args: Record<string, string | string[] | number | boolean | User | Channel | Role>
+    args: ParsedArguments
 ) => Awaitable<string | void>;
 
 type ContextMenuCommandInteractions = UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction;

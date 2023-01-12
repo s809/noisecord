@@ -1,16 +1,15 @@
 import { Command } from "./definitions";
-import { Translator } from "./Translator";
 import { CommandRegistry, CommandRegistryOptions } from "./CommandRegistry";
 import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager";
-import { traverseTree } from "./util";
-import { ApplicationCommandManager } from "./ApplicationCommandManager";
 import { Client } from "discord.js";
+import { InteractionHandler, InteractionHandlerOptions } from "./handlers/InteractionHandler";
+import { MessageCreateHandler, MessageHandlerOptions } from "./handlers/MessageCreateHandler";
 
 export interface CommandFrameworkOptions {
     commandRegistryOptions: CommandRegistryOptions;
     translationOptions: TranslatorManagerOptions;
-    registerApplicationCommands?: boolean;
-    autoAttachCommandHandlers?: boolean;
+    interactionCommands?: InteractionHandlerOptions;
+    messageCommands?: MessageHandlerOptions;
 }
 
 export class CommandFramework {
@@ -23,9 +22,10 @@ export class CommandFramework {
 
     translatorManager?: TranslatorManager;
 
-    applicationCommandManager?: ApplicationCommandManager;
-
     client?: Client;
+
+    messageHandler: MessageCreateHandler | null = null;
+    interactionHandler: InteractionHandler | null = null;
 
     constructor(private options: CommandFrameworkOptions) {}
 
@@ -43,47 +43,16 @@ export class CommandFramework {
     }
 
     private async afterClientLogin() {
-        this.applicationCommandManager = await new ApplicationCommandManager(this.commandRegistry!).init(this.client!);
+        await this.attachCommandHandlers();
     }
 
-    /**
-     * Resolves command by its path.
-     *
-     * @param path Path to command.
-     * @param allowPartialResolve Whether to allow resolving to closest match.
-     * @returns Command, if it was found.
-     */
-    resolveCommandByPath(path: string | string[], allowPartialResolve: boolean = false): Command | null {
-        if (typeof path === "string")
-            path = path.split("/");
-        
-        return traverseTree(path,
-            this.commands,
-            command => command.subcommands,
-            allowPartialResolve);
-    }
+    private async attachCommandHandlers() {
+        if (this.options.messageCommands)
+            this.messageHandler = await new MessageCreateHandler(this.client!, this.commandRegistry!, this.options.messageCommands).init();
+        if (this.options.interactionCommands)
+            this.interactionHandler = await new InteractionHandler(this.client!, this.commandRegistry!, this.options.interactionCommands).init();
 
-    resolveCommandByLocalizedPath(path: string | string[], translator: Translator, allowFallback = true): Command | null {
-        if (typeof path === "string")
-            path = path.split("/");
-
-        const translatorSubMap = this.commandRegistry!.commandsByLocale.get(translator.localeString)!;
-        const fallbackSubMap = this.commandRegistry!.commandsByLocale.get(this.translatorManager!.fallbackLocale)!;
-        const subMap = translatorSubMap.has(path[0]) || !allowFallback
-            ? translatorSubMap
-            : fallbackSubMap;
-        
-        const result = traverseTree(path,
-            subMap,
-            v => v instanceof Map ? v : null,
-            true);
-        return result && !(result instanceof Map) ? result : null;
-    }
-
-    /**
-     * Recursively iterates commands.
-     */
-    iterateCommands() {
-        return this.commandRegistry!.iterateCommands();
+        if (!this.options.messageCommands && !this.options.interactionCommands)
+            throw new Error("None of command handlers are attached.");
     }
 }

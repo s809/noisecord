@@ -5,8 +5,10 @@ import format from "string-format";
 type FormatParameters = Parameters<typeof format>[1][];
 export class Translator {
     readonly localeString: LocaleString;
+    readonly setLanguageRegex: RegExp;
+    readonly booleanValues: [string[], string[]];
 
-    private data: object;
+    private data: any;
     private prefix: string | null = null;
     
     /** Translator of same locale without prefix. */
@@ -27,6 +29,8 @@ export class Translator {
         }
         
         this.localeString = get(this.data, "locale_string")!;
+        this.setLanguageRegex = new RegExp(`^${get(this.data, "set_language_regex")}$`, "iu");
+        this.booleanValues = get(this.data, "boolean_values");
 
         if (prefixOrFallback instanceof Translator) {
             this.prefix = prefixOrFallback.prefix;

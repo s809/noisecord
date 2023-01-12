@@ -49,10 +49,14 @@ describe("CreateCommandUtil", () => {
         describe(`#${CreateCommandUtil.prototype.fillInheritableOptions.name}`, () => {
             for (const inputs of [
                 {
-                    title: "Allowing a child to be usable as app command",
-                    partialCommand: { usableAsAppCommand: true }, 
+                    title: "Allowing a child to be usable as interaction command",
+                    partialCommand: {
+                        interactionCommand: {
+                            id: null
+                        }
+                    }, 
                     inheritedOptions: {},
-                    check: /application command/
+                    check: /interaction command/
                 },
                 {
                     title: "Defining default member permissions in child",
@@ -73,10 +77,13 @@ describe("CreateCommandUtil", () => {
                     check: /not owner-only/
                 },
                 {
-                    title: "Conflicting properties (ownerOnly and usableAsAppCommand)",
-                    partialCommand: { ownerOnly: false, usableAsAppCommand: true },
+                    title: "Conflicting properties (ownerOnly and interactionCommand)",
+                    partialCommand: {
+                        ownerOnly: true,
+                        interactionCommand: { id: null },
+                    },
                     inheritedOptions: {},
-                    check: /application command/
+                    check: /interaction command/
                 }
             ] as const) {
                 it(inputs.title, () => {
@@ -86,7 +93,7 @@ describe("CreateCommandUtil", () => {
                     }, {
                         path: "test",
                         conditions: [],
-                        usableAsAppCommand: true,
+                        interactionCommand: null,
                         ownerOnly: false,
                         defaultMemberPermissions: [PermissionFlagsBits.UseApplicationCommands],
                         allowDMs: true,

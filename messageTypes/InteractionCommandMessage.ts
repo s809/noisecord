@@ -1,4 +1,4 @@
-import { CommandInteraction, InteractionReplyOptions, MessageReplyOptions } from 'discord.js';
+import { CommandInteraction, InteractionReplyOptions, Message, MessageReplyOptions } from 'discord.js';
 import { Translator } from '../Translator';
 import { Command } from '../definitions';
 import { CommandMessage } from './CommandMessage';
@@ -6,45 +6,42 @@ import { MessageCommandResponse } from "./MessageCommandResponse";
 import { InteractionCommandResponse } from "./InteractionCommandResponse";
 
 export class InteractionCommandMessage<InGuild extends boolean = boolean> extends CommandMessage<InGuild> {
-    readonly interaction: CommandInteraction;
-
-    constructor(command: Command, translator: Translator, interaction: CommandInteraction) {
+    constructor(command: Command, translator: Translator, readonly interaction: CommandInteraction) {
         super(command, translator);
-
         this.interaction = interaction;
     }
 
     override async completeSilently() {
-        if (this.interaction.replied)
-            return;
-
-        await this.interaction.deferReply();
-        await this.interaction.deleteReply();
+        if (!this.interaction.deferred && !this.interaction.replied)
+            await this.interaction.deferReply({ ephemeral: true });
+        await this.interaction.deleteReply().catch(() => { });
     }
 
     async deferReply(ephemeral = true) {
-        return this._response = new InteractionCommandResponse({
-            interaction: this.interaction,
-            response: await this.interaction!.deferReply({ ephemeral })
-        });
+        return this.response ??= new InteractionCommandResponse(
+            this.interaction,
+            await this.interaction.deferReply({
+                ephemeral,
+                fetchReply: true,
+            })
+        );
     }
 
     async reply(options: string | InteractionReplyOptions) {
-        return this._response = new InteractionCommandResponse({
-            interaction: this.interaction,
-            response: await this.interaction.reply({
-                ephemeral: true,
-                ...(typeof options === "string" ? { content: options } : options)
-            } as InteractionReplyOptions),
-            message: await this.interaction.fetchReply()
-        });
+        return this.response = this.response
+            ? await this.response.edit(options)
+            : new InteractionCommandResponse(
+                this.interaction,
+                await this.interaction.reply({
+                    ephemeral: true,
+                    ...typeof options === "string" ? { content: options } : options,
+                    fetchReply: true
+                } as InteractionReplyOptions) as unknown as Message
+            );
     }
 
     async sendSeparate(options: string | MessageReplyOptions) {
-        return new MessageCommandResponse({
-            message: await this.interaction.channel!.send(options),
-            deferChannel: this.interaction.channel!
-        });
+        return new MessageCommandResponse(await this.interaction.channel!.send(options));
     }
 
     get content() {

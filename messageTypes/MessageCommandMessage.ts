@@ -14,9 +14,7 @@ export class MessageCommandMessage<InGuild extends boolean = boolean> extends Co
     }
 
     async deferReply() {
-        return this._response = new MessageCommandResponse({
-            deferChannel: this.message!.channel,
-        });
+        return this.response = new MessageCommandResponse(this.message.channel);
     }
 
     async reply(options: string | MessageReplyOptions) {
@@ -24,10 +22,7 @@ export class MessageCommandMessage<InGuild extends boolean = boolean> extends Co
     }
 
     async sendSeparate(options: string | MessageReplyOptions) {
-        return new MessageCommandResponse({
-            message: await this.message.channel.send(options),
-            deferChannel: this.message.channel
-        });
+        return new MessageCommandResponse(await this.message.channel.send(options));
     }
 
     get content() {

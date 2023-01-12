@@ -13,6 +13,10 @@ const options: CommandFrameworkOptions = {
         defaultLocale: "en-US",
         getUserLanguage: async () => "en-US",
         getGuildLanguage: async () => "en-US",
+    },
+    messageCommands: {
+        prefix: "!",
+        ignorePermissionsFor: []
     }
 };
 
@@ -31,6 +35,7 @@ describe("CommandFramework", () => {
     it("when client is ready", async () => {
         const client = {
             isReady: () => true,
+            on: sinon.stub(),
             once: sinon.stub(),
             application: {
                 commands: {

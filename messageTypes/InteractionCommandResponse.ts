@@ -1,29 +1,16 @@
-import { CommandInteraction, InteractionReplyOptions, InteractionResponse, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, WebhookEditMessageOptions, MessageCreateOptions } from 'discord.js';
+import { CommandInteraction, InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, WebhookEditMessageOptions, MessageCreateOptions, MessageFlags } from 'discord.js';
 import { CommandResponse } from './CommandResponse';
 
 export class InteractionCommandResponse extends CommandResponse {
-    readonly interaction: CommandInteraction;
-    readonly response: InteractionResponse;
-
-    constructor({
-        interaction, response, message
-    }: {
-        interaction: CommandInteraction;
-        response: InteractionResponse;
-        message?: Message;
-    }) {
-        super();
-        this.interaction = interaction;
-        this.response = response;
-        this.message = message;
+    constructor(readonly interaction: CommandInteraction, message: Message) {
+        super(message);
     }
 
     async edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions) {
-        if (this.interaction.deferred)
-            this.message = await this.interaction.followUp(options as InteractionReplyOptions);
-
-        else
-            this.message = await this.interaction.editReply(options as WebhookEditMessageOptions);
+        this.message = this.message!.flags.has(MessageFlags.Loading)
+            ? await this.interaction.followUp(options as InteractionReplyOptions)
+            : await this.interaction.editReply(options as WebhookEditMessageOptions);
+        return this;
     }
 
     async delete() {
@@ -33,6 +20,6 @@ export class InteractionCommandResponse extends CommandResponse {
     createMessageComponentCollector<T extends MessageComponentType>(
         options?: MessageCollectorOptionsParams<T>
     ) {
-        return this.response.createMessageComponentCollector(options);
+        return this.message!.createMessageComponentCollector(options);
     }
 }

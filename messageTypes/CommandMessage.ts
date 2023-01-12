@@ -3,19 +3,10 @@ import { Translator } from '../Translator';
 import { Command } from '../definitions';
 import { CommandResponse } from './CommandResponse';
 
-export abstract class CommandMessage<InGuild extends boolean = boolean> {
-    readonly command: Command;
-    readonly translator: Translator;
-    
-    get response() {
-        return this._response;
-    }
-    _response: CommandResponse | null = null;
+export abstract class CommandMessage<InGuild extends boolean = boolean> {    
+    response: CommandResponse | null = null;
 
-    constructor(command: Command, translator: Translator) {
-        this.command = command;
-        this.translator = translator;
-    }
+    constructor(readonly command: Command, readonly translator: Translator) { }
 
     async completeSilently() { };
 
@@ -33,7 +24,8 @@ export abstract class CommandMessage<InGuild extends boolean = boolean> {
 
     abstract inGuild(): this is CommandMessage<true>;
 
-    // {send: never} is to avoid breaking interaction-ish flow
+    // { send: never } is to avoid breaking interaction-ish flow
+    // Use sendSeparate() instead
     abstract get channel(): If<InGuild, GuildTextBasedChannel, TextBasedChannel> & { send: never };
 
     get channelId() {

@@ -2,25 +2,24 @@ import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, Messag
 import { CommandResponse } from './CommandResponse';
 
 export class MessageCommandResponse extends CommandResponse {
-    private channel: TextBasedChannel;
+    private channel?: TextBasedChannel;
 
-    constructor({
-        message, deferChannel,
-    }: {
-        message?: Message;
-        deferChannel: TextBasedChannel;
-    }) {
-        super();
-        this.message = message;
-        this.channel = deferChannel;
+    constructor(message: Message);
+    constructor(deferChannel: TextBasedChannel);
+    constructor(messageOrDeferChannel: Message | TextBasedChannel) {
+        if (messageOrDeferChannel instanceof Message) {
+            super(messageOrDeferChannel);
+        } else {
+            super();
+            this.channel = messageOrDeferChannel;
+        }
     }
 
     async edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions) {
-        if (!this.message) {
-            this.message = await this.channel.send(options as MessageCreateOptions);
-        } else {
-            this.message = await this.message!.edit(options as MessageEditOptions);
-        }
+        this.message = this.message
+            ? await this.message.edit(options as MessageEditOptions)
+            : await this.channel!.send(options as MessageCreateOptions);
+        return this;
     }
 
     async delete() {

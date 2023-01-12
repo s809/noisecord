@@ -1,12 +1,9 @@
 import { InteractionReplyOptions, InteractionResponse, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, WebhookEditMessageOptions, MessageCreateOptions } from 'discord.js';
 
 export abstract class CommandResponse {
-    protected message?: Message;
-    get replyCompleted() {
-        return Boolean(this.message);
-    }
+    constructor(protected message?: Message) { }
 
-    abstract edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<void>;
+    abstract edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
 
     abstract delete(): Promise<void>;
 

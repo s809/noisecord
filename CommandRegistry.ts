@@ -6,8 +6,9 @@ import {
 } from "./CreateCommandUtil";
 import { Command, CommandDefinition, ContextMenuCommand, ContextMenuCommandDefinition } from "./definitions";
 import { importModules, isTsNode } from "./importHelper";
+import { Translator } from "./Translator";
 import { TranslatorManager } from "./TranslatorManager";
-import { DeeplyNestedMap } from "./util";
+import { DeeplyNestedMap, traverseTree } from "./util";
 
 export interface CommandRegistryOptions {
     commandModuleDirectory?: string;
@@ -61,10 +62,10 @@ export class CommandRegistry {
                 ? {
                     path: lastParent.path,
                     conditions: [...lastParent.conditions],
-                    usableAsAppCommand: lastParent.usableAsAppCommand,
+                    interactionCommand: structuredClone(lastParent.interactionCommand),
                     ownerOnly: lastParent.ownerOnly,
                     defaultMemberPermissions: lastParent.defaultMemberPermissions,
-                    allowDMs: lastParent.allowDMs
+                    allowDMs: lastParent.allowDMs,
                 } as InheritableOptions
                 : undefined;
 
@@ -141,6 +142,52 @@ export class CommandRegistry {
         }
         
         return this.contextMenuCommands;
+    }
+
+    /**
+     * Resolves command by its path.
+     *
+     * @param path Path to command.
+     * @param allowPartialResolve Whether to allow resolving to closest match.
+     * @returns Command, if it was found.
+     */
+    resolveCommandByPath(path: string | string[], allowPartialResolve: boolean = false): Command | null {
+        if (typeof path === "string")
+            path = path.split("/");
+
+        return traverseTree(path,
+            this.commands,
+            command => command.subcommands,
+            allowPartialResolve);
+    }
+
+    resolveCommandByLocalizedPath(path: string | string[], translator: Translator, allowFallback = true): Command | null {
+        if (typeof path === "string")
+            path = path.split("/");
+
+        const translatorSubMap = this.commandsByLocale.get(translator.localeString)!;
+        const fallbackSubMap = this.commandsByLocale.get(this.translatorManager!.fallbackLocale)!;
+        const subMap = translatorSubMap.has(path[0]) || !allowFallback
+            ? translatorSubMap
+            : fallbackSubMap;
+
+        const result = traverseTree(path,
+            subMap,
+            v => v instanceof Map ? v : null,
+            true);
+        return result && !(result instanceof Map) ? result : null;
+    }
+
+    getCommandUsageString(command: Command, prefix: string, translator: Translator) {
+        let map = this.commands;
+        const localizedCommandPath = command.path.split("/").map(a => {
+            const c = map.get(a)!;
+            map = c.subcommands;
+            return translator.getTranslationFromRecord(c.nameTranslations);
+        }).join(" ");
+
+        const localizedArgs = translator.getTranslationFromRecord(command.args.stringTranslations) ?? "";
+        return `${prefix}${localizedCommandPath} ${localizedArgs}`.trimEnd();
     }
 
     /**
