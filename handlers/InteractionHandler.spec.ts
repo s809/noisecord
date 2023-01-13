@@ -447,6 +447,8 @@ describe(InteractionHandler.name, () => {
                 });
 
                 it("Slow command", async function () {
+                    this.slow(2000);
+
                     const interaction = await handleChatInteraction("auto/slow");
                     sinon.assert.calledOnceWithExactly(interaction.deferReply, {
                         ephemeral: true,
