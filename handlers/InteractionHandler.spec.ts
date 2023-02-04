@@ -1,208 +1,12 @@
 import assert from "assert";
-import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandType, Client, Interaction, MessageFlags, MessageFlagsBitField, Snowflake } from "discord.js";
+import { ApplicationCommandDataResolvable, ApplicationCommandType, Client, Interaction, MessageFlags, MessageFlagsBitField, Snowflake } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
-import { setTimeout } from "timers/promises";
 import { CommandRegistry } from "../CommandRegistry";
-import { Command } from "../definitions";
-import { CommandMessage } from "../messageTypes/CommandMessage";
 import { InteractionHandler } from "./InteractionHandler";
+import { makeFakeCommand, createHandler } from "./testData/util";
 
 describe(InteractionHandler.name, () => {
-    function makeFakeCommand(path: string, {
-        usableAsAppCommand: usableAsInteractionCommand,
-        hasHandler,
-        subcommands,
-    }: {
-        usableAsAppCommand?: false,
-        hasHandler?: boolean,
-        subcommands?: Command[],
-    } = {}) {
-        const key = path.split("/").reverse()[0];
-
-        return {
-            key,
-            path,
-            subcommands: new Map(subcommands?.map(command => [command.key, command])),
-            handler: !subcommands?.length || hasHandler
-                ? hasHandler !== false ? () => { } : null
-                : null,
-
-            interactionCommand: usableAsInteractionCommand !== false
-                ? {
-                    id: null
-                }
-                : undefined,
-
-            nameTranslations: {
-                "en-US": key
-            },
-            descriptionTranslations: {
-                "en-US": key
-            },
-            args: {
-                list: []
-            },
-            allowDMs: false,
-            defaultMemberPermissions: []
-        } as unknown as Command;
-    }
-
-    function createHandler(commands?: Command[]) {
-        commands ??= [
-            {
-                path: "no-handler",
-                translationPath: "no_handler",
-                handler: null,
-                subcommands: new Map()
-            },
-            {
-                path: "all-arguments",
-                translationPath: "all_arguments",
-                args: {
-                    list: [{
-                        key: "argString",
-                        type: ApplicationCommandOptionType.String
-                    }, {
-                        key: "argNumber",
-                        type: ApplicationCommandOptionType.Number
-                    }, {
-                        key: "argInteger",
-                        type: ApplicationCommandOptionType.Integer
-                    }, {
-                        key: "argBoolean",
-                        type: ApplicationCommandOptionType.Boolean
-                    }, {
-                        key: "argChannel",
-                        type: ApplicationCommandOptionType.Channel
-                    }, {
-                        key: "argUser",
-                        type: ApplicationCommandOptionType.User
-                    }, {
-                        key: "argRole",
-                        type: ApplicationCommandOptionType.Role
-                    }]
-                },
-                handler: (_: any, {
-                    argString,
-                    argNumber,
-                    argInteger,
-                    argBoolean,
-                    argChannel,
-                    argUser,
-                    argRole
-                }: any) => `${argString} ${argNumber} ${argInteger} ${argBoolean} ${argChannel.id} ${argUser.id} ${argRole.id}`,
-                subcommands: new Map()
-            },
-            {
-                path: "last-arg-as-extras",
-                translationPath: "last_arg_as_extras",
-                args: {
-                    list: [{
-                        key: "firstArg",
-                        name: "first-arg",
-                        type: ApplicationCommandOptionType.String
-                    }, {
-                        key: "lastArg",
-                        name: "last-arg",
-                        type: ApplicationCommandOptionType.String
-                    }],
-                    lastArgAsExtras: true
-                },
-                handler: (_: any, {
-                    firstArg,
-                    lastArg
-                }: any) => `${firstArg} ${lastArg.join(",")}`,
-                subcommands: new Map()
-            },
-            {
-                path: "normal",
-                translationPath: "normal",
-                args: { list: [] },
-                handler: () => { },
-                subcommands: new Map()
-            },
-            {
-                path: "auto/slow",
-                translationPath: "auto_slow",
-                args: { list: [] },
-                handler: async () => {
-                    await setTimeout(1500)
-                },
-                subcommands: new Map()
-            },
-            {
-                path: "auto/manually-replied",
-                translationPath: "auto_manually_replied",
-                args: { list: [] },
-                handler: async (msg: CommandMessage) => {
-                    await msg.reply({
-                        content: "YAAY",
-                        ephemeral: false
-                    });
-                },
-                subcommands: new Map()
-            },
-            {
-                path: "auto/rejected",
-                translationPath: "auto_rejected",
-                args: { list: [] },
-                handler: async () => {
-                    throw new Error();
-                },
-                subcommands: new Map()
-            }
-        ] as any;
-
-        return new InteractionHandler(
-            {
-                application: {
-                    commands: {
-                        set: (commands: ApplicationCommandDataResolvable[]) =>
-                            commands.map((command, i) => ({ ...command, id: i.toString() }))
-                    }
-                }
-            } as unknown as Client,
-            {
-                translatorManager: {
-                    fallbackLocale: "en-US",
-                    getTranslator(_: any, base: string) {
-                        // It always translates successfully
-                        return {
-                            translate: (...args: string[]) => `${base}: ${args.join(" ")}`
-                        };
-                    }
-                },
-                commandsById: new Map([
-                    ["1", new Map(commands!.map(command => [command.path, command]))]
-                ] as any) ,
-                createContextMenuCommands: () => [{
-                    id: "2",
-                    handler: () => { }
-                }],
-                get commands() {
-                    return new Map(commands!.map(command => [command.key, command]));
-                },
-                iterateCommands() {
-                    return this.iterateSubcommands(this.commands);
-                },
-                *iterateSubcommands(map: Map<string, Command>) {
-                    for (const command of map.values()) {
-                        yield command;
-                        yield* this.iterateSubcommands(command.subcommands);
-                    }
-                },
-                resolveCommand(path: string) {
-                    return commands?.find(command => command.path === path);
-                },
-                resolveCommandByLocalizedPath(path: string) {
-                    return this.resolveCommand(path);
-                }
-            } as unknown as CommandRegistry,
-            {}
-        )
-    }
-
     describe("Registration of interaction commands", () => {
         it("Filter away non slash commands", async () => {
             const commands = [
@@ -210,7 +14,7 @@ describe(InteractionHandler.name, () => {
                 makeFakeCommand("test2")
             ];
 
-            await createHandler(commands).init();
+            await createHandler(InteractionHandler, commands).init();
 
             assert(!commands[0].interactionCommand?.id && commands[1].interactionCommand?.id);
         });
@@ -241,7 +45,7 @@ describe(InteractionHandler.name, () => {
                 })
             ];
 
-            await createHandler(commands).init();
+            await createHandler(InteractionHandler, commands).init();
 
             assert(commands.every((command, i) => [
                 command.interactionCommand?.id,
@@ -276,6 +80,7 @@ describe(InteractionHandler.name, () => {
 
             const handler = new InteractionHandler(
                 {
+                    on: sinon.stub(),
                     application: {
                         commands: {
                             set: (commands: ApplicationCommandDataResolvable[]) =>
@@ -312,7 +117,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                await assert.rejects(createHandler(commands).init(), /cannot have a handler/);
+                await assert.rejects(createHandler(InteractionHandler, commands).init(), /cannot have a handler/);
             });
 
             it("Command without either subcommands or handler", async () => {
@@ -322,7 +127,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                await assert.rejects(createHandler(commands).init(), /must have a handler/);
+                await assert.rejects(createHandler(InteractionHandler, commands).init(), /must have a handler/);
             });
 
             it("Too many nested commands", async () => {
@@ -342,14 +147,14 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                await assert.rejects(createHandler(commands).init(), /depth was exceeded/);
+                await assert.rejects(createHandler(InteractionHandler, commands).init(), /depth was exceeded/);
             });
         });
     });
 
     describe("Interaction handling", () => {
         it("Ignore non-command interactions", async () => {
-            const handler = await createHandler().init();
+            const handler = await createHandler(InteractionHandler).init();
             await handler.handle({
                 isCommand: () => false
             } as unknown as Interaction);
@@ -359,7 +164,7 @@ describe(InteractionHandler.name, () => {
             async function handleChatInteraction(path: string, overrides?: object) {
                 const parts = path.split("/");
 
-                const handler = await createHandler().init();
+                const handler = await createHandler(InteractionHandler).init();
                 const interaction = merge({
                     command: {
                         id: "1",
@@ -479,7 +284,7 @@ describe(InteractionHandler.name, () => {
 
         describe("Context menu commands", () => {
             async function handleContextMenuInteraction(id: Snowflake, overrides?: object) {
-                const handler = await createHandler().init();
+                const handler = await createHandler(InteractionHandler).init();
                 const interaction = merge({
                     command: { id },
                     options: {

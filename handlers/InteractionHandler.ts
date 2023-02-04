@@ -60,7 +60,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
     }
 
     override async init() {
-        super.init();
+        await super.init();
         if (this.options.registerApplicationCommands)
             await this.registerApplicationCommands();
         return this;

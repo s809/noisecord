@@ -79,13 +79,10 @@ export function checkConditions(
     msg: WithCommandContext,
     source: Command | CommandCondition[]
 ): CommandConditionCheckResult {
-    let conditions;
-    if ((source as Command).conditions)
-        conditions = (source as Command).conditions;
-    else
-        conditions = source as CommandCondition[];
+    if (!Array.isArray(source))
+        source = source.conditions;
     
-    return conditions
+    return source
         .map(condition => checkCondition(msg, condition))
         .filter(result => result)[0] ?? null;
 }

@@ -4,10 +4,15 @@ import { checkConditions } from "../conditions";
 import { Command, CommandHandler, ParsedArguments } from "../definitions";
 import { MessageCommandMessage } from "../messageTypes/MessageCommandMessage";
 import { Translator } from "../Translator";
-import { ArrayElement, parseChannelMention, parseRoleMention, parseUserMention } from "../util";
+import { parseChannelMention, parseRoleMention, parseUserMention } from "../util";
 import { ArgumentParseError, CommandResultError } from "./errors";
 import { HandlerOptions } from "./HandlerOptions";
 import { EventHandler } from "./EventHandler";
+import { IterableElement } from "type-fest";
+
+export const loadingEmoji = "🔄";
+export const successEmoji = "✅";
+export const failureEmoji = "❌";
 
 export interface MessageHandlerOptions extends HandlerOptions {
     /**
@@ -24,7 +29,7 @@ export interface MessageHandlerOptions extends HandlerOptions {
      * Allows specific users to execute commands regardless of their permissions. \
      * A function can be passed if there's a need for custom processing.
      */
-    ignorePermissionsFor: Snowflake | Snowflake[] | ((msg: Message) => Awaitable<boolean>);
+    ignorePermissionsFor?: Snowflake | Snowflake[] | ((msg: Message) => Awaitable<boolean>);
 };
 
 interface ConvertedOptions extends Required<HandlerOptions> {
@@ -49,22 +54,24 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
                     return msg.author.id === options.ignorePermissionsFor;
                 if (Array.isArray(options.ignorePermissionsFor))
                     return options.ignorePermissionsFor.includes(msg.author.id);
-                return options.ignorePermissionsFor(msg);
+                if (options.ignorePermissionsFor)
+                    return options.ignorePermissionsFor(msg);
+                return false;
             }
         }, {
             async onSlowCommand(msg: MessageCommandMessage) {
-                await msg.message.react("🔄").catch(() => { });
+                await msg.message.react(loadingEmoji).catch(() => { });
             },
             async onSuccess(msg: MessageCommandMessage) {
                 await Promise.allSettled([
-                    msg.message.reactions.resolve("🔄")?.users.remove(),
-                    msg.message.react("✅")
+                    msg.message.reactions.resolve(loadingEmoji)?.users.remove(),
+                    msg.message.react(successEmoji)
                 ]);
             },
             async onFailure(msg: MessageCommandMessage, e) {
                 await Promise.allSettled([
-                    msg.message.reactions.resolve("🔄")?.users.remove(),
-                    msg.message.react("❌"),
+                    msg.message.reactions.resolve(loadingEmoji)?.users.remove(),
+                    msg.message.react(failureEmoji),
                     msg.reply(e instanceof CommandResultError
                         ? e.message
                         : String(e.stack))
@@ -79,11 +86,12 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
         const prefix = await this.options.getPrefix(msg);
         if (!msg.content.startsWith(prefix)) return;
 
-        const parts = this.splitByWhitespace(msg.content.slice(prefix.length));
-
         const translator = await this.translatorManager.getTranslator(msg, "command_processor");
+
+        const parts = this.splitByWhitespace(msg.content.slice(prefix.length));
         const command = this.commandRegistry.resolveCommandByLocalizedPath(parts, translator);
         if (!command || !command.handler) return;
+        parts.splice(0, command.path.split("/").length);
 
         if (!(await this.checkCommandPermissions(msg, command)))
             return;
@@ -113,15 +121,13 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
     }
 
     private async checkCommandPermissions(msg: Message, command: Command): Promise<boolean> {
-        const shouldIgnorePermissions = await this.options.shouldIgnorePermissions(msg);
-
         // Owner only check
         if (command.ownerOnly)
-            return shouldIgnorePermissions;
+            return this.options.shouldIgnorePermissions(msg);
 
-        // For DMs: check if DMs were not disallowed explicitly
+        // For DMs: check if DMs are allowed
         if (!msg.inGuild())
-            return command.allowDMs !== false;
+            return command.allowDMs;
 
         // For guilds: check permissions
         const requiredPermissions = new PermissionsBitField(command.defaultMemberPermissions ?? [])
@@ -167,7 +173,7 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
             allowed &&= allowedInChannel;
         }
 
-        return allowed || shouldIgnorePermissions;
+        return allowed || this.options.shouldIgnorePermissions(msg);
     }
 
     private async parseArguments(parts: string[], command: Command, guild: Guild | null, translator: Translator): Promise<ParsedArguments> {
@@ -178,7 +184,7 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
         }
 
         // Combined for numeric & integer
-        const parseNumberValue = (input: string, arg: ArrayElement<NonNullable<Command>["args"]["list"]>, check: (x: number) => boolean) => {
+        const parseNumberValue = (input: string, arg: IterableElement<NonNullable<Command>["args"]["list"]>, check: (x: number) => boolean) => {
             const value = parseInt(input);
             const arga = arg as ApplicationCommandNumericOptionData;
 
@@ -210,7 +216,7 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
         }
 
         const argsObj = {} as Parameters<CommandHandler>["1"];
-        const argToGetter = new Map<ApplicationCommandOptionType, (value: string, arg: ArrayElement<NonNullable<Command>["args"]["list"]>) => any>([
+        const argToGetter = new Map<ApplicationCommandOptionType, (value: string, arg: IterableElement<NonNullable<Command>["args"]["list"]>) => any>([
             [ApplicationCommandOptionType.String, (input, arg) => {
                 const arga = arg as ApplicationCommandStringOptionData;
 

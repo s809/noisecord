@@ -3,10 +3,12 @@
  */
 
 import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
-import { ArrayElement, DistributiveOmit, Overwrite } from "./util";
+import { DistributiveOmit } from "./util";
 import { CommandCondition } from "./conditions";
 import { CommandMessage } from "./messageTypes/CommandMessage";
 import { Translator } from "./Translator";
+import { IterableElement, Merge } from "type-fest";
+import { SimpleMerge } from "type-fest/source/merge";
 
 export const textChannels = [
     ChannelType.GuildAnnouncement,
@@ -25,7 +27,7 @@ export interface CommandDefinition {
     interactionCommand?: boolean;
 
     args?: (DistributiveOmit<
-        ArrayElement<NonNullable<ApplicationCommandSubCommandData["options"]>>,
+        IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>,
         "name" | "nameLocalizations" | "description" | "descriptionLocalizations" |
         "choices"
     > & {
@@ -40,7 +42,7 @@ export interface CommandDefinition {
     alwaysReactOnSuccess?: boolean;
 }
 
-export type Command = Overwrite<Required<CommandDefinition>, {
+export type Command = SimpleMerge<Required<CommandDefinition>, {
     path: string;
     key: string;
     translationPath: string;
@@ -62,7 +64,7 @@ export type Command = Overwrite<Required<CommandDefinition>, {
         min: number;
         max: number;
         stringTranslations: LocalizationMap;
-        list: (ArrayElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
+        list: (IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
             key: string;
         })[],
         lastArgAsExtras: boolean;
