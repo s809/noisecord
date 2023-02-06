@@ -3,7 +3,7 @@ import { GuildMember, Message, User } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
-import { MessageCreateHandler, successEmoji } from "./MessageCreateHandler";
+import { MessageCreateHandler, MessageHandlerOptions, successEmoji } from "./MessageCreateHandler";
 import { createHandler } from "./testData/util";
 
 describe(MessageCreateHandler.name, () => {
@@ -16,6 +16,15 @@ describe(MessageCreateHandler.name, () => {
         }>>
     }>>>;
 
+    let handlerOptions: MessageHandlerOptions;
+
+    beforeEach(() => {
+        handlerOptions = {
+            prefix: "!",
+            ignorePermissionsFor: "1001"
+        };
+    });
+
     function createMessage(overrides: MessageOverrides) {
         return merge({
             author: {
@@ -24,6 +33,11 @@ describe(MessageCreateHandler.name, () => {
             webhookId: null,
             content: "",
             inGuild: () => true,
+            member: {
+                permissions: {
+                    has: () => true
+                }
+            },
             channel: {
                 send: sinon.stub()
             },
@@ -35,10 +49,7 @@ describe(MessageCreateHandler.name, () => {
     }
 
     async function handleCommand(contentOrOverrides: string | MessageOverrides) {
-        const handler = await createHandler(MessageCreateHandler, undefined, {
-            prefix: "!",
-            ignorePermissionsFor: "1001"
-        }).init();
+        const handler = await createHandler(MessageCreateHandler, undefined, handlerOptions).init();
         const message = createMessage(typeof contentOrOverrides === "object"
             ? contentOrOverrides
             : {
@@ -74,9 +85,69 @@ describe(MessageCreateHandler.name, () => {
             webhookId: "0"
         }) as unknown as Message);
     });
+    
+    describe("Prefix handling", () => {
+        describe("String", () => {
+            it("Without prefix", () => shouldIgnore("normal"));
+            it("With prefix", () => shouldSucceed("!normal"));
+        });
 
+        describe("Map", () => {
+            beforeEach(() => {
+                handlerOptions.prefix = new Map([
+                    [null, "#"],
+                    ["1002", "?"],
+                    ["1003", "@"]
+                ]);
+            });
+
+            it("No prefix", () => shouldIgnore("normal"));
+
+            describe("Global", () => {
+                it("Accept", () => shouldSucceed({
+                    content: "#normal"
+                }));
+            });
+
+            describe("Author custom", () => {
+                it("Accept", () => shouldSucceed({
+                    content: "?normal",
+                    author: {
+                        id: "1002"
+                    }
+                }));
+                
+                it("Ignore global", () => shouldIgnore({
+                    content: "#normal",
+                    author: {
+                        id: "1002"
+                    }
+                }));
+            });
+
+            describe("Guild custom", () => {
+                it("Accept", () => shouldSucceed({
+                    content: "@normal",
+                    author: {
+                        id: "1002"
+                    },
+                    guildId: "1003"
+                }));
+
+                it("Ignore global and author custom", () => shouldIgnore({
+                    content: "?normal",
+                    author: {
+                        id: "1002"
+                    },
+                    guildId: "1003"
+                }));
+            })
+        });
+        
+        it("Custom function", async () => { });
+    })
+    
     describe("Ignore non-commands", () => {
-        it("Not starting with prefix", () => shouldIgnore("test"));
         it("Unknown command", () => shouldIgnore("!unknown-command"));
         it("No handler", () => shouldIgnore("!no-handler"));
     });
@@ -135,5 +206,6 @@ describe(MessageCreateHandler.name, () => {
                 }
             }));
         });
-    });
+   
+ });
 });

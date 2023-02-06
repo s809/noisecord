@@ -61,7 +61,7 @@ export abstract class EventHandler<Args extends any[], TConvertedOptions extends
             ]);
 
             if (!finished) {
-                this.options.onSlowCommand(commandMessage);
+                await this.options.onSlowCommand(commandMessage);
                 result = await promise;
             }
         }
@@ -70,12 +70,12 @@ export abstract class EventHandler<Args extends any[], TConvertedOptions extends
         }
 
         if (result === undefined) {
-            this.options.onSuccess(commandMessage);
+            await this.options.onSuccess(commandMessage);
         } else {
             const errorPath = `errors.${result}`;
             const translatedError = translator.translate(errorPath);
 
-            this.options.onFailure(commandMessage, new CommandResultError(translatedError !== errorPath
+            await this.options.onFailure(commandMessage, new CommandResultError(translatedError !== errorPath
                 ? translatedError
                 : result));
         }

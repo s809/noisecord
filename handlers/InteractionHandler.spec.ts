@@ -184,15 +184,24 @@ describe(InteractionHandler.name, () => {
                     isCommand: () => true,
                     isChatInputCommand: () => true,
                     reply: sinon.stub()
-                        .onFirstCall().resolves()
+                        .onFirstCall().resolves({
+                            flags: new MessageFlagsBitField()
+                        })
                         .onSecondCall().rejects(),
                     deferReply: sinon.stub()
                         .onFirstCall().resolves({
-                        flags: new MessageFlagsBitField(MessageFlags.Loading)
-                    })
+                            flags: new MessageFlagsBitField(MessageFlags.Loading)
+                        })
                         .onSecondCall().rejects(),
                     followUp: sinon.stub()
-                        .onFirstCall().resolves()
+                        .onFirstCall().resolves({
+                            flags: new MessageFlagsBitField()
+                        })
+                        .onSecondCall().rejects(),
+                    editReply: sinon.stub()
+                        .onFirstCall().resolves({
+                            flags: new MessageFlagsBitField()
+                        })
                         .onSecondCall().rejects(),
                 }, overrides);
                 await handler.handle(interaction as unknown as Interaction);

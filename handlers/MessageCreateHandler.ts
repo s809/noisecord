@@ -24,7 +24,7 @@ export interface MessageHandlerOptions extends HandlerOptions {
      * 
      * A function can be passed if there's a need for custom processing.
      */
-    prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string>);
+    prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string | null>);
     /**
      * Allows specific users to execute commands regardless of their permissions. \
      * A function can be passed if there's a need for custom processing.
@@ -33,7 +33,7 @@ export interface MessageHandlerOptions extends HandlerOptions {
 };
 
 interface ConvertedOptions extends Required<HandlerOptions> {
-    getPrefix: (msg: Message) => Awaitable<string>;
+    getPrefix: (msg: Message) => Awaitable<string | null>;
     shouldIgnorePermissions: (msg: Message) => Awaitable<boolean>;
 };
 
@@ -44,9 +44,10 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
         super(client, commandRegistry, {
             getPrefix(msg) {
                 if (typeof options.prefix === "string") return options.prefix;
-                if (options.prefix instanceof Map) return options.prefix.get(msg.guildId!)
+                if (options.prefix instanceof Map) return options.prefix.get(msg.guildId ?? "")
                     ?? options.prefix.get(msg.author.id)
-                    ?? "";
+                    ?? options.prefix.get(null)
+                    ?? null;
                 return options.prefix(msg);
             },
             shouldIgnorePermissions(msg) {
@@ -84,7 +85,7 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
         if (msg.author.bot || msg.webhookId) return;
 
         const prefix = await this.options.getPrefix(msg);
-        if (!msg.content.startsWith(prefix)) return;
+        if (!prefix || !msg.content.startsWith(prefix)) return;
 
         const translator = await this.translatorManager.getTranslator(msg, "command_processor");
 
@@ -136,10 +137,11 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
 
         // Interaction command, if registered
         if (command.interactionCommand) {
-            const overwrites = await this.client.application?.commands.permissions.fetch({
+            // TODO avoid doing/cache requests in handler as this can get rate limited very quickly
+            const overwrites = await this.client.application!.commands.permissions.fetch({
                 guild: msg.guild,
                 command: command.interactionCommand.id!
-            }).catch(() => [] as ApplicationCommandPermissions[])!;
+            }).catch(() => [] as ApplicationCommandPermissions[]);
 
             let allowedInChannel = true;
             let rolePosition = -1;
