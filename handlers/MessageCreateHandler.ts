@@ -136,11 +136,11 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
         let allowed = msg.member!.permissions.has(requiredPermissions);
 
         // Interaction command, if registered
-        if (command.interactionCommand) {
-            // TODO avoid doing/cache requests in handler as this can get rate limited very quickly
+        if (command.interactionCommand?.id) {
+            // TODO avoid making/cache requests in handler as this may get rate limited very quickly
             const overwrites = await this.client.application!.commands.permissions.fetch({
                 guild: msg.guild,
-                command: command.interactionCommand.id!
+                command: command.interactionCommand.id
             }).catch(() => [] as ApplicationCommandPermissions[]);
 
             let allowedInChannel = true;

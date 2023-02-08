@@ -121,7 +121,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
         const translator = await this.translatorManager.getTranslator(interaction, "command_processor");
         
         const command = this.commandRegistry.commandsById.get(interaction.command!.id) as ContextMenuCommand;
-        if (!command)
+        if (!command || !command.handler)
             return this.replyUnknownCommand(interaction, translator);
 
         const commandTranslator = await this.translatorManager.getTranslator(interaction, `contextMenuCommands.${command.key}`);
@@ -206,6 +206,9 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
         const commands: ChatInputApplicationCommandData[] = [];
 
         for (const command of this.commandRegistry.iterateCommands()) {
+            if (!command.interactionCommand)
+                continue;
+
             try {
                 if (command.handler && command.subcommands.size)
                     throw new Error("Commands with subcommands cannot have a handler.");
@@ -226,6 +229,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                     dmPermission: command.allowDMs,
                     defaultMemberPermissions: command.defaultMemberPermissions
                 };
+                assert(data.name);
 
                 const pathParts = command.path.split('/');
                 switch (pathParts.length) {

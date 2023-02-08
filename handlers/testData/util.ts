@@ -1,9 +1,34 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry";
 import { Command } from "../../definitions";
 import { CommandMessage } from "../../messageTypes/CommandMessage";
 import { setTimeout } from "timers/promises";
 import sinon from "sinon";
+import { merge } from "lodash-es";
+
+enum _IdConstants {
+    Guild1,
+    Guild2,
+
+    UserBotOwner,
+    UserNone,
+    User1,
+
+    PermissionOverridesNone,
+    PermissionOverridesRoleBasic,
+    PermissionOverridesRoleStacking,
+    PermissionOverridesUserBasic,
+    PermissionOverridesUserOverrideRole,
+
+    Role1,
+    Role2,
+    Role3,
+};
+export const IdConstants: {
+    [K in keyof typeof _IdConstants]: string;
+} = Object.fromEntries(
+    Object.entries(_IdConstants).map(([key, value]) => [key, value.toString()])
+) as any;
 
 export function makeFakeCommand(path: string, {
     usableAsAppCommand: usableAsInteractionCommand,
@@ -45,16 +70,19 @@ export function makeFakeCommand(path: string, {
 }
 
 export function createHandler<T extends new (...args: any) => InstanceType<T>>(constructor: T, commands?: Command[], options: ConstructorParameters<T>[2] = {}) {
+    // Do not use path slashes along with interaction allowing commands
     commands ??= [
-        {
-            path: "no-handler",
-            translationPath: "no_handler",
+        ["normal", {}],
+        ["no-handler", {
             handler: null,
-            subcommands: new Map()
-        },
-        {
-            path: "all-arguments",
-            translationPath: "all_arguments",
+            subcommands: new Map([
+                ["fake", {
+                    handler: () => { },
+                    subcommands: new Map()
+                } as any]
+            ])
+        }],
+        ["all-arguments", {
             args: {
                 list: [{
                     key: "argString",
@@ -87,12 +115,9 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                 argChannel,
                 argUser,
                 argRole
-            }: any) => `${argString} ${argNumber} ${argInteger} ${argBoolean} ${argChannel.id} ${argUser.id} ${argRole.id}`,
-            subcommands: new Map()
-        },
-        {
-            path: "last-arg-as-extras",
-            translationPath: "last_arg_as_extras",
+            }: any) => `${argString} ${argNumber} ${argInteger} ${argBoolean} ${argChannel.id} ${argUser.id} ${argRole.id}`
+        }],
+        ["last-arg-as-extras", {
             args: {
                 list: [{
                     key: "firstArg",
@@ -108,79 +133,82 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             handler: (_: any, {
                 firstArg,
                 lastArg
-            }: any) => `${firstArg} ${lastArg.join(",")}`,
-            subcommands: new Map()
-        },
-        {
-            path: "normal",
-            translationPath: "normal",
-            handler: () => { },
-            allowDMs: true,
-            conditions: [],
-            args: {
-                min: 0,
-                max: 0,
-                list: []
-            },
-            subcommands: new Map()
-        },
-        {
-            path: "auto/slow",
-            translationPath: "auto_slow",
-            args: { list: [] },
+            }: any) => `${firstArg} ${lastArg.join(",")}`
+        }],
+        ["auto/slow", {
             handler: async () => {
                 await setTimeout(1500)
-            },
-            subcommands: new Map()
-        },
-        {
-            path: "auto/manually-replied",
-            translationPath: "auto_manually_replied",
-            args: { list: [] },
+            }
+        }],
+        ["auto/manually-replied", {
             handler: async (msg: CommandMessage) => {
                 await msg.reply({
                     content: "YAAY",
                     ephemeral: false
                 });
-            },
-            subcommands: new Map()
-        },
-        {
-            path: "auto/rejected",
-            translationPath: "auto_rejected",
-            args: { list: [] },
+            }
+        }],
+        ["auto/rejected", {
             handler: async () => {
                 throw new Error();
-            },
-            subcommands: new Map()
+            }
+        }],
+        ["owner-only", {
+            ownerOnly: true
+        }],
+        ["dm-no", {
+            allowDMs: false
+        }],
+        ["permission-overrides-none", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesNone
+            }
+        }],
+        ["permission-overrides-role-basic", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesRoleBasic
+            }
+        }],
+        ["permission-overrides-role-stacking", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesRoleStacking
+            }
+        }],
+        ["permission-overrides-user-basic", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesUserBasic
+            }
+        }],
+        ["permission-overrides-user-override-role", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesUserOverrideRole
+            }
+        }],
+    ].map(([path, overrides]: [string, Partial<Command>]) => merge({
+        path,
+        key: path.split("/").reverse()[0],
+        translationPath: path.replaceAll(/[^a-z_]/g, "_"),
+        nameTranslations: {
+            ["en-US"]: path
         },
-        {
-            path: "owner-only",
-            translationPath: "owner_only",
-            handler: () => { },
-            ownerOnly: true,
-            conditions: [],
-            args: {
-                min: 0,
-                max: 0,
-                list: []
-            },
-            subcommands: new Map()
+        descriptionTranslations: {},
+        usageTranslations: {},
+        handler: () => { },
+        allowDMs: true,
+        ownerOnly: false,
+        defaultMemberPermissions: [],
+        interactionCommand: null,
+        conditions: [],
+        args: {
+            min: 0,
+            max: 0,
+            stringTranslations: {},
+            list: [],
+            lastArgAsExtras: false
         },
-        {
-            path: "dm-no",
-            translationPath: "dm_no",
-            handler: () => { },
-            allowDMs: false,
-            conditions: [],
-            args: {
-                min: 0,
-                max: 0,
-                list: []
-            },
-            subcommands: new Map()
-        },
-    ] as any;
+        alwaysReactOnSuccess: true,
+        subcommands: new Map()
+    }, overrides));
 
     return new constructor(
         {
@@ -188,7 +216,52 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             application: {
                 commands: {
                     set: (commands: ApplicationCommandDataResolvable[]) =>
-                        commands.map((command, i) => ({ ...command, id: i.toString() }))
+                        commands.map((command, i) => ({ ...command, id: i.toString() })),
+                    
+                    permissions: {
+                        fetch: async (
+                            { guild: { id: guildId }, command: commandId }:
+                            { guild: { id: string }, command: Snowflake }) => {
+                            switch (commandId) {
+                                case IdConstants.PermissionOverridesNone:
+                                    throw new Error();
+                                case IdConstants.PermissionOverridesRoleBasic:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.Role,
+                                        id: IdConstants.Role1,
+                                        permission: guildId === IdConstants.Guild1
+                                    }];
+                                case IdConstants.PermissionOverridesRoleStacking:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.Role,
+                                        id: IdConstants.Role1,
+                                        permission: true
+                                    }, {
+                                        type: ApplicationCommandPermissionType.Role,
+                                        id: IdConstants.Role2,
+                                        permission: false
+                                    }];
+                                case IdConstants.PermissionOverridesUserBasic:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.User,
+                                        id: IdConstants.User1,
+                                        permission: guildId === IdConstants.Guild1
+                                    }];
+                                case IdConstants.PermissionOverridesUserOverrideRole:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.Role,
+                                        id: IdConstants.Role1,
+                                        permission: true
+                                    }, {
+                                        type: ApplicationCommandPermissionType.User,
+                                        id: IdConstants.User1,
+                                        permission: false
+                                    }]
+                                default:
+                                    throw new Error();
+                            }
+                        }
+                    }
                 }
             }
         } as unknown as Client,

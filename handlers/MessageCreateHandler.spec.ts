@@ -1,10 +1,10 @@
 import assert from "assert";
-import { GuildMember, Message, User } from "discord.js";
+import { Guild, GuildMember, Message, User } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
 import { MessageCreateHandler, MessageHandlerOptions, successEmoji } from "./MessageCreateHandler";
-import { createHandler } from "./testData/util";
+import { createHandler, IdConstants } from "./testData/util";
 
 describe(MessageCreateHandler.name, () => {
     type Clean<T> = Omit<T, "toString" | "valueOf">;
@@ -13,7 +13,8 @@ describe(MessageCreateHandler.name, () => {
         author: Clean<User>,
         member: Clean<Merge<GuildMember, {
             permissions: Clean<GuildMember["permissions"]>
-        }>>
+        }>>,
+        guild: Clean<Guild>,
     }>>>;
 
     let handlerOptions: MessageHandlerOptions;
@@ -21,14 +22,15 @@ describe(MessageCreateHandler.name, () => {
     beforeEach(() => {
         handlerOptions = {
             prefix: "!",
-            ignorePermissionsFor: "1001"
+            ignorePermissionsFor: IdConstants.UserBotOwner
         };
     });
 
     function createMessage(overrides: MessageOverrides) {
         return merge({
             author: {
-                bot: false
+                bot: false,
+                id: IdConstants.UserNone
             },
             webhookId: null,
             content: "",
@@ -36,6 +38,15 @@ describe(MessageCreateHandler.name, () => {
             member: {
                 permissions: {
                     has: () => true
+                },
+                roles: {
+                    resolve(id: string) {
+                        return new Map<string, { position: number }>([
+                            [IdConstants.Role1, { position: 0 }],
+                            [IdConstants.Role2, { position: 1 }],
+                            [IdConstants.Role3, { position: 2 }]
+                        ]).get(id) ?? null;
+                    }
                 }
             },
             channel: {
@@ -96,8 +107,8 @@ describe(MessageCreateHandler.name, () => {
             beforeEach(() => {
                 handlerOptions.prefix = new Map([
                     [null, "#"],
-                    ["1002", "?"],
-                    ["1003", "@"]
+                    [IdConstants.User1, "?"],
+                    [IdConstants.Guild1, "@"]
                 ]);
             });
 
@@ -113,14 +124,14 @@ describe(MessageCreateHandler.name, () => {
                 it("Accept", () => shouldSucceed({
                     content: "?normal",
                     author: {
-                        id: "1002"
+                        id: IdConstants.User1
                     }
                 }));
                 
                 it("Ignore global", () => shouldIgnore({
                     content: "#normal",
                     author: {
-                        id: "1002"
+                        id: IdConstants.User1
                     }
                 }));
             });
@@ -129,22 +140,33 @@ describe(MessageCreateHandler.name, () => {
                 it("Accept", () => shouldSucceed({
                     content: "@normal",
                     author: {
-                        id: "1002"
+                        id: IdConstants.User1
                     },
-                    guildId: "1003"
+                    guildId: IdConstants.Guild1
                 }));
 
-                it("Ignore global and author custom", () => shouldIgnore({
+                it("Ignore global", () => shouldIgnore({
+                    content: "#normal",
+                    author: {
+                        id: IdConstants.User1
+                    },
+                    guildId: IdConstants.Guild1
+                }));
+
+                it("Ignore author custom", () => shouldIgnore({
                     content: "?normal",
                     author: {
-                        id: "1002"
+                        id: IdConstants.User1
                     },
-                    guildId: "1003"
+                    guildId: IdConstants.Guild1
                 }));
             })
         });
         
-        it("Custom function", async () => { });
+        it("Custom function", async () => {
+            handlerOptions.prefix = msg => msg.content.startsWith("!!") ? "!!" : null;
+            await shouldSucceed("!!normal");
+        });
     })
     
     describe("Ignore non-commands", () => {
@@ -158,7 +180,7 @@ describe(MessageCreateHandler.name, () => {
             it("Bot owner", () => shouldSucceed({
                 content: "!owner-only",
                 author: {
-                    id: "1001"
+                    id: IdConstants.UserBotOwner
                 }
             }));
         });
@@ -197,7 +219,7 @@ describe(MessageCreateHandler.name, () => {
             it("Always allow for owner", () => shouldSucceed({
                 content: "!normal",
                 author: {
-                    id: "1001"
+                    id: IdConstants.UserBotOwner
                 },
                 member: {
                     permissions: {
@@ -205,7 +227,70 @@ describe(MessageCreateHandler.name, () => {
                     }
                 }
             }));
+
+            describe("Permission overrides", () => {
+                it("No overrides", () => shouldSucceed({
+                    content: "!permission-overrides-none",
+                    guild: {
+                        id: IdConstants.Guild1
+                    }
+                }));
+
+                describe("Role", () => {
+                    it("Allow when allowed", () => shouldSucceed({
+                        content: "!permission-overrides-role-basic",
+                        guild: {
+                            id: IdConstants.Guild1
+                        }
+                    }));
+
+                    it("Ignore when disallowed", () => shouldIgnore({
+                        content: "!permission-overrides-role-basic",
+                        guild: {
+                            id: IdConstants.Guild2
+                        }
+                    }));
+
+                    it("Upper roles override lower", () => shouldIgnore({
+                        content: "!permission-overrides-role-stacking",
+                        guild: {
+                            id: IdConstants.Guild1
+                        }
+                    }));
+                });
+
+                describe("User", () => {
+                    it("Allow when allowed", () => shouldSucceed({
+                        content: "!permission-overrides-user-basic",
+                        guild: {
+                            id: IdConstants.Guild1
+                        },
+                        author: {
+                            id: IdConstants.User1
+                        }
+                    }));
+
+                    it("Ignore when disallowed", () => shouldIgnore({
+                        content: "!permission-overrides-user-basic",
+                        guild: {
+                            id: IdConstants.Guild2
+                        },
+                        author: {
+                            id: IdConstants.User1
+                        }
+                    }));
+
+                    it("Override role permissions", () => shouldIgnore({
+                        content: "!permission-overrides-user-override-role",
+                        guild: {
+                            id: IdConstants.Guild1
+                        },
+                        author: {
+                            id: IdConstants.User1
+                        }
+                    }));
+                })
+            });
         });
-   
- });
+    });
 });
