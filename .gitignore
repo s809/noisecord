@@ -10,5 +10,5 @@ build/
 # Configuration file
 config.json
 
-# Jest coverage reports
+# Mocha coverage reports
 coverage/

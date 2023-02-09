@@ -156,7 +156,7 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
                     case ApplicationCommandPermissionType.User:
                         if (overwrite.id === msg.author.id) {
                             allowed = overwrite.permission;
-                            break checkOverwrites;
+                            rolePosition = Infinity;
                         }
                         break;
                     case ApplicationCommandPermissionType.Channel:

@@ -1,5 +1,5 @@
 import assert from "assert";
-import { Guild, GuildMember, Message, User } from "discord.js";
+import { Guild, GuildMember, Message, TextBasedChannel, User } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
@@ -14,7 +14,8 @@ describe(MessageCreateHandler.name, () => {
         member: Clean<Merge<GuildMember, {
             permissions: Clean<GuildMember["permissions"]>
         }>>,
-        guild: Clean<Guild>,
+        guild: Clean<Guild> | null,
+        channel: Clean<TextBasedChannel>
     }>>>;
 
     let handlerOptions: MessageHandlerOptions;
@@ -34,7 +35,15 @@ describe(MessageCreateHandler.name, () => {
             },
             webhookId: null,
             content: "",
-            inGuild: () => true,
+            inGuild() {
+                return !!this.guildId;
+            },
+            guild: {
+                id: IdConstants.ChannelNone
+            },
+            get guildId() {
+                return this.guild?.id ?? null;
+            },
             member: {
                 permissions: {
                     has: () => true
@@ -50,7 +59,11 @@ describe(MessageCreateHandler.name, () => {
                 }
             },
             channel: {
+                id: IdConstants.ChannelNone,
                 send: sinon.stub()
+            },
+            get channelId() {
+                return this.channel.id;
             },
             react: sinon.stub(),
             reactions: {
@@ -70,17 +83,18 @@ describe(MessageCreateHandler.name, () => {
         return message;
     }
 
+    async function shouldSucceed(contentOrOverrides: string | MessageOverrides) {
+        const message = await handleCommand(contentOrOverrides);
+        assert(message.channel.send.notCalled);
+        assert(message.react.calledOnceWith(successEmoji));
+    }
+
     async function shouldIgnore(contentOrOverrides: string | MessageOverrides) {
         const message = await handleCommand(contentOrOverrides);
         assert(message.channel.send.notCalled);
         assert(message.react.notCalled);
     }
 
-    async function shouldSucceed(contentOrOverrides: string | MessageOverrides) {
-        const message = await handleCommand(contentOrOverrides);
-        assert(message.channel.send.notCalled);
-        assert(message.react.calledOnceWith(successEmoji));
-    }
 
     it("Ignore bots and webhooks", async () => {
         const handler = await createHandler(MessageCreateHandler).init();
@@ -142,7 +156,9 @@ describe(MessageCreateHandler.name, () => {
                     author: {
                         id: IdConstants.User1
                     },
-                    guildId: IdConstants.Guild1
+                    guild: {
+                        id: IdConstants.Guild1
+                    }
                 }));
 
                 it("Ignore global", () => shouldIgnore({
@@ -150,7 +166,9 @@ describe(MessageCreateHandler.name, () => {
                     author: {
                         id: IdConstants.User1
                     },
-                    guildId: IdConstants.Guild1
+                    guild: {
+                        id: IdConstants.Guild1
+                    }
                 }));
 
                 it("Ignore author custom", () => shouldIgnore({
@@ -158,7 +176,9 @@ describe(MessageCreateHandler.name, () => {
                     author: {
                         id: IdConstants.User1
                     },
-                    guildId: IdConstants.Guild1
+                    guild: {
+                        id: IdConstants.Guild1
+                    }
                 }));
             })
         });
@@ -188,12 +208,12 @@ describe(MessageCreateHandler.name, () => {
         describe("DM behavior", () => {
             it("DM only", () => shouldIgnore({
                 content: "!dm-no",
-                inGuild: () => false
+                guild: null
             }));
 
             it("Not DM only", () => shouldSucceed({
                 content: "!normal",
-                inGuild: () => false
+                guild: null
             }));
         });
 
@@ -290,7 +310,95 @@ describe(MessageCreateHandler.name, () => {
                         }
                     }));
                 })
+
+                describe("Channel", () => {
+                    it("Allow when allowed", () => shouldSucceed({
+                        content: "!permission-overrides-channel-basic",
+                        guild: {
+                            id: IdConstants.Guild1
+                        }, 
+                        channel: {
+                            id: IdConstants.Channel1
+                        }
+                    }));
+                    
+                    it("Ignore when disallowed", () => shouldIgnore({
+                        content: "!permission-overrides-channel-basic",
+                        guild: {
+                            id: IdConstants.Guild2
+                        },
+                        channel: {
+                            id: IdConstants.Channel1
+                        }
+                    }));
+
+                    it("All channels", () => shouldIgnore({
+                        content: "!permission-overrides-channel-all-channels",
+                        guild: {
+                            id: IdConstants.Guild1
+                        },
+                        channel: {
+                            id: IdConstants.Channel1
+                        }
+                    }));
+
+                    it("Override 'All channels'", () => shouldIgnore({
+                        content: "!permission-overrides-channel-override-all-channels",
+                        guild: {
+                            id: IdConstants.Guild1
+                        },
+                        channel: {
+                            id: IdConstants.Channel1
+                        }
+                    }));
+
+                    it("Override role permissions", () => shouldIgnore({
+                        content: "!permission-overrides-channel-override-role",
+                        guild: {
+                            id: IdConstants.Guild1
+                        },
+                        channel: {
+                            id: IdConstants.Channel1
+                        }
+                    }));
+
+                    it("Override user permissions", () => shouldIgnore({
+                        content: "!permission-overrides-channel-override-user",
+                        guild: {
+                            id: IdConstants.Guild1
+                        },
+                        channel: {
+                            id: IdConstants.Channel1
+                        },
+                        author: {
+                            id: IdConstants.User1
+                        }
+                    }));
+                });
+
+                it("Ignore permissions for owner", () => shouldSucceed({
+                    content: "!permission-overrides-allow-owner",
+                    guild: {
+                        id: IdConstants.Guild1
+                    },
+                    channel: {
+                        id: IdConstants.Channel1
+                    },
+                    author: {
+                        id: IdConstants.UserBotOwner
+                    }
+                }));
             });
+        });
+    });
+
+    describe("Check command conditions", () => {
+        it("Allow when allowed", () => shouldSucceed({
+
+        }));
+
+        it("Show error when disallowed", () => {
+
         });
     });
 });

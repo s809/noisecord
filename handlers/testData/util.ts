@@ -7,8 +7,12 @@ import sinon from "sinon";
 import { merge } from "lodash-es";
 
 enum _IdConstants {
+    GuildNone,
     Guild1,
     Guild2,
+
+    ChannelNone,
+    Channel1,
 
     UserBotOwner,
     UserNone,
@@ -19,13 +23,19 @@ enum _IdConstants {
     PermissionOverridesRoleStacking,
     PermissionOverridesUserBasic,
     PermissionOverridesUserOverrideRole,
+    PermissionOverridesChannelBasic,
+    PermissionOverridesChannelAllChannels,
+    PermissionOverridesChannelOverrideAllChannels,
+    PermissionOverridesChannelOverrideRole,
+    PermissionOverridesChannelOverrideUser,
+    PermissionOverridesAllowOwner,
 
     Role1,
     Role2,
     Role3,
 };
 export const IdConstants: {
-    [K in keyof typeof _IdConstants]: string;
+    [K in keyof typeof _IdConstants]: `${typeof _IdConstants[K]}`;
 } = Object.fromEntries(
     Object.entries(_IdConstants).map(([key, value]) => [key, value.toString()])
 ) as any;
@@ -184,6 +194,36 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                 id: IdConstants.PermissionOverridesUserOverrideRole
             }
         }],
+        ["permission-overrides-channel-basic", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesChannelBasic
+            }
+        }],
+        ["permission-overrides-channel-all-channels", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesChannelAllChannels
+            }
+        }],
+        ["permission-overrides-channel-override-all-channels", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesChannelOverrideAllChannels
+            }
+        }],
+        ["permission-overrides-channel-override-role", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesChannelOverrideRole
+            }
+        }],
+        ["permission-overrides-channel-override-user", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesChannelOverrideUser
+            }
+        }],
+        ["permission-overrides-allow-owner", {
+            interactionCommand: {
+                id: IdConstants.PermissionOverridesAllowOwner
+            }
+        }],
     ].map(([path, overrides]: [string, Partial<Command>]) => merge({
         path,
         key: path.split("/").reverse()[0],
@@ -225,6 +265,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                             switch (commandId) {
                                 case IdConstants.PermissionOverridesNone:
                                     throw new Error();
+                                
                                 case IdConstants.PermissionOverridesRoleBasic:
                                     return [{
                                         type: ApplicationCommandPermissionType.Role,
@@ -241,6 +282,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                                         id: IdConstants.Role2,
                                         permission: false
                                     }];
+                                
                                 case IdConstants.PermissionOverridesUserBasic:
                                     return [{
                                         type: ApplicationCommandPermissionType.User,
@@ -256,7 +298,66 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                                         type: ApplicationCommandPermissionType.User,
                                         id: IdConstants.User1,
                                         permission: false
-                                    }]
+                                    }];
+                                
+                                case IdConstants.PermissionOverridesChannelBasic:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.Channel,
+                                        id: IdConstants.Channel1,
+                                        permission: guildId === IdConstants.Guild1
+                                    }];
+                                case IdConstants.PermissionOverridesChannelAllChannels:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.Channel,
+                                        id: `${_IdConstants.Guild1 - 1}`,
+                                        permission: false
+                                    }];
+                                case IdConstants.PermissionOverridesChannelOverrideAllChannels:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.Channel,
+                                        id: `${_IdConstants.Guild1 - 1}`,
+                                        permission: true
+                                    }, {
+                                        type: ApplicationCommandPermissionType.Channel,
+                                        id: IdConstants.Channel1,
+                                        permission: false
+                                    }];
+                                case IdConstants.PermissionOverridesChannelOverrideRole:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.Role,
+                                        id: IdConstants.Role1,
+                                        permission: true
+                                    }, {
+                                        type: ApplicationCommandPermissionType.Channel,
+                                        id: IdConstants.Channel1,
+                                        permission: false
+                                    }];
+                                case IdConstants.PermissionOverridesChannelOverrideUser:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.User,
+                                        id: IdConstants.User1,
+                                        permission: true
+                                    }, {
+                                        type: ApplicationCommandPermissionType.Channel,
+                                        id: IdConstants.Channel1,
+                                        permission: false
+                                    }];
+                                
+                                case IdConstants.PermissionOverridesAllowOwner:
+                                    return [{
+                                        type: ApplicationCommandPermissionType.Role,
+                                        id: IdConstants.Role1,
+                                        permission: false
+                                    }, {
+                                        type: ApplicationCommandPermissionType.User,
+                                        id: IdConstants.UserBotOwner,
+                                        permission: false
+                                    }, {
+                                        type: ApplicationCommandPermissionType.Channel,
+                                        id: IdConstants.Channel1,
+                                        permission: false
+                                    }];
+                                
                                 default:
                                     throw new Error();
                             }

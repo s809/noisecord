@@ -3,6 +3,9 @@
     "ts"
   ],
   "spec": "**/*.spec.ts",
+  "exclude": [
+    "**/node_modules/**"
+  ],
   "node-option": [
     "experimental-specifier-resolution=node",
     "loader=ts-node/esm"
