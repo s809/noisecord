@@ -1,4 +1,4 @@
-import { assert } from "console";
+import { expect } from "chai";
 import { BitField, CommandInteraction, MessageFlags } from "discord.js";
 import sinon from "sinon";
 import { Command } from "../definitions";
@@ -27,8 +27,8 @@ describe(InteractionCommandMessage.name, () => {
             };
             const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
             await commandMessage.completeSilently();
-            assert(commandInteraction.deferReply.calledOnce);
-            assert(commandInteraction.deleteReply.calledOnce);
+            expect(commandInteraction.deferReply).calledOnce;
+            expect(commandInteraction.deleteReply).calledOnce;
         });
 
         it("Ignore delete rejection", async () => {
@@ -40,8 +40,8 @@ describe(InteractionCommandMessage.name, () => {
             };
             const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
             await commandMessage.completeSilently();
-            assert(commandInteraction.deferReply.calledOnce);
-            assert(commandInteraction.deleteReply.calledOnce);
+            expect(commandInteraction.deferReply).calledOnce;
+            expect(commandInteraction.deleteReply).calledOnce;
         });
     });
 
@@ -53,7 +53,7 @@ describe(InteractionCommandMessage.name, () => {
             const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
             await commandMessage.deferReply();
             await commandMessage.deferReply(false);
-            sinon.assert.calledOnceWithExactly(commandInteraction.deferReply, {
+            expect(commandInteraction.deferReply).calledOnceWithExactly({
                 ephemeral: true,
                 fetchReply: true
             });
@@ -67,7 +67,7 @@ describe(InteractionCommandMessage.name, () => {
             };
             const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
             await commandMessage.reply("test");
-            sinon.assert.calledOnceWithExactly(commandInteraction.reply, {
+            expect(commandInteraction.reply).calledOnceWithExactly({
                 ephemeral: true,
                 content: "test",
                 fetchReply: true
@@ -84,7 +84,7 @@ describe(InteractionCommandMessage.name, () => {
                 content: "test",
                 fetchReply: false
             });
-            sinon.assert.calledOnceWithExactly(commandInteraction.reply, {
+            expect(commandInteraction.reply).calledOnceWithExactly({
                 ephemeral: false,
                 content: "test",
                 fetchReply: true
@@ -101,11 +101,11 @@ describe(InteractionCommandMessage.name, () => {
             const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
             await commandMessage.deferReply();
             await commandMessage.reply("test");
-            sinon.assert.calledOnceWithExactly(commandInteraction.deferReply, {
+            expect(commandInteraction.deferReply).calledOnceWithExactly({
                 ephemeral: true,
                 fetchReply: true
             });
-            sinon.assert.calledOnceWithExactly(commandInteraction.followUp, "test");
+            expect(commandInteraction.followUp).calledOnceWithExactly("test");
         });
     });
 
@@ -117,6 +117,6 @@ describe(InteractionCommandMessage.name, () => {
         };
         const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
         await commandMessage.sendSeparate("test");
-        sinon.assert.calledOnceWithExactly(commandInteraction.channel.send, "test");
+        expect(commandInteraction.channel.send).calledOnceWithExactly("test");
     });
 });

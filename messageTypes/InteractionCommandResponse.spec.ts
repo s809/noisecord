@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { BitField, CommandInteraction, Message, MessageFlags } from "discord.js";
 import sinon from "sinon";
 import { InteractionCommandResponse } from "./InteractionCommandResponse";
@@ -25,8 +25,8 @@ describe(InteractionCommandResponse.name, () => {
 
                 const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction, message as Message);
                 commandResponse.edit("test");
-                assert(interaction.followUp.calledOnce);
-                assert(interaction.editReply.notCalled);
+                expect(interaction.followUp).calledOnce;
+                expect(interaction.editReply).not.called;
             });
             
             it("Not loading", async () => {
@@ -36,8 +36,8 @@ describe(InteractionCommandResponse.name, () => {
 
                 const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction, message as Message);
                 commandResponse.edit("test");
-                assert(interaction.followUp.notCalled);
-                assert(interaction.editReply.calledOnce);
+                expect(interaction.followUp).not.called;
+                expect(interaction.editReply).calledOnce;
             });
         });
     });

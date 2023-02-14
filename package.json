@@ -8,9 +8,15 @@
     "clean": "rimraf ./build"
   },
   "dependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/sinon-chai": "^3.2.9",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1",
     "discord.js": "^14.5.0",
     "lodash-es": "^4.17.21",
     "rimraf": "^3.0.2",
+    "sinon-chai": "^3.7.0",
     "string-format": "^2.0.0",
     "type-fest": "^3.5.4",
     "typescript": "^4.8.4"

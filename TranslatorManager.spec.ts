@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { CommandInteraction, Guild, Message, TextChannel, User } from "discord.js";
 import sinon from "sinon";
 import { NameOrContext, TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager";
@@ -24,24 +24,24 @@ describe("TranslatorManager", () => {
 
     it("empty translation directory", async () => {
         const promise = new TranslatorManager(translationOptionsEmpty).init();
-        await assert.rejects(promise);
+        expect(promise).rejected;
     });
 
     it("#fallbackLocale", async () => {
-        assert(translatorManager.fallbackLocale === "en-US");
+        expect(translatorManager.fallbackLocale).equal("en-US");
     });
 
     describe("#getTranslator()", () => {
         async function validate(value: NameOrContext) {
             const found = await translatorManager.getTranslator(value);
-            assert(found.localeString === "ru");
+            expect(found.localeString).equal("ru");
         }
 
         describe("by locale string", () => {
             it("valid", () => validate("ru"));
             it("invalid/missing", async () => {
                 const found = await translatorManager.getTranslator("nani");
-                assert(found.localeString === "en-US");
+                expect(found.localeString).equal("en-US");
             });
         });
 
@@ -92,7 +92,7 @@ describe("TranslatorManager", () => {
 
     it("#getLocalizations()", () => {
         const localizations = translatorManager.getLocalizations("locale_string");
-        assert.deepStrictEqual(localizations, {
+        expect(localizations).deep.equal({
             "en-US": "en-US",
             "ru": "ru"
         });

@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import { createCommand, CreateCommandUtil } from "./CreateCommandUtil";
 import { CommandDefinition } from "./definitions";
@@ -99,7 +99,7 @@ describe("CreateCommandUtil", () => {
                         allowDMs: true,
                         ...inputs.inheritedOptions
                     });
-                    assert.throws(() => createCommandUtil.throwIfErrors(), inputs.check);
+                    expect(() => createCommandUtil.throwIfErrors()).throws(inputs.check);
                 });
             }
         });
@@ -162,7 +162,7 @@ describe("CreateCommandUtil", () => {
 
                     createCommandUtil.fillTranslations({ path: "path/to/command" });
 
-                    assert.throws(() => createCommandUtil.throwIfErrors(), inputs.check);
+                    expect(() => createCommandUtil.throwIfErrors()).throws(inputs.check);
                 });
             }
         });
@@ -243,7 +243,7 @@ describe("CreateCommandUtil", () => {
                         ...argsFiller, ...arg
                     })) ?? [argsFiller]);
 
-                    assert.throws(() => createCommandUtil.throwIfErrors(), inputs.check);
+                    expect(() => createCommandUtil.throwIfErrors()).throws(inputs.check);
                 });
             }
         });

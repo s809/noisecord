@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry";
 import { Command } from "../../definitions";
 import { CommandMessage } from "../../messageTypes/CommandMessage";
@@ -63,7 +63,7 @@ export function makeFakeCommand(path: string, {
             ? {
                 id: null
             }
-            : undefined,
+            : null,
 
         nameTranslations: {
             "en-US": key
@@ -80,7 +80,7 @@ export function makeFakeCommand(path: string, {
 }
 
 export function createHandler<T extends new (...args: any) => InstanceType<T>>(constructor: T, commands?: Command[], options: ConstructorParameters<T>[2] = {}) {
-    // Do not use path slashes along with interaction allowing commands
+    // Do not use path slashes here
     commands ??= [
         ["normal", {}],
         ["no-handler", {
@@ -224,6 +224,19 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                 id: IdConstants.PermissionOverridesAllowOwner
             }
         }],
+        ["conditions", {
+            conditions: [{
+                name: "Test condition",
+                check: (msg: Message) => msg.guildId === IdConstants.Guild1,
+                failureMessage: "Test condition error"
+            }]
+        }],
+        ["arguments-count", {
+            args: {
+                min: 2,
+                max: 3
+            }
+        }]
     ].map(([path, overrides]: [string, Partial<Command>]) => merge({
         path,
         key: path.split("/").reverse()[0],
@@ -397,8 +410,11 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             },
             resolveCommand(path: string | string[]) {
                 if (Array.isArray(path))
-                    path = path.join(" ");
-                return commands?.find(command => command.path === path);
+                    path = path.join("/");
+                else
+                    path = path.replaceAll(" ", "/");
+                return commands?.sort((command1, command2) => command1.path.length - command2.path.length)
+                    .find(command => (path as string).startsWith(command.path));
             },
             resolveCommandByLocalizedPath(path: string | string[]) {
                 return this.resolveCommand(path);

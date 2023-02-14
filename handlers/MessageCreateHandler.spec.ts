@@ -1,9 +1,9 @@
-import assert from "assert";
+import { expect } from "chai";
 import { Guild, GuildMember, Message, TextBasedChannel, User } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
-import { MessageCreateHandler, MessageHandlerOptions, successEmoji } from "./MessageCreateHandler";
+import { failureEmoji, MessageCreateHandler, MessageHandlerOptions, successEmoji } from "./MessageCreateHandler";
 import { createHandler, IdConstants } from "./testData/util";
 
 describe(MessageCreateHandler.name, () => {
@@ -85,14 +85,19 @@ describe(MessageCreateHandler.name, () => {
 
     async function shouldSucceed(contentOrOverrides: string | MessageOverrides) {
         const message = await handleCommand(contentOrOverrides);
-        assert(message.channel.send.notCalled);
-        assert(message.react.calledOnceWith(successEmoji));
+        expect(message.channel.send).not.called;
+        expect(message.react).calledOnceWith(successEmoji);
     }
 
     async function shouldIgnore(contentOrOverrides: string | MessageOverrides) {
         const message = await handleCommand(contentOrOverrides);
-        assert(message.channel.send.notCalled);
-        assert(message.react.notCalled);
+        expect(message.channel.send).not.called;
+        expect(message.react).not.called;
+    }
+
+    async function shouldFail(contentOrOverrides: string | MessageOverrides, errorContent: string) {
+        const message = await handleCommand(contentOrOverrides);
+        expect(message.channel.send).calledOnceWith(errorContent);
     }
 
 
@@ -195,7 +200,7 @@ describe(MessageCreateHandler.name, () => {
     });
 
     describe("Check command permissions", () => {
-        describe("Owner only", () => {
+        describe("ignorePermissionsFor", () => {
             it("Not bot owner", () => shouldIgnore("!owner-only"));
             it("Bot owner", () => shouldSucceed({
                 content: "!owner-only",
@@ -203,6 +208,19 @@ describe(MessageCreateHandler.name, () => {
                     id: IdConstants.UserBotOwner
                 }
             }));
+
+            describe("None", () => {
+                beforeEach(() => {
+                    handlerOptions.ignorePermissionsFor = undefined;
+                })
+
+                it("Should always ignore", () => shouldIgnore({
+                    content: "!owner-only",
+                    author: {
+                        id: IdConstants.UserBotOwner
+                    }
+                }));
+            })
         });
 
         describe("DM behavior", () => {
@@ -394,11 +412,35 @@ describe(MessageCreateHandler.name, () => {
 
     describe("Check command conditions", () => {
         it("Allow when allowed", () => shouldSucceed({
-
+            content: "!conditions",
+            guild: {
+                id: IdConstants.Guild1
+            }
         }));
 
-        it("Show error when disallowed", () => {
-
-        });
+        it("Show error when disallowed", () => shouldFail({
+            content: "!conditions",
+            guild: {
+                id: IdConstants.Guild2
+            }
+        }, "Test condition error"));
     });
+
+    describe("Parse arguments", () => {
+        describe("Argument count", () => {
+            it("Min", () => shouldFail({
+                content: "!arguments-count a"
+            }, `
+command_processor: errors.too_few_arguments
+command_processor: strings.command_usage <usage:arguments-count>
+            `.trim()));
+
+            it("Max", () => shouldFail({
+                content: "!arguments-count a b c d"
+            }, `
+command_processor: errors.too_many_arguments
+command_processor: strings.command_usage <usage:arguments-count>
+            `.trim()));
+        });
+    })
 });

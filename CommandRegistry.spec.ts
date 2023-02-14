@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { CommandRegistry, CommandRegistryOptions } from "./CommandRegistry";
 import { TranslatorManager } from "./TranslatorManager";
 
@@ -36,6 +36,6 @@ describe("CommandRegistry", () => {
             contextMenuModuleDirectory: "./testData/contextMenuCommands/normal"
         }, translatorManager).createCommands();
 
-        await assert.rejects(promise);
+        expect(promise).rejected;
     });
 });

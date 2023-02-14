@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { ApplicationCommandDataResolvable, ApplicationCommandType, Client, Interaction, MessageFlags, MessageFlagsBitField, Snowflake } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
@@ -16,7 +16,8 @@ describe(InteractionHandler.name, () => {
 
             await createHandler(InteractionHandler, commands).init();
 
-            assert(!commands[0].interactionCommand?.id && commands[1].interactionCommand?.id);
+            expect(commands[0].interactionCommand).null;
+            expect(commands[1].interactionCommand).exist;
         });
 
         it("Subcommand handling", async () => {
@@ -47,13 +48,15 @@ describe(InteractionHandler.name, () => {
 
             await createHandler(InteractionHandler, commands).init();
 
-            assert(commands.every((command, i) => [
-                command.interactionCommand?.id,
-                command.subcommands.get("test")!.interactionCommand?.id,
-                command.subcommands.get("test")!.subcommands.get("test")!.interactionCommand?.id,
-                command.subcommands.get("test")!.subcommands.get("test2")!.interactionCommand?.id,
-                command.subcommands.get("test2")!.interactionCommand?.id
-            ].every(id => id === i.toString())))
+            for (const [i, command] of commands.entries()) {
+                expect([
+                    command.interactionCommand?.id,
+                    command.subcommands.get("test")!.interactionCommand?.id,
+                    command.subcommands.get("test")!.subcommands.get("test")!.interactionCommand?.id,
+                    command.subcommands.get("test")!.subcommands.get("test2")!.interactionCommand?.id,
+                    command.subcommands.get("test2")!.interactionCommand?.id
+                ]).deep.equal(new Array(5).fill(i.toString()));
+            }
         });
 
         it("Assign ids to context menu commands", async () => {
@@ -103,7 +106,8 @@ describe(InteractionHandler.name, () => {
 
             await handler.init();
 
-            assert(contextMenuCommands.every((command, i) => command.appCommandId === i.toString()));
+            for (const [i, command] of contextMenuCommands.entries())
+                expect(command.appCommandId).equal(i.toString());
         });
 
         describe("errors", () => { 
@@ -117,7 +121,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                await assert.rejects(createHandler(InteractionHandler, commands).init(), /cannot have a handler/);
+                expect(createHandler(InteractionHandler, commands).init()).rejectedWith(/cannot have a handler/);
             });
 
             it("Command without either subcommands or handler", async () => {
@@ -127,7 +131,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                await assert.rejects(createHandler(InteractionHandler, commands).init(), /must have a handler/);
+                expect(createHandler(InteractionHandler, commands).init()).rejectedWith(/must have a handler/);
             });
 
             it("Too many nested commands", async () => {
@@ -147,7 +151,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                await assert.rejects(createHandler(InteractionHandler, commands).init(), /depth was exceeded/);
+                expect(createHandler(InteractionHandler, commands).init()).rejectedWith(/depth was exceeded/);
             });
         });
     });
@@ -211,7 +215,7 @@ describe(InteractionHandler.name, () => {
             describe("Respond with unknown command error", () => {
                 it("No command in registry", async () => {
                     const interaction = await handleChatInteraction("unknown-command");
-                    sinon.assert.calledOnceWithExactly(interaction.reply, {
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: "command_processor: errors.unknown_command",
                         ephemeral: true
                     });
@@ -219,7 +223,7 @@ describe(InteractionHandler.name, () => {
 
                 it("No handler", async () => {
                     const interaction = await handleChatInteraction("no-handler");
-                    sinon.assert.calledOnceWithExactly(interaction.reply, {
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: "command_processor: errors.unknown_command",
                         ephemeral: true
                     });
@@ -229,7 +233,7 @@ describe(InteractionHandler.name, () => {
             describe("Argument parsing", () => {
                 it("Argument types", async () => {
                     const interaction = await handleChatInteraction("all-arguments");
-                    sinon.assert.calledOnceWithExactly(interaction.reply, {
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: "all_arguments: errors.string 1 2 true 3 4 5",
                         ephemeral: true,
                         fetchReply: true
@@ -242,7 +246,7 @@ describe(InteractionHandler.name, () => {
                             getString: (name: string) => name === "first-arg" ? "1 2" : `3 4 "5 6"`
                         }
                     });
-                    sinon.assert.calledOnceWithExactly(interaction.reply, {
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: "last_arg_as_extras: errors.1 2 3,4,5 6",
                         ephemeral: true,
                         fetchReply: true
@@ -253,7 +257,7 @@ describe(InteractionHandler.name, () => {
             describe("Execute command", () => {
                 it("Success", async () => {
                     const interaction = await handleChatInteraction("normal");
-                    sinon.assert.calledOnceWithExactly(interaction.reply, {
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: "OK",
                         ephemeral: true,
                         fetchReply: true
@@ -264,16 +268,16 @@ describe(InteractionHandler.name, () => {
                     this.slow(2000);
 
                     const interaction = await handleChatInteraction("auto/slow");
-                    sinon.assert.calledOnceWithExactly(interaction.deferReply, {
+                    expect(interaction.deferReply).calledOnceWithExactly({
                         ephemeral: true,
                         fetchReply: true
                     });
-                    sinon.assert.calledOnceWithExactly(interaction.followUp, "OK");
+                    expect(interaction.followUp).calledOnceWithExactly("OK");
                 });
 
                 it("Manually replied", async () => {
                     const interaction = await handleChatInteraction("auto/manually-replied");
-                    sinon.assert.calledOnceWithExactly(interaction.reply, {
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: "YAAY",
                         ephemeral: false,
                         fetchReply: true
@@ -282,7 +286,7 @@ describe(InteractionHandler.name, () => {
 
                 it("Threw or rejected", async () => {
                     const interaction = await handleChatInteraction("auto/rejected");
-                    sinon.assert.calledOnceWithMatch(interaction.reply, {
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: sinon.match(/Error/),
                         ephemeral: true,
                         fetchReply: true
@@ -309,7 +313,7 @@ describe(InteractionHandler.name, () => {
 
             it("No command in registry", async () => {
                 const interaction = await handleContextMenuInteraction("2");
-                sinon.assert.calledOnceWithExactly(interaction.reply, {
+                expect(interaction.reply).calledOnceWithExactly({
                     content: "command_processor: errors.unknown_command",
                     ephemeral: true
                 });

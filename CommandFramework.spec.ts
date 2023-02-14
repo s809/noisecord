@@ -1,4 +1,4 @@
-import assert from "assert";
+import { expect } from "chai";
 import { Client, Collection } from "discord.js";
 import sinon from "sinon";
 import { CommandFramework, CommandFrameworkOptions } from ".";
@@ -29,7 +29,7 @@ describe("CommandFramework", () => {
         const commandFramework = new CommandFramework(options);
         await commandFramework.init(client as unknown as Client);
 
-        assert(client.once.calledOnce);
+        expect(client.once).calledOnce;
     });
 
     it("when client is ready", async () => {
@@ -47,6 +47,6 @@ describe("CommandFramework", () => {
         const commandFramework = new CommandFramework(options);
         await commandFramework.init(client as unknown as Client);
 
-        assert(client.once.notCalled);
+        expect(client.once).not.called;
     });
 });
