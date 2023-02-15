@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry";
 import { Command } from "../../definitions";
 import { CommandMessage } from "../../messageTypes/CommandMessage";
@@ -127,6 +127,50 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                 argRole
             }: any) => `${argString} ${argNumber} ${argInteger} ${argBoolean} ${argChannel.id} ${argUser.id} ${argRole.id}`
         }],
+        ["args-string", {
+            args: {
+                list: [{
+                    key: "argString",
+                    type: ApplicationCommandOptionType.String,
+                    minLength: 2,
+                    maxLength: 3
+                }]
+            }
+        }],
+        ["args-string-choices", {
+            args: {
+                list: [{
+                    key: "argString",
+                    type: ApplicationCommandOptionType.String,
+                    choices: [{
+                        key: "a",
+                        value: "a"
+                    }]
+                }]
+            }
+        }],
+        ["args-number", {
+            args: {
+                list: [{
+                    key: "argNumber",
+                    type: ApplicationCommandOptionType.Number,
+                    minValue: 2,
+                    maxValue: 3
+                }]
+            }
+        }],
+        ["args-integer", {
+            args: {
+                list: [{
+                    key: "argInteger",
+                    type: ApplicationCommandOptionType.Integer,
+                    choices: [{
+                        key: "a",
+                        value: 1
+                    }]
+                }]
+            }
+        }],
         ["last-arg-as-extras", {
             args: {
                 list: [{
@@ -145,7 +189,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                 lastArg
             }: any) => `${firstArg} ${lastArg.join(",")}`
         }],
-        ["auto/slow", {
+        ["slow", {
             handler: async () => {
                 await setTimeout(1500)
             }
@@ -253,10 +297,22 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
         interactionCommand: null,
         conditions: [],
         args: {
-            min: 0,
-            max: 0,
+            min: overrides.args?.list?.length ?? 0,
+            max: overrides.args?.list?.length ?? 0,
             stringTranslations: {},
-            list: [],
+            list: overrides.args?.list?.map(arg => ({
+                nameLocalizations: {
+                    "en-US": arg.key,
+                },
+                ...arg,
+                choices: (arg as any).choices?.map((choice: any) => ({
+                    name: choice.key,
+                    nameLocalizations: {
+                        "en-US": "tr_" + choice.key,
+                    },
+                    ...choice
+                })),
+            })) ?? [],
             lastArgAsExtras: false
         },
         alwaysReactOnSuccess: true,
@@ -385,7 +441,15 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                 getTranslator(_: any, base: string) {
                     // It always translates successfully
                     return {
-                        translate: (...args: string[]) => `${base}: ${args.join(" ")}`
+                        localeString: "en-US",
+                        booleanValues: [
+                            ["false"],
+                            ["true"]
+                        ],
+                        translate: (...args: string[]) => `${base}: ${args.join(" ")}`,
+                        getTranslationFromRecord(object: LocalizationMap) {
+                            return object["en-US"];
+                        }
                     };
                 }
             },
@@ -413,8 +477,8 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                     path = path.join("/");
                 else
                     path = path.replaceAll(" ", "/");
-                return commands?.sort((command1, command2) => command1.path.length - command2.path.length)
-                    .find(command => (path as string).startsWith(command.path));
+                return commands?.sort((command1, command2) => command2.path.length - command1.path.length)
+                    .filter(command => (path as string).startsWith(command.path))[0];
             },
             resolveCommandByLocalizedPath(path: string | string[]) {
                 return this.resolveCommand(path);

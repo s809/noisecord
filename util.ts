@@ -30,10 +30,10 @@ export function traverseTree<V>(path: string[],
  * @returns Extracted ID.
  */
 export function parseMention(text: string, prefix: string): string | null {
-    if (/^\d{17,19}$/.test(text))
+    if (/^\d{1,19}$/.test(text))
         return text;
 
-    let regex = new RegExp(`^<${prefix}(\\d{17,19})>$`)
+    let regex = new RegExp(`^<${prefix}(\\d{1,19})>$`)
     return text.match(regex)?.[1] ?? null;
 }
 

@@ -117,8 +117,9 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
             return;
         }
 
-        const commandMessage = new MessageCommandMessage(command, await this.translatorManager.getTranslator(msg, command.translationPath), msg);
-        await this.executeCommand(commandMessage, () => command.handler!(commandMessage, argsObj), translator);
+        const commandTranslator = await this.translatorManager.getTranslator(msg, command.translationPath);
+        const commandMessage = new MessageCommandMessage(command, commandTranslator, msg);
+        await this.executeCommand(commandMessage, () => command.handler!(commandMessage, argsObj), commandTranslator);
     }
 
     private async checkCommandPermissions(msg: Message, command: Command): Promise<boolean> {
@@ -205,14 +206,15 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
         // For objects obtainable with their managers
         function parseResolvableValue(input: string,
             parse: (text: string) => string | null,
-            manager: CachedManager<Snowflake, any, any> | undefined) {
+            manager: CachedManager<Snowflake, any, any> | undefined,
+            errorName: string) {
             const id = parse(input);
             if (id === null)
-                throw ["invalid_channel", input];
+                throw [errorName, input];
 
             const result = manager?.resolve(id);
             if (!result)
-                throw ["invalid_channel", input];
+                throw [errorName, input];
 
             return result;
         }
@@ -234,14 +236,14 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
                     throw ["value_not_allowed", input, arga.choices.map(choice => `"${(choice.nameLocalizations as any)[translator.localeString] ?? choice.name}"`).join(", ")];
                 } else {
                     if (arga.minLength && input.length < arga.minLength)
-                        throw ["value_too_small", input, arga.minLength];
+                        throw ["value_too_short", input, arga.minLength];
                     if (arga.maxLength && input.length > arga.maxLength)
                         throw ["value_too_long", input, arga.maxLength];
                 }
 
                 return input;
             }],
-            [ApplicationCommandOptionType.Number, (input, arg) => parseNumberValue(input, arg, n => !isNaN(n))],
+            [ApplicationCommandOptionType.Number, (input, arg) => parseNumberValue(input, arg, isFinite)],
             [ApplicationCommandOptionType.Integer, (input, arg) => parseNumberValue(input, arg, Number.isSafeInteger)],
             [ApplicationCommandOptionType.Boolean, input => {
                 // Merge boolean falues of current and fallback translators
@@ -255,14 +257,14 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
                 throw ["invalid_boolean", input];
             }],
             [ApplicationCommandOptionType.Channel, (input, arg) => {
-                const resolvedChannel: GuildChannel = parseResolvableValue(input, parseChannelMention, guild?.channels);
+                const resolvedChannel: GuildChannel = parseResolvableValue(input, parseChannelMention, guild?.channels, "invalid_channel");
                 const fits = (arg as ApplicationCommandChannelOptionData).channelTypes?.some(type => resolvedChannel.type === type) ?? true;
                 if (!fits)
                     throw ["channel_constraints_not_met", resolvedChannel.toString()];
                 return resolvedChannel;
             }],
-            [ApplicationCommandOptionType.User, input => parseResolvableValue(input, parseUserMention, guild?.members)],
-            [ApplicationCommandOptionType.Role, input => parseResolvableValue(input, parseRoleMention, guild?.roles)],
+            [ApplicationCommandOptionType.User, input => parseResolvableValue(input, parseUserMention, guild?.members, "invalid_user")],
+            [ApplicationCommandOptionType.Role, input => parseResolvableValue(input, parseRoleMention, guild?.roles, "invalid_role")],
         ]);
 
         for (const arg of command.args.list) {

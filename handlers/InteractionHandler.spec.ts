@@ -267,7 +267,7 @@ describe(InteractionHandler.name, () => {
                 it("Slow command", async function () {
                     this.slow(2000);
 
-                    const interaction = await handleChatInteraction("auto/slow");
+                    const interaction = await handleChatInteraction("slow");
                     expect(interaction.deferReply).calledOnceWithExactly({
                         ephemeral: true,
                         fetchReply: true

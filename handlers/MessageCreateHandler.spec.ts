@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Guild, GuildMember, Message, TextBasedChannel, User } from "discord.js";
+import { Guild, GuildBasedChannel, GuildMember, Message, Role, TextBasedChannel, User } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
@@ -8,15 +8,14 @@ import { createHandler, IdConstants } from "./testData/util";
 
 describe(MessageCreateHandler.name, () => {
     type Clean<T> = Omit<T, "toString" | "valueOf">;
+    type CleanSome<T, ToPick extends keyof T, U = {}> = Clean<Merge<Merge<T, {
+        [K in ToPick]: Clean<T[K]>
+    }>, U>>;
 
-    type MessageOverrides = PartialDeep<Clean<Merge<Message, {
-        author: Clean<User>,
-        member: Clean<Merge<GuildMember, {
-            permissions: Clean<GuildMember["permissions"]>
-        }>>,
-        guild: Clean<Guild> | null,
-        channel: Clean<TextBasedChannel>
-    }>>>;
+    type MessageOverrides = PartialDeep<CleanSome<Message, "author" | "channel", {
+        member: CleanSome<GuildMember, "permissions"> | null,
+        guild: CleanSome<Guild, "channels" | "members" | "roles"> | null
+    }>>;
 
     let handlerOptions: MessageHandlerOptions;
 
@@ -201,26 +200,85 @@ describe(MessageCreateHandler.name, () => {
 
     describe("Check command permissions", () => {
         describe("ignorePermissionsFor", () => {
-            it("Not bot owner", () => shouldIgnore("!owner-only"));
-            it("Bot owner", () => shouldSucceed({
-                content: "!owner-only",
-                author: {
-                    id: IdConstants.UserBotOwner
-                }
-            }));
-
             describe("None", () => {
                 beforeEach(() => {
                     handlerOptions.ignorePermissionsFor = undefined;
-                })
+                });
 
                 it("Should always ignore", () => shouldIgnore({
+                    content: "!owner-only",
+                    author: {
+                        id: IdConstants.User1
+                    }
+                }));
+            })
+
+            describe("String", () => {
+                beforeEach(() => {
+                    handlerOptions.ignorePermissionsFor = IdConstants.User1;
+                });
+
+                it("Accept owner", () => shouldSucceed({
+                    content: "!owner-only",
+                    author: {
+                        id: IdConstants.User1
+                    }
+                }));
+
+                it("Ignore non-owner", () => shouldIgnore({
+                    content: "!owner-only",
+                    author: {
+                        id: IdConstants.UserNone
+                    }
+                }));
+            });
+
+            describe("Array", () => {
+                beforeEach(() => {
+                    handlerOptions.ignorePermissionsFor = [IdConstants.UserBotOwner, IdConstants.User1];
+                });
+
+                it("Accept owner 1", () => shouldSucceed({
                     content: "!owner-only",
                     author: {
                         id: IdConstants.UserBotOwner
                     }
                 }));
-            })
+
+                it("Accept owner 2", () => shouldSucceed({
+                    content: "!owner-only",
+                    author: {
+                        id: IdConstants.User1
+                    }
+                }));
+
+                it("Ignore non-owner", () => shouldIgnore({
+                    content: "!owner-only",
+                    author: {
+                        id: IdConstants.UserNone
+                    }
+                }));
+            });
+
+            describe("Custom function", () => {
+                beforeEach(() => {
+                    handlerOptions.ignorePermissionsFor = msg => msg.author.id === IdConstants.User1;
+                });
+
+                it("Accept owner", () => shouldSucceed({
+                    content: "!owner-only",
+                    author: {
+                        id: IdConstants.User1
+                    }
+                }));
+
+                it("Ignore non-owner", () => shouldIgnore({
+                    content: "!owner-only",
+                    author: {
+                        id: IdConstants.UserNone
+                    }
+                }));
+            });
         });
 
         describe("DM behavior", () => {
@@ -426,21 +484,79 @@ describe(MessageCreateHandler.name, () => {
         }, "Test condition error"));
     });
 
-    describe("Parse arguments", () => {
+    describe("Argument parsing", () => {
+        const messagePart = {
+            guild: {
+                id: IdConstants.Guild1,
+                channels: {
+                    resolve: () => ({
+                        id: IdConstants.Channel1
+                    } as GuildBasedChannel)
+                },
+                members: {
+                    resolve: () => ({
+                        id: IdConstants.User1
+                    } as GuildMember)
+                },
+                roles: {
+                    resolve: () => ({
+                        id: IdConstants.Role1
+                    } as Role)
+                }
+            },
+        }
+
         describe("Argument count", () => {
-            it("Min", () => shouldFail({
-                content: "!arguments-count a"
-            }, `
+            it("Min", () => shouldFail("!arguments-count a", `
 command_processor: errors.too_few_arguments
 command_processor: strings.command_usage <usage:arguments-count>
             `.trim()));
 
-            it("Max", () => shouldFail({
-                content: "!arguments-count a b c d"
-            }, `
+            it("Max", () => shouldFail("!arguments-count a b c d", `
 command_processor: errors.too_many_arguments
 command_processor: strings.command_usage <usage:arguments-count>
             `.trim()));
         });
-    })
+
+        it("All arguments", () => shouldFail({
+            content: `!all-arguments string 1 2 true <#${IdConstants.Channel1}> <@${IdConstants.User1}> <@&${IdConstants.Role1}>`,
+            ...messagePart
+        }, `all_arguments: errors.string 1 2 true ${IdConstants.Channel1} ${IdConstants.User1} ${IdConstants.Role1}`));
+
+        describe("Argument types", () => {
+            describe("String", () => {
+                it("Min length", () => shouldFail("!args-string a", `
+command_processor: errors.value_too_short \"a\" (command_processor: strings.argument_name argString) 2
+command_processor: strings.command_usage <usage:args-string>`.trim()));
+                
+                it("Max length", () => shouldFail("!args-string aaaa", `
+command_processor: errors.value_too_long \"aaaa\" (command_processor: strings.argument_name argString) 3
+command_processor: strings.command_usage <usage:args-string>`.trim()));
+                
+                describe("Choices", () => {
+                    it("Default choice", () => shouldSucceed("!args-string-choices a"));
+                    it("Localized choice", () => shouldSucceed("!args-string-choices tr_a"));
+                    it("Invalid choice", () => shouldFail("!args-string-choices tr_b", `
+command_processor: errors.value_not_allowed \"tr_b\" (command_processor: strings.argument_name argString) \"tr_a\"
+command_processor: strings.command_usage <usage:args-string-choices>`.trim()));
+                });
+            });
+
+            describe("Number/integer", () => {
+                it("Min value", () => shouldFail("!args-number 1", `
+command_processor: errors.value_too_small \"1\" (command_processor: strings.argument_name argNumber) 2
+command_processor: strings.command_usage <usage:args-number>`.trim()));
+                it("Max value", () => shouldFail("!args-number 4", `
+command_processor: errors.value_too_large \"4\" (command_processor: strings.argument_name argNumber) 3
+command_processor: strings.command_usage <usage:args-number>`.trim()));
+
+                describe("Choices", () => {
+                    it("Valid choice", () => shouldSucceed("!args-integer 1"));
+                    it("Invalid choice", () => shouldFail("!args-integer 2", `
+command_processor: errors.value_not_allowed \"2\" (command_processor: strings.argument_name argInteger) 1
+command_processor: strings.command_usage <usage:args-integer>`.trim()));
+                })
+            });
+        });
+    });
 });
