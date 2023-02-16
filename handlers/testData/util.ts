@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry";
 import { Command } from "../../definitions";
 import { CommandMessage } from "../../messageTypes/CommandMessage";
@@ -13,6 +13,7 @@ enum _IdConstants {
 
     ChannelNone,
     Channel1,
+    Channel2,
 
     UserBotOwner,
     UserNone,
@@ -171,6 +172,44 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                 }]
             }
         }],
+        ["args-boolean", {
+            args: {
+                list: [{
+                    key: "argBoolean",
+                    type: ApplicationCommandOptionType.Boolean
+                }]
+            }
+        }],
+        ["args-resolvable", {
+            args: {
+                list: [{
+                    key: "argChannel",
+                    type: ApplicationCommandOptionType.Channel
+                }, {
+                    key: "argUser",
+                    type: ApplicationCommandOptionType.User
+                }, {
+                    key: "argRole",
+                    type: ApplicationCommandOptionType.Role
+                }]
+            },
+            handler: (_: any, {
+                argChannel,
+                argUser,
+                argRole
+            }: any) => `${argChannel.id} ${argUser.id} ${argRole.id}`
+        }],
+        ["args-channel-types", {
+            args: {
+                list: [{
+                    key: "argChannel",
+                    type: ApplicationCommandOptionType.Channel,
+                    channelTypes: [
+                        ChannelType.GuildText
+                    ]
+                }]
+            }
+        }],
         ["last-arg-as-extras", {
             args: {
                 list: [{
@@ -298,7 +337,9 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
         conditions: [],
         args: {
             min: overrides.args?.list?.length ?? 0,
-            max: overrides.args?.list?.length ?? 0,
+            max: overrides.args?.lastArgAsExtras
+                ? Infinity
+                : overrides.args?.list?.length ?? 0,
             stringTranslations: {},
             list: overrides.args?.list?.map(arg => ({
                 nameLocalizations: {
@@ -443,8 +484,8 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                     return {
                         localeString: "en-US",
                         booleanValues: [
-                            ["false"],
-                            ["true"]
+                            ["no"],
+                            ["yes"]
                         ],
                         translate: (...args: string[]) => `${base}: ${args.join(" ")}`,
                         getTranslationFromRecord(object: LocalizationMap) {

@@ -22,6 +22,8 @@ export class MessageCommandMessage<InGuild extends boolean = boolean> extends Co
     }
 
     async sendSeparate(options: string | MessageReplyOptions) {
+        options = structuredClone(options);
+        delete (options as any).ephemeral;
         return new MessageCommandResponse(await this.message.channel.send(options));
     }
 

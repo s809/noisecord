@@ -1,9 +1,9 @@
 import { expect } from "chai";
-import { Guild, GuildBasedChannel, GuildMember, Message, Role, TextBasedChannel, User } from "discord.js";
+import { ChannelType, Guild, GuildBasedChannel, GuildMember, Message, Role, TextBasedChannel, User } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
-import { failureEmoji, MessageCreateHandler, MessageHandlerOptions, successEmoji } from "./MessageCreateHandler";
+import { failureEmoji, loadingEmoji, MessageCreateHandler, MessageHandlerOptions, successEmoji } from "./MessageCreateHandler";
 import { createHandler, IdConstants } from "./testData/util";
 
 describe(MessageCreateHandler.name, () => {
@@ -59,12 +59,12 @@ describe(MessageCreateHandler.name, () => {
             },
             channel: {
                 id: IdConstants.ChannelNone,
-                send: sinon.stub()
+                send: sinon.stub().resolves()
             },
             get channelId() {
                 return this.channel.id;
             },
-            react: sinon.stub(),
+            react: sinon.stub().resolves(),
             reactions: {
                 resolve: () => { }
             }
@@ -94,9 +94,12 @@ describe(MessageCreateHandler.name, () => {
         expect(message.react).not.called;
     }
 
-    async function shouldFail(contentOrOverrides: string | MessageOverrides, errorContent: string) {
+    async function shouldFail(contentOrOverrides: string | MessageOverrides, errorContent: string | RegExp) {
         const message = await handleCommand(contentOrOverrides);
-        expect(message.channel.send).calledOnceWith(errorContent);
+        expect(message.channel.send).calledOnceWith(errorContent instanceof RegExp
+            ? sinon.match(errorContent)
+            : errorContent
+        );
     }
 
 
@@ -489,19 +492,29 @@ describe(MessageCreateHandler.name, () => {
             guild: {
                 id: IdConstants.Guild1,
                 channels: {
-                    resolve: () => ({
-                        id: IdConstants.Channel1
-                    } as GuildBasedChannel)
+                    resolve: (id: any) => ([IdConstants.Channel1, IdConstants.Channel2].includes(id)
+                        ? {
+                            id: IdConstants.Channel1,
+                            type: id === IdConstants.Channel1
+                                ? ChannelType.GuildText
+                                : ChannelType.GuildVoice,
+                            toString: () => `<#${id}>`
+                        }
+                        : null) as GuildBasedChannel
                 },
                 members: {
-                    resolve: () => ({
-                        id: IdConstants.User1
-                    } as GuildMember)
+                    resolve: (id: any) => (id === IdConstants.User1
+                        ? {
+                            id: IdConstants.User1
+                        }
+                        : null) as GuildMember
                 },
                 roles: {
-                    resolve: () => ({
-                        id: IdConstants.Role1
-                    } as Role)
+                    resolve: (id: any) => (id === IdConstants.Role1
+                        ? {
+                            id: IdConstants.Role1
+                        }
+                        : null) as Role
                 }
             },
         }
@@ -519,44 +532,151 @@ command_processor: strings.command_usage <usage:arguments-count>
         });
 
         it("All arguments", () => shouldFail({
-            content: `!all-arguments string 1 2 true <#${IdConstants.Channel1}> <@${IdConstants.User1}> <@&${IdConstants.Role1}>`,
+            content: `!all-arguments string 1 2 yes <#${IdConstants.Channel1}> <@${IdConstants.User1}> <@&${IdConstants.Role1}>`,
             ...messagePart
         }, `all_arguments: errors.string 1 2 true ${IdConstants.Channel1} ${IdConstants.User1} ${IdConstants.Role1}`));
 
         describe("Argument types", () => {
             describe("String", () => {
                 it("Min length", () => shouldFail("!args-string a", `
-command_processor: errors.value_too_short \"a\" (command_processor: strings.argument_name argString) 2
+command_processor: errors.value_too_short "a" (command_processor: strings.argument_name argString) 2
 command_processor: strings.command_usage <usage:args-string>`.trim()));
                 
                 it("Max length", () => shouldFail("!args-string aaaa", `
-command_processor: errors.value_too_long \"aaaa\" (command_processor: strings.argument_name argString) 3
+command_processor: errors.value_too_long "aaaa" (command_processor: strings.argument_name argString) 3
 command_processor: strings.command_usage <usage:args-string>`.trim()));
                 
                 describe("Choices", () => {
                     it("Default choice", () => shouldSucceed("!args-string-choices a"));
                     it("Localized choice", () => shouldSucceed("!args-string-choices tr_a"));
                     it("Invalid choice", () => shouldFail("!args-string-choices tr_b", `
-command_processor: errors.value_not_allowed \"tr_b\" (command_processor: strings.argument_name argString) \"tr_a\"
+command_processor: errors.value_not_allowed "tr_b" (command_processor: strings.argument_name argString) "tr_a"
 command_processor: strings.command_usage <usage:args-string-choices>`.trim()));
                 });
             });
 
             describe("Number/integer", () => {
                 it("Min value", () => shouldFail("!args-number 1", `
-command_processor: errors.value_too_small \"1\" (command_processor: strings.argument_name argNumber) 2
+command_processor: errors.value_too_small "1" (command_processor: strings.argument_name argNumber) 2
 command_processor: strings.command_usage <usage:args-number>`.trim()));
                 it("Max value", () => shouldFail("!args-number 4", `
-command_processor: errors.value_too_large \"4\" (command_processor: strings.argument_name argNumber) 3
+command_processor: errors.value_too_large "4" (command_processor: strings.argument_name argNumber) 3
 command_processor: strings.command_usage <usage:args-number>`.trim()));
 
                 describe("Choices", () => {
                     it("Valid choice", () => shouldSucceed("!args-integer 1"));
                     it("Invalid choice", () => shouldFail("!args-integer 2", `
-command_processor: errors.value_not_allowed \"2\" (command_processor: strings.argument_name argInteger) 1
+command_processor: errors.value_not_allowed "2" (command_processor: strings.argument_name argInteger) 1
 command_processor: strings.command_usage <usage:args-integer>`.trim()));
                 })
             });
+
+            describe("Boolean", () => {
+                it("Valid boolean", () => shouldSucceed("!args-boolean yes"));
+                it("Invalid boolean", () => shouldFail("!args-boolean test", `
+command_processor: errors.invalid_boolean "test" (command_processor: strings.argument_name argBoolean)
+command_processor: strings.command_usage <usage:args-boolean>`.trim()));
+            });
+
+            describe("Resolvable", () => {
+                it("Parse with id", () => shouldFail({
+                    content: `!args-resolvable <#${IdConstants.Channel1}> <@${IdConstants.User1}> <@&${IdConstants.Role1}>`,
+                    ...messagePart
+                }, `args_resolvable: errors.${IdConstants.Channel1} ${IdConstants.User1} ${IdConstants.Role1}`));
+
+                it("Parse without id", () => shouldFail({
+                    content: `!args-resolvable ${IdConstants.Channel1} ${IdConstants.User1} ${IdConstants.Role1}`,
+                    ...messagePart
+                }, `args_resolvable: errors.${IdConstants.Channel1} ${IdConstants.User1} ${IdConstants.Role1}`));
+
+                describe("Invalid resolvable", () => {
+                    describe("Channel", () => {
+                        it("Non numeric id", () => shouldFail({
+                            content: `!args-resolvable test ${IdConstants.User1} ${IdConstants.Role1}`,
+                            ...messagePart
+                        }, `
+command_processor: errors.invalid_channel "test" (command_processor: strings.argument_name argChannel)
+command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+
+                        it("Missing id", () => shouldFail({
+                            content: `!args-resolvable 10${IdConstants.Channel1} ${IdConstants.User1} ${IdConstants.Role1}`,
+                            ...messagePart
+                        }, `
+command_processor: errors.invalid_channel "10${IdConstants.Channel1}" (command_processor: strings.argument_name argChannel)
+command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+                    });
+                    
+                    describe("User", () => {
+                        it("Non numeric id", () => shouldFail({
+                            content: `!args-resolvable ${IdConstants.Channel1} test ${IdConstants.Role1}`,
+                            ...messagePart
+                        }, `
+command_processor: errors.invalid_user "test" (command_processor: strings.argument_name argUser)
+command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+
+                        it("Missing id", () => shouldFail({
+                            content: `!args-resolvable ${IdConstants.Channel1} 10${IdConstants.User1} ${IdConstants.Role1}`,
+                            ...messagePart
+                        }, `
+command_processor: errors.invalid_user "10${IdConstants.User1}" (command_processor: strings.argument_name argUser)
+command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+                    });
+
+                    describe("Role", () => {
+                        it("Non numeric id", () => shouldFail({
+                            content: `!args-resolvable ${IdConstants.Channel1} ${IdConstants.User1} test`,
+                            ...messagePart
+                        }, `
+command_processor: errors.invalid_role "test" (command_processor: strings.argument_name argRole)
+command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+
+                        it("Missing id", () => shouldFail({
+                            content: `!args-resolvable ${IdConstants.Channel1} ${IdConstants.User1} 10${IdConstants.Role1}`,
+                            ...messagePart
+                        }, `
+command_processor: errors.invalid_role "10${IdConstants.Role1}" (command_processor: strings.argument_name argRole)
+command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+                    });
+                });
+
+                describe("Channel type", () => {
+                    it("Valid", () => shouldSucceed({
+                        content: `!args-channel-types ${IdConstants.Channel1}`,
+                        ...messagePart
+                    }));
+
+                    it("Invalid", () => shouldFail({
+                        content: `!args-channel-types ${IdConstants.Channel2}`,
+                        ...messagePart
+                    }, `
+command_processor: errors.channel_constraints_not_met "<#${IdConstants.Channel2}>" (command_processor: strings.argument_name argChannel)
+command_processor: strings.command_usage <usage:args-channel-types>`.trim()));
+                });
+            });
         });
+
+        it("Last arg as extras", () => shouldFail("!last-arg-as-extras \"1 2\" 3 4 \"5 6\"", `last_arg_as_extras: errors.1 2 3,4,5 6`));
     });
+
+    describe("Execute command", () => {
+        it("Success", () => shouldSucceed("!normal"));
+
+        it("Slow command", async function () {
+            this.slow(2000);
+
+            const message = await handleCommand("!slow");
+            expect(message.channel.send).not.called;
+            expect(message.react.getCall(0)).calledWith(loadingEmoji);
+            expect(message.react.getCall(1)).calledWith(successEmoji);
+        });
+
+        it("Manually replied", async () => {
+            const message = await handleCommand("!auto manually-replied");
+            expect(message.channel.send).calledOnceWithExactly({
+                content: "YAAY"
+            });
+        });
+
+        it("Threw or rejected", () => shouldFail("!auto rejected", /Error/));
+    })
 });

@@ -246,11 +246,11 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
             [ApplicationCommandOptionType.Number, (input, arg) => parseNumberValue(input, arg, isFinite)],
             [ApplicationCommandOptionType.Integer, (input, arg) => parseNumberValue(input, arg, Number.isSafeInteger)],
             [ApplicationCommandOptionType.Boolean, input => {
-                // Merge boolean falues of current and fallback translators
-                const zipped = translator.booleanValues.map((v, i) => translator.fallback
+                // Merge boolean values of current and fallback translators
+                const merged = translator.booleanValues.map((v, i) => translator.fallback
                     ? v.concat(translator.fallback.booleanValues[i])
                     : v);
-                for (const [i, variants] of zipped.entries()) {
+                for (const [i, variants] of merged.entries()) {
                     if (variants.includes(input.toLocaleLowerCase()))
                         return Boolean(i);
                 }
