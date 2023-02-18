@@ -3,8 +3,9 @@ import { ApplicationCommandDataResolvable, ApplicationCommandType, Client, Inter
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { CommandRegistry } from "../CommandRegistry";
+import { ContextMenuCommand } from "../definitions";
 import { InteractionHandler } from "./InteractionHandler";
-import { makeFakeCommand, createHandler } from "./testData/util";
+import { makeFakeCommand, createHandler, IdConstants } from "./testData/util";
 
 describe(InteractionHandler.name, () => {
     describe("Registration of interaction commands", () => {
@@ -169,9 +170,11 @@ describe(InteractionHandler.name, () => {
                 const parts = path.split("/");
 
                 const handler = await createHandler(InteractionHandler).init();
+                let deferred = false;
+                let replied = false;
                 const interaction = merge({
                     command: {
-                        id: "1",
+                        id: IdConstants.ChatInteractionCommands,
                         name: parts[0]
                     },
                     options: {
@@ -187,16 +190,27 @@ describe(InteractionHandler.name, () => {
                     },
                     isCommand: () => true,
                     isChatInputCommand: () => true,
+                    get deferred() {
+                        return deferred;
+                    },
+                    get replied() {
+                        return replied;
+                    },
                     reply: sinon.stub()
-                        .onFirstCall().resolves({
+                        .onFirstCall().callsFake(() => replied = true).resolves({
                             flags: new MessageFlagsBitField()
                         })
                         .onSecondCall().rejects(),
                     deferReply: sinon.stub()
-                        .onFirstCall().resolves({
+                        .onFirstCall().callsFake(() => deferred = true).resolves({
                             flags: new MessageFlagsBitField(MessageFlags.Loading)
                         })
                         .onSecondCall().rejects(),
+                    fetchReply: () => ({
+                        flags: {
+                            has: (flag: MessageFlags) => flag === MessageFlags.Loading && deferred
+                        }
+                    }),
                     followUp: sinon.stub()
                         .onFirstCall().resolves({
                             flags: new MessageFlagsBitField()
@@ -272,7 +286,10 @@ describe(InteractionHandler.name, () => {
                         ephemeral: true,
                         fetchReply: true
                     });
-                    expect(interaction.followUp).calledOnceWithExactly("OK");
+                    expect(interaction.followUp).calledOnceWithExactly({
+                        content: "OK",
+                        ephemeral: true
+                    });
                 });
 
                 it("Manually replied", async () => {
@@ -292,30 +309,108 @@ describe(InteractionHandler.name, () => {
                         fetchReply: true
                     });
                 });
-            })
+            });
         });
 
         describe("Context menu commands", () => {
-            async function handleContextMenuInteraction(id: Snowflake, overrides?: object) {
+            async function handleContextMenuInteraction(key: string, overrides?: object) {
                 const handler = await createHandler(InteractionHandler).init();
+
+                const command = [...((handler as any).commandRegistry as CommandRegistry).commandsById.values()]
+                    .find(c => (c as ContextMenuCommand).key === key) as ContextMenuCommand | undefined;
+                
+                let deferred = false;
+                let replied = false;
                 const interaction = merge({
-                    command: { id },
+                    command: {
+                        id: command?.appCommandId ?? "1000"
+                    },
                     options: {
                     },
                     isCommand: () => true,
                     isChatInputCommand: () => false,
                     isContextMenuCommand: () => true,
+                    get deferred() {
+                        return deferred;
+                    },
+                    get replied() {
+                        return replied;
+                    },
                     reply: sinon.stub()
+                        .onFirstCall().callsFake(() => replied = true).resolves({
+                            flags: new MessageFlagsBitField()
+                        })
+                        .onSecondCall().rejects(),
+                    deferReply: sinon.stub()
+                        .onFirstCall().callsFake(() => deferred = true).resolves({
+                            flags: new MessageFlagsBitField(MessageFlags.Loading)
+                        })
+                        .onSecondCall().rejects(),
+                    fetchReply: () => ({
+                        flags: {
+                            has: (flag: MessageFlags) => flag === MessageFlags.Loading && deferred
+                        }
+                    }),
+                    followUp: sinon.stub()
+                        .onFirstCall().resolves({
+                            flags: new MessageFlagsBitField()
+                        })
+                        .onSecondCall().rejects(),
+                    editReply: sinon.stub()
+                        .onFirstCall().resolves({
+                            flags: new MessageFlagsBitField()
+                        })
+                        .onSecondCall().rejects(),
                 }, overrides);
                 await handler.handle(interaction as unknown as Interaction);
                 return interaction;
             }
 
             it("No command in registry", async () => {
-                const interaction = await handleContextMenuInteraction("2");
+                const interaction = await handleContextMenuInteraction("cmnone");
                 expect(interaction.reply).calledOnceWithExactly({
                     content: "command_processor: errors.unknown_command",
                     ephemeral: true
+                });
+            });
+
+            describe("Execute command", () => {
+                it("Success", async () => {
+                    const interaction = await handleContextMenuInteraction("cm-normal");
+                    expect(interaction.reply).calledOnceWithExactly({
+                        content: "OK",
+                        ephemeral: true
+                    });
+                });
+
+                it("Slow command", async function () {
+                    this.slow(2000);
+
+                    const interaction = await handleContextMenuInteraction("cm-slow");
+                    expect(interaction.deferReply).calledOnceWithExactly({
+                        ephemeral: true
+                    });
+                    expect(interaction.followUp).calledOnceWithExactly({
+                        content: 'OK',
+                        ephemeral: true
+                    });
+                });
+
+                it("Manually replied", async () => {
+                    const interaction = await handleContextMenuInteraction("cm-manually-replied");
+                    expect(interaction.reply).calledOnceWithExactly({
+                        content: "YAAY",
+                        ephemeral: false
+                    });
+                });
+
+                it("Threw or rejected", async () => {
+                    const interaction = await handleContextMenuInteraction("cm-rejected");
+                    expect(interaction.reply).calledOnceWithExactly({
+                        content: sinon.match(/Error/),
+                        ephemeral: true,
+                        fetchReply: true
+                    });
                 });
             });
         });

@@ -67,6 +67,8 @@ export abstract class EventHandler<Args extends any[], TConvertedOptions extends
         }
         catch (e) {
             await this.options.onFailure(commandMessage, e);
+            console.error(e);
+            return;
         }
 
         if (result === undefined) {

@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry";
 import { Command } from "../../definitions";
 import { CommandMessage } from "../../messageTypes/CommandMessage";
@@ -34,6 +34,9 @@ enum _IdConstants {
     Role1,
     Role2,
     Role3,
+
+    ChatInteractionCommands = 100,
+    ContextMenuInteractionCommand1 = 101
 };
 export const IdConstants: {
     [K in keyof typeof _IdConstants]: `${typeof _IdConstants[K]}`;
@@ -495,12 +498,39 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                 }
             },
             commandsById: new Map([
-                ["1", new Map(commands!.map(command => [command.path, command]))]
+                [IdConstants.ChatInteractionCommands, new Map(commands!.map(command => [command.path, command]))]
             ] as any),
             createContextMenuCommands: () => [{
-                id: "2",
-                handler: () => { }
-            }],
+                key: "cm-normal",
+                type: ApplicationCommandType.Message
+            }, {
+                key: "cm-slow",
+                type: ApplicationCommandType.Message,
+                handler: () => setTimeout(1500)
+            }, {
+                key: "cm-manually-replied",
+                type: ApplicationCommandType.Message,
+                handler: async (msg: ContextMenuCommandInteraction) => {
+                    await msg.reply({
+                        content: "YAAY",
+                        ephemeral: false
+                    });
+                }
+            }, {
+                key: "cm-rejected",
+                type: ApplicationCommandType.Message,
+                handler: async () => {
+                    throw new Error();
+                }
+            }].map(command => ({
+                handler: () => { },
+                ...command,
+                appCommandId: null,
+                appCommandData: {
+                    name: command.key,
+                    type: command.type
+                },
+            })),
             get commands() {
                 return new Map(commands!.map(command => [command.key, command]));
             },

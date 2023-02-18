@@ -32,14 +32,30 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
             registerApplicationCommands: options.registerApplicationCommands !== false
         }, {
             async onSlowCommand(msg: CommandMessageType) {
-                const interaction = getInteraction(msg);
-                if (!interaction.deferred && !interaction.replied)
-                    await msg.deferReply(true);
+                if (msg instanceof InteractionCommandMessage) {
+                    if (!msg.response)
+                        await msg.deferReply();
+                } else {
+                    if (!msg.deferred && !msg.replied) {
+                        await msg.deferReply({
+                            ephemeral: true
+                        });
+                    }
+                }
             },
             async onSuccess(msg: CommandMessageType) {
                 const interaction = getInteraction(msg);
-                if (!getInteraction(msg).replied || !(await interaction.fetchReply()).flags.has(MessageFlags.Loading))
-                    await msg.reply("OK");
+                if (!interaction.deferred && !interaction.replied) {
+                    await msg.reply({
+                        content: "OK",
+                        ephemeral: true
+                    });
+                } else if (interaction.deferred && (await interaction.fetchReply()).flags.has(MessageFlags.Loading)) {
+                    await interaction.followUp({
+                        content: "OK",
+                        ephemeral: true
+                    });
+                }
             },
             async onFailure(msg: CommandMessageType, e) {
                 const content = e instanceof CommandResultError
@@ -47,9 +63,10 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                     : String(e.stack);
 
                 const interaction = getInteraction(msg);
-                if (!getInteraction(msg).replied || !(await interaction.fetchReply()).flags.has(MessageFlags.Loading)) {
+                if (!interaction.replied || !(await interaction.fetchReply()).flags.has(MessageFlags.Loading)) {
                     await msg.reply({
                         content,
+                        ephemeral: true,
                         fetchReply: true
                     });
                 } else {
@@ -75,7 +92,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
             await this.handleContextMenuInteraction(interaction);
     }
 
-    async replyUnknownCommand(interaction: CommandInteraction, translator: Translator) {
+    private async replyUnknownCommand(interaction: CommandInteraction, translator: Translator) {
         await interaction.reply({
             content: translator.translate("errors.unknown_command"),
             ephemeral: true

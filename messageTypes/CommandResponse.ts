@@ -18,4 +18,8 @@ export abstract class CommandResponse {
     get embeds() {
         return this.message?.embeds;
     }
+
+    get flags() {
+        return this.message?.flags;
+    }
 }
