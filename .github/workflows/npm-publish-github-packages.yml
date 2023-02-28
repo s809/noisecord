@@ -28,17 +28,17 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v3
-      - id: check # This will be the reference for getting the outputs.
-        uses: EndBug/version-check@v2
-        with:
-          diff-search: true
-          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v3
-        if: steps.check.outputs.changed == 'true'
         with:
           node-version: 18
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
+      - uses: EndBug/version-check@v2
+        id: check
+        with:
+          diff-search: true
+          token: ${{ secrets.GITHUB_TOKEN }}
       - run: npm publish
+        if: steps.check.outputs.changed == 'true'
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
