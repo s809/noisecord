@@ -21,7 +21,9 @@ describe("CommandRegistry", () => {
 
     it("normal", () => commandRegistry.createCommands());
 
-    it("errors", async () => {
+    it("errors", async function () {
+        this.timeout(5000);
+
         const translatorManager = await new TranslatorManager({
             translationFileDirectory: "./testData/translations/normal",
             defaultLocale: "en-US",

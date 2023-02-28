@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Client, Collection } from "discord.js";
 import sinon from "sinon";
-import { CommandFramework, CommandFrameworkOptions } from "..js";
+import { CommandFramework, CommandFrameworkOptions } from "./index.js";
 
 const options: CommandFrameworkOptions = {
     commandRegistryOptions: {

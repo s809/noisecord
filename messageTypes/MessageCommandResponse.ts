@@ -1,4 +1,4 @@
-import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, TextBasedChannel, WebhookEditMessageOptions, MessageCreateOptions } from 'discord.js';
+import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, TextBasedChannel, WebhookEditMessageOptions, MessageCreateOptions, StageChannel } from 'discord.js';
 import { CommandResponse } from "./CommandResponse.js";
 
 export class MessageCommandResponse extends CommandResponse {
@@ -18,7 +18,7 @@ export class MessageCommandResponse extends CommandResponse {
     async edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions) {
         this.message = this.message
             ? await this.message.edit(options as MessageEditOptions)
-            : await this.channel!.send(options as MessageCreateOptions);
+            : await (this.channel! as Exclude<TextBasedChannel, StageChannel>).send(options as MessageCreateOptions);
         return this;
     }
 

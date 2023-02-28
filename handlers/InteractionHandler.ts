@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags, Snowflake } from "discord.js";
+import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags, Snowflake, StageChannel } from "discord.js";
 import { CommandRegistry } from "../CommandRegistry.js";
 import { Command, CommandHandler, ContextMenuCommand, ParsedArguments } from "../definitions.js";
 import { InteractionCommandRequest } from "../messageTypes/InteractionCommandRequest.js";
@@ -9,7 +9,7 @@ import { Translator } from "../Translator.js";
 import assert from "assert";
 import { CommandRequest } from "../messageTypes/CommandRequest.js";
 
-type CommandRequestType = InteractionCommandRequest | ContextMenuCommandInteraction;
+type ContainsInteraction = InteractionCommandRequest | ContextMenuCommandInteraction;
 
 export interface InteractionHandlerOptions extends HandlerOptions<CommandRequest | ContextMenuCommandInteraction> {
     registerApplicationCommands?: boolean;
@@ -21,7 +21,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
     protected readonly eventName = "interactionCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {
-        const getInteraction = (msg: CommandRequestType) => {
+        const getInteraction = (msg: ContainsInteraction) => {
             if (msg instanceof InteractionCommandRequest)
                 return msg.interaction;
             else
@@ -31,7 +31,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
         super(client, commandRegistry, {
             registerApplicationCommands: options.registerApplicationCommands !== false
         }, {
-            async onSlowCommand(msg: CommandRequestType) {
+            async onSlowCommand(msg: ContainsInteraction) {
                 if (msg instanceof InteractionCommandRequest) {
                     if (!msg.response)
                         await msg.deferReply();
@@ -43,7 +43,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                     }
                 }
             },
-            async onSuccess(msg: CommandRequestType) {
+            async onSuccess(msg: ContainsInteraction) {
                 const interaction = getInteraction(msg);
                 if (!interaction.deferred && !interaction.replied) {
                     await msg.reply({
@@ -57,7 +57,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                     });
                 }
             },
-            async onFailure(msg: CommandRequestType, e) {
+            async onFailure(msg: ContainsInteraction, e) {
                 const content = e instanceof CommandResultError
                     ? e.message
                     : String(e.stack);
@@ -70,7 +70,8 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                         fetchReply: true
                     });
                 } else {
-                    await msg.channel?.send(content);
+                    if (!(msg.channel instanceof StageChannel))
+                        await msg.channel?.send(content);
                 }
             },
         });

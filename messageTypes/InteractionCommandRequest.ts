@@ -1,4 +1,4 @@
-import { CommandInteraction, InteractionReplyOptions, Message, MessageReplyOptions } from 'discord.js';
+import { CommandInteraction, InteractionReplyOptions, Message, MessageReplyOptions, StageChannel, TextBasedChannel } from 'discord.js';
 import { Translator } from "../Translator.js";
 import { Command } from "../definitions.js";
 import { CommandRequest } from "./CommandRequest.js";
@@ -41,7 +41,7 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
     }
 
     async sendSeparate(options: string | MessageReplyOptions) {
-        return new MessageCommandResponse(await this.interaction.channel!.send(options));
+        return new MessageCommandResponse(await (this.interaction.channel as Exclude<TextBasedChannel, StageChannel>)!.send(options));
     }
 
     get content() {
