@@ -1,13 +1,13 @@
 import { ApplicationCommandChannelOptionData, ApplicationCommandNumericOptionData, ApplicationCommandOptionType, ApplicationCommandPermissions, ApplicationCommandPermissionType, ApplicationCommandStringOptionData, Awaitable, CachedManager, Client, Guild, GuildChannel, Message, PermissionFlagsBits, PermissionsBitField, Snowflake } from "discord.js";
-import { CommandRegistry } from "../CommandRegistry";
-import { checkConditions } from "../conditions";
-import { Command, CommandHandler, ParsedArguments } from "../definitions";
-import { MessageCommandMessage } from "../messageTypes/MessageCommandMessage";
-import { Translator } from "../Translator";
-import { parseChannelMention, parseRoleMention, parseUserMention } from "../util";
-import { ArgumentParseError, CommandResultError } from "./errors";
-import { HandlerOptions } from "./HandlerOptions";
-import { EventHandler } from "./EventHandler";
+import { CommandRegistry } from "../CommandRegistry.js";
+import { checkConditions } from "../conditions/index.js";
+import { Command, CommandHandler, ParsedArguments } from "../definitions.js";
+import { MessageCommandRequest } from "../messageTypes/MessageCommandRequest.js";
+import { Translator } from "../Translator.js";
+import { parseChannelMention, parseRoleMention, parseUserMention } from "../util.js";
+import { ArgumentParseError, CommandResultError } from "./errors.js";
+import { HandlerOptions } from "./HandlerOptions.js";
+import { EventHandler } from "./EventHandler.js";
 import { IterableElement } from "type-fest";
 
 export const loadingEmoji = "🔄";
@@ -37,7 +37,7 @@ interface ConvertedOptions extends Required<HandlerOptions> {
     shouldIgnorePermissions: (msg: Message) => Awaitable<boolean>;
 };
 
-export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptions> {
+export class MessageHandler extends EventHandler<[Message], ConvertedOptions> {
     protected readonly eventName = "messageCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions) {
@@ -60,16 +60,16 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
                 return false;
             }
         }, {
-            async onSlowCommand(msg: MessageCommandMessage) {
+            async onSlowCommand(msg: MessageCommandRequest) {
                 await msg.message.react(loadingEmoji).catch(() => { });
             },
-            async onSuccess(msg: MessageCommandMessage) {
+            async onSuccess(msg: MessageCommandRequest) {
                 await Promise.allSettled([
                     msg.message.reactions.resolve(loadingEmoji)?.users.remove(),
                     msg.message.react(successEmoji)
                 ]);
             },
-            async onFailure(msg: MessageCommandMessage, e) {
+            async onFailure(msg: MessageCommandRequest, e) {
                 await Promise.allSettled([
                     msg.message.reactions.resolve(loadingEmoji)?.users.remove(),
                     msg.message.react(failureEmoji),
@@ -118,8 +118,8 @@ export class MessageCreateHandler extends EventHandler<[Message], ConvertedOptio
         }
 
         const commandTranslator = await this.translatorManager.getTranslator(msg, command.translationPath);
-        const commandMessage = new MessageCommandMessage(command, commandTranslator, msg);
-        await this.executeCommand(commandMessage, () => command.handler!(commandMessage, argsObj), commandTranslator);
+        const CommandRequest = new MessageCommandRequest(command, commandTranslator, msg);
+        await this.executeCommand(CommandRequest, () => command.handler!(CommandRequest, argsObj), commandTranslator);
     }
 
     private async checkCommandPermissions(msg: Message, command: Command): Promise<boolean> {

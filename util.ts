@@ -1,12 +1,13 @@
-export function traverseTree<V>(path: string[],
-    root: ReadonlyMap<string, V>,
-    getDescendants: (value: V) => Map<string, V> | null | undefined,
-    allowPartialResolve: boolean = false): V | null {
-    let result;
+export function traverseTree<T>(path: string[],
+    root: ReadonlyMap<string, T>,
+    getDescendants: (value: T) => Map<string, T> | null | undefined,
+    allowPartialResolve: boolean = false): T | null {
+    path = [...path];
+    let result: T | undefined;
 
-    let list: ReadonlyMap<string, V> | null | undefined = root;
+    let list: ReadonlyMap<string, T> | null | undefined = root;
     do {
-        const found: V | undefined = list.get(path[0]);
+        const found: T | undefined = list.get(path[0]);
         if (!found)
             break;
 

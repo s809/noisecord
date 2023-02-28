@@ -1,5 +1,5 @@
 import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, TextBasedChannel, WebhookEditMessageOptions, MessageCreateOptions } from 'discord.js';
-import { CommandResponse } from './CommandResponse';
+import { CommandResponse } from "./CommandResponse.js";
 
 export class MessageCommandResponse extends CommandResponse {
     private channel?: TextBasedChannel;

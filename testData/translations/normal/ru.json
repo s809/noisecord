@@ -1,3 +1,27 @@
 {
-  "locale_string": "ru"
+  "locale_string": "ru",
+  "commands": {
+    "parent": {
+      "name": "парент",
+      "description": "парент"
+    },
+    "parent_test": {
+      "name": "тест",
+      "description": "тест",
+      "args": {
+        "arg": {
+          "name": "арг",
+          "description": "арг"
+        },
+        "arg2": {
+          "name": "арг2",
+          "description": "арг2"
+        }
+      }
+    },
+    "test": {
+      "name": "тест",
+      "description": "тест"
+    }
+  }
 }

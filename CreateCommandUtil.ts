@@ -1,8 +1,8 @@
 import { PermissionResolvable } from "discord.js";
-import { CommandCondition } from "./conditions";
-import { Command, CommandDefinition } from "./definitions";
+import { CommandCondition } from "./conditions/index.js";
+import { Command, CommandDefinition } from "./definitions.js";
 import { ApplicationCommandOptionType, LocaleString, PermissionFlagsBits } from "discord.js";
-import { TranslatorManager } from "./TranslatorManager";
+import { TranslatorManager } from "./TranslatorManager.js";
 import { castArray, isNil } from "lodash-es";
 
 export interface InheritableOptions {
@@ -225,7 +225,7 @@ export class CreateCommandUtil {
             };
         }) as Command["args"]["list"] ?? [];
 
-        return {
+        partialCommand.args = {
             list: convertedArgs,
             min: minArgs,
             max: maxArgs,

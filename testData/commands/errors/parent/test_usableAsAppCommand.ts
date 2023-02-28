@@ -1,6 +1,6 @@
-import { defineCommand } from "../../../../definitions";
+import { defineCommand } from "../../../../definitions.js";
 
 export default defineCommand({
     key: "test_usableAsAppCommand",
-    interactionCommand: { }
+    interactionCommand: true
 });

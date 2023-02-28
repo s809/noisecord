@@ -1,4 +1,4 @@
-import { CommandCondition, InVoiceChannel } from ".";
+import { CommandCondition, InVoiceChannel } from "./index.js";
 
 export const InVoiceWithBot: CommandCondition = {
     name: "In Voice With a Bot",

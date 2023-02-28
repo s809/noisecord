@@ -1,22 +1,22 @@
 import { expect } from "chai";
 import { BitField, CommandInteraction, MessageFlags } from "discord.js";
 import sinon from "sinon";
-import { Command } from "../definitions";
-import { Translator } from "../Translator";
-import { InteractionCommandMessage } from "./InteractionCommandMessage";
+import { Command } from "../definitions.js";
+import { Translator } from "../Translator.js";
+import { InteractionCommandRequest } from "./InteractionCommandRequest.js";
 
-describe(InteractionCommandMessage.name, () => {
+describe(InteractionCommandRequest.name, () => {
 
-    describe(`#${InteractionCommandMessage.prototype.completeSilently.name}`, () => {
+    describe(`#${InteractionCommandRequest.prototype.completeSilently.name}`, () => {
         it("Defer only if possible", async () => {
             for (const prop of ["deferred", "replied"]) {
-                const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, {
+                const CommandRequest = new InteractionCommandRequest({} as Command, {} as Translator, {
                     deferred: false,
                     replied: false,
                     [prop]: true,
                     deleteReply: sinon.stub().resolves()
                 } as unknown as CommandInteraction);
-                await commandMessage.completeSilently();
+                await CommandRequest.completeSilently();
             }
 
             const commandInteraction = {
@@ -25,8 +25,8 @@ describe(InteractionCommandMessage.name, () => {
                 deferReply: sinon.stub().resolves(),
                 deleteReply: sinon.stub().resolves()
             };
-            const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
-            await commandMessage.completeSilently();
+            const CommandRequest = new InteractionCommandRequest({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
+            await CommandRequest.completeSilently();
             expect(commandInteraction.deferReply).calledOnce;
             expect(commandInteraction.deleteReply).calledOnce;
         });
@@ -38,21 +38,21 @@ describe(InteractionCommandMessage.name, () => {
                 deferReply: sinon.stub().resolves(),
                 deleteReply: sinon.stub().rejects()
             };
-            const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
-            await commandMessage.completeSilently();
+            const CommandRequest = new InteractionCommandRequest({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
+            await CommandRequest.completeSilently();
             expect(commandInteraction.deferReply).calledOnce;
             expect(commandInteraction.deleteReply).calledOnce;
         });
     });
 
-    describe(`#${InteractionCommandMessage.prototype.deferReply.name}`, () => {
+    describe(`#${InteractionCommandRequest.prototype.deferReply.name}`, () => {
         it("Defers only once", async () => {
             const commandInteraction = {
                 deferReply: sinon.stub().resolves()
             };
-            const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
-            await commandMessage.deferReply();
-            await commandMessage.deferReply(false);
+            const CommandRequest = new InteractionCommandRequest({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
+            await CommandRequest.deferReply();
+            await CommandRequest.deferReply(false);
             expect(commandInteraction.deferReply).calledOnceWithExactly({
                 ephemeral: true,
                 fetchReply: true
@@ -60,13 +60,13 @@ describe(InteractionCommandMessage.name, () => {
         });
     });
 
-    describe(`#${InteractionCommandMessage.prototype.reply.name}`, () => {
+    describe(`#${InteractionCommandRequest.prototype.reply.name}`, () => {
         it("Accept strings", async () => {
             const commandInteraction = {
                 reply: sinon.stub().resolves()
             };
-            const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
-            await commandMessage.reply("test");
+            const CommandRequest = new InteractionCommandRequest({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
+            await CommandRequest.reply("test");
             expect(commandInteraction.reply).calledOnceWithExactly({
                 ephemeral: true,
                 content: "test",
@@ -78,8 +78,8 @@ describe(InteractionCommandMessage.name, () => {
             const commandInteraction = {
                 reply: sinon.stub().resolves()
             };
-            const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
-            await commandMessage.reply({
+            const CommandRequest = new InteractionCommandRequest({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
+            await CommandRequest.reply({
                 ephemeral: false,
                 content: "test",
                 fetchReply: false
@@ -98,9 +98,9 @@ describe(InteractionCommandMessage.name, () => {
                 }),
                 followUp: sinon.stub().resolves()
             };
-            const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
-            await commandMessage.deferReply();
-            await commandMessage.reply("test");
+            const CommandRequest = new InteractionCommandRequest({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
+            await CommandRequest.deferReply();
+            await CommandRequest.reply("test");
             expect(commandInteraction.deferReply).calledOnceWithExactly({
                 ephemeral: true,
                 fetchReply: true
@@ -109,14 +109,14 @@ describe(InteractionCommandMessage.name, () => {
         });
     });
 
-    it(`#${InteractionCommandMessage.prototype.sendSeparate.name}`, async () => {
+    it(`#${InteractionCommandRequest.prototype.sendSeparate.name}`, async () => {
         const commandInteraction = {
             channel: {
                 send: sinon.stub().resolves()
             }
         };
-        const commandMessage = new InteractionCommandMessage({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
-        await commandMessage.sendSeparate("test");
+        const CommandRequest = new InteractionCommandRequest({} as Command, {} as Translator, commandInteraction as unknown as CommandInteraction);
+        await CommandRequest.sendSeparate("test");
         expect(commandInteraction.channel.send).calledOnceWithExactly("test");
     });
 });

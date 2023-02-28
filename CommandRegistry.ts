@@ -3,12 +3,12 @@ import path from "path";
 import {
     createCommand,
     CreateCommandUtil, InheritableOptions
-} from "./CreateCommandUtil";
-import { Command, CommandDefinition, ContextMenuCommand, ContextMenuCommandDefinition } from "./definitions";
-import { importModules, isTsNode } from "./importHelper";
-import { Translator } from "./Translator";
-import { TranslatorManager } from "./TranslatorManager";
-import { DeeplyNestedMap, traverseTree } from "./util";
+} from "./CreateCommandUtil.js";
+import { Command, CommandDefinition, ContextMenuCommand, ContextMenuCommandDefinition } from "./definitions.js";
+import { importModules, isTsNode } from "./importHelper.js";
+import { Translator } from "./Translator.js";
+import { TranslatorManager } from "./TranslatorManager.js";
+import { DeeplyNestedMap, traverseTree } from "./util.js";
 
 export interface CommandRegistryOptions {
     commandModuleDirectory?: string;
@@ -125,9 +125,9 @@ export class CommandRegistry {
         const definitions = await importModules<ContextMenuCommandDefinition>(this.options.contextMenuModuleDirectory);
         
         for (const [, definition] of definitions) {
-            const nameLocalizations = this.translatorManager.getLocalizations(`contextMenuCommands.${definition.key}.name`);
+            const nameLocalizations = this.translatorManager.getLocalizations(`context_menu_commands.${definition.key}.name`);
             if (!nameLocalizations[this.translatorManager.fallbackLocale])
-                throw new Error(`Context menu command ${definition.key} has no name in default locale.`);
+                throw new Error(`Context menu command ${definition.key} has no name in default locale (${this.translatorManager.fallbackLocale}).`);
 
             this.contextMenuCommands.push({
                 ...definition,
@@ -165,10 +165,10 @@ export class CommandRegistry {
         if (typeof path === "string")
             path = path.split("/");
 
-        const translatorSubMap = this.commandsByLocale.get(translator.localeString)!;
+        const translatorSubMap = this.commandsByLocale.get(translator.localeString);
         const fallbackSubMap = this.commandsByLocale.get(this.translatorManager!.fallbackLocale)!;
-        const subMap = translatorSubMap.has(path[0]) || !allowFallback
-            ? translatorSubMap
+        const subMap = translatorSubMap?.has(path[0]) || !allowFallback
+            ? translatorSubMap!
             : fallbackSubMap;
 
         const result = traverseTree(path,

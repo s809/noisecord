@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { BitField, CommandInteraction, Message, MessageFlags } from "discord.js";
 import sinon from "sinon";
-import { InteractionCommandResponse } from "./InteractionCommandResponse";
+import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 
 describe(InteractionCommandResponse.name, () => {
     describe(`#${InteractionCommandResponse.prototype.edit.name}`, () => {

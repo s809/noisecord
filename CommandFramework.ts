@@ -1,9 +1,9 @@
-import { Command } from "./definitions";
-import { CommandRegistry, CommandRegistryOptions } from "./CommandRegistry";
-import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager";
+import { Command } from "./definitions.js";
+import { CommandRegistry, CommandRegistryOptions } from "./CommandRegistry.js";
+import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
 import { Client } from "discord.js";
-import { InteractionHandler, InteractionHandlerOptions } from "./handlers/InteractionHandler";
-import { MessageCreateHandler, MessageHandlerOptions } from "./handlers/MessageCreateHandler";
+import { InteractionHandler, InteractionHandlerOptions } from "./handlers/InteractionHandler.js";
+import { MessageHandler, MessageHandlerOptions } from "./handlers/MessageHandler.js";
 
 export interface CommandFrameworkOptions {
     commandRegistryOptions: CommandRegistryOptions;
@@ -24,7 +24,7 @@ export class CommandFramework {
 
     client?: Client;
 
-    messageHandler: MessageCreateHandler | null = null;
+    messageHandler: MessageHandler | null = null;
     interactionHandler: InteractionHandler | null = null;
 
     constructor(private options: CommandFrameworkOptions) {}
@@ -48,7 +48,7 @@ export class CommandFramework {
 
     private async attachCommandHandlers() {
         if (this.options.messageCommands)
-            this.messageHandler = await new MessageCreateHandler(this.client!, this.commandRegistry!, this.options.messageCommands).init();
+            this.messageHandler = await new MessageHandler(this.client!, this.commandRegistry!, this.options.messageCommands).init();
         if (this.options.interactionCommands)
             this.interactionHandler = await new InteractionHandler(this.client!, this.commandRegistry!, this.options.interactionCommands).init();
 

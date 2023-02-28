@@ -3,12 +3,12 @@
  */
 
 import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
-import { DistributiveOmit } from "./util";
-import { CommandCondition } from "./conditions";
-import { CommandMessage } from "./messageTypes/CommandMessage";
-import { Translator } from "./Translator";
+import { DistributiveOmit } from "./util.js";
+import { CommandCondition } from "./conditions/index.js";
+import { CommandRequest } from "./messageTypes/CommandRequest.js";
+import { Translator } from "./Translator.js";
 import { IterableElement, Merge } from "type-fest";
-import { SimpleMerge } from "type-fest/source/merge";
+import { SimpleMerge } from "type-fest/source/merge.js";
 
 export const textChannels = [
     ChannelType.GuildAnnouncement,
@@ -77,7 +77,7 @@ export type Command = SimpleMerge<Required<CommandDefinition>, {
 export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role>;
 
 export type CommandHandler = (
-    msg: CommandMessage,
+    msg: CommandRequest,
     args: ParsedArguments
 ) => Awaitable<string | void>;
 
@@ -96,6 +96,6 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = C
 /**
  * This function is just for convenience/type checking.
  */
-export function defineCommand(definition: CommandDefinition) {
+export function defineCommand<T extends CommandDefinition | ContextMenuCommandDefinition = CommandDefinition>(definition: T) {
     return definition;
 }

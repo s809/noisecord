@@ -1,10 +1,10 @@
 import { Awaitable, Client } from "discord.js";
-import { CommandRegistry } from "../CommandRegistry";
-import { TranslatorManager } from "../TranslatorManager";
-import { CommandResultError } from "./errors";
-import { HandlerOptions } from "./HandlerOptions";
+import { CommandRegistry } from "../CommandRegistry.js";
+import { TranslatorManager } from "../TranslatorManager.js";
+import { CommandResultError } from "./errors.js";
+import { HandlerOptions } from "./HandlerOptions.js";
 import { setTimeout } from "timers/promises";
-import { Translator } from "../Translator";
+import { Translator } from "../Translator.js";
 import { merge } from "lodash-es";
 
 type HandlerOptionsType<T> = T extends HandlerOptions<infer T> ? T : never;
@@ -45,7 +45,7 @@ export abstract class EventHandler<Args extends any[], TConvertedOptions extends
         }) ?? [];
     }
 
-    protected async executeCommand(commandMessage: HandlerOptionsType<TConvertedOptions>, execute: () => Awaitable<string | void>, translator: Translator) {
+    protected async executeCommand(CommandRequest: HandlerOptionsType<TConvertedOptions>, execute: () => Awaitable<string | void>, translator: Translator) {
         let result: string | undefined;
         try {
             let finished = false;
@@ -61,23 +61,23 @@ export abstract class EventHandler<Args extends any[], TConvertedOptions extends
             ]);
 
             if (!finished) {
-                await this.options.onSlowCommand(commandMessage);
+                await this.options.onSlowCommand(CommandRequest);
                 result = await promise;
             }
         }
         catch (e) {
-            await this.options.onFailure(commandMessage, e);
+            await this.options.onFailure(CommandRequest, e);
             console.error(e);
             return;
         }
 
         if (result === undefined) {
-            await this.options.onSuccess(commandMessage);
+            await this.options.onSuccess(CommandRequest);
         } else {
             const errorPath = `errors.${result}`;
             const translatedError = translator.translate(errorPath);
 
-            await this.options.onFailure(commandMessage, new CommandResultError(translatedError !== errorPath
+            await this.options.onFailure(CommandRequest, new CommandResultError(translatedError !== errorPath
                 ? translatedError
                 : result));
         }

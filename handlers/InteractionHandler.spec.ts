@@ -2,10 +2,10 @@ import { expect } from "chai";
 import { ApplicationCommandDataResolvable, ApplicationCommandType, Client, Interaction, MessageFlags, MessageFlagsBitField, Snowflake } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
-import { CommandRegistry } from "../CommandRegistry";
-import { ContextMenuCommand } from "../definitions";
-import { InteractionHandler } from "./InteractionHandler";
-import { makeFakeCommand, createHandler, IdConstants } from "./testData/util";
+import { CommandRegistry } from "../CommandRegistry.js";
+import { ContextMenuCommand } from "../definitions.js";
+import { InteractionHandler } from "./InteractionHandler.js";
+import { makeFakeCommand, createHandler, IdConstants } from "./testData/util.js";
 
 describe(InteractionHandler.name, () => {
     describe("Registration of interaction commands", () => {
@@ -122,7 +122,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                expect(createHandler(InteractionHandler, commands).init()).rejectedWith(/cannot have a handler/);
+                expect(createHandler(InteractionHandler, commands).init()).rejectedWith("cannot have a handler");
             });
 
             it("Command without either subcommands or handler", async () => {
@@ -132,7 +132,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                expect(createHandler(InteractionHandler, commands).init()).rejectedWith(/must have a handler/);
+                expect(createHandler(InteractionHandler, commands).init()).rejectedWith("must have a handler");
             });
 
             it("Too many nested commands", async () => {
@@ -152,7 +152,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                expect(createHandler(InteractionHandler, commands).init()).rejectedWith(/depth was exceeded/);
+                expect(createHandler(InteractionHandler, commands).init()).rejectedWith("depth was exceeded");
             });
         });
     });

@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction } from "discord.js";
-import { CommandRegistry } from "../../CommandRegistry";
-import { Command } from "../../definitions";
-import { CommandMessage } from "../../messageTypes/CommandMessage";
+import { CommandRegistry } from "../../CommandRegistry.js";
+import { Command } from "../../definitions.js";
+import { CommandRequest } from "../../messageTypes/CommandRequest.js";
 import { setTimeout } from "timers/promises";
 import sinon from "sinon";
 import { merge } from "lodash-es";
@@ -237,7 +237,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             }
         }],
         ["auto/manually-replied", {
-            handler: async (msg: CommandMessage) => {
+            handler: async (msg: CommandRequest) => {
                 await msg.reply({
                     content: "YAAY",
                     ephemeral: false

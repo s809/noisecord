@@ -1,7 +1,7 @@
 import { CommandInteraction, Guild, GuildResolvable, LocaleString, Message, User } from "discord.js";
 import { readdir, readFile } from "fs/promises";
 import path from "path";
-import { Translator } from "./Translator";
+import { Translator } from "./Translator.js";
 
 const defaultDiscordLocale: LocaleString = "en-US";
 

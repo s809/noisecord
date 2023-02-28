@@ -1,10 +1,10 @@
 import { Message, MessageReplyOptions } from 'discord.js';
-import { Translator } from '../Translator';
-import { Command } from '../definitions';
-import { CommandMessage } from './CommandMessage';
-import { MessageCommandResponse } from "./MessageCommandResponse";
+import { Translator } from "../Translator.js";
+import { Command } from "../definitions.js";
+import { CommandRequest } from "./CommandRequest.js";
+import { MessageCommandResponse } from "./MessageCommandResponse.js";
 
-export class MessageCommandMessage<InGuild extends boolean = boolean> extends CommandMessage<InGuild> {
+export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
     readonly message: Message;
 
     constructor(command: Command, translator: Translator, message: Message) {
@@ -31,19 +31,19 @@ export class MessageCommandMessage<InGuild extends boolean = boolean> extends Co
         return this.message.content;
     }
 
-    inGuild(): this is MessageCommandMessage<true> {
+    inGuild(): this is MessageCommandRequest<true> {
         return this.message.inGuild();
     }
 
-    get channel(): CommandMessage<InGuild>["channel"] {
+    get channel(): CommandRequest<InGuild>["channel"] {
         return this.message.channel as any;
     }
 
-    get guild(): CommandMessage<InGuild>["guild"] {
+    get guild(): CommandRequest<InGuild>["guild"] {
         return this.message.guild ?? null as any;
     }
 
-    get member(): CommandMessage<InGuild>["member"] {
+    get member(): CommandRequest<InGuild>["member"] {
         return this.message.member ?? null as any;
     }
 

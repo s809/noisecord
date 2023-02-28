@@ -1,18 +1,18 @@
 import { CommandInteraction, Message } from "discord.js";
-import { CommandMessage } from "../messageTypes/CommandMessage";
-import { Command } from "../definitions";
+import { CommandRequest } from "../messageTypes/CommandRequest.js";
+import { Command } from "../definitions.js";
 
 export interface CommandCondition {
     name: string;
-    check: (msg: Message | CommandMessage) => boolean;
+    check: (msg: Message | CommandRequest) => boolean;
     failureMessage: string;
     hideInDescription?: boolean;
-    hideCommand?: boolean | ((msg: Message | CommandMessage) => boolean);
+    hideCommand?: boolean | ((msg: Message | CommandRequest) => boolean);
     satisfiedBy?: CommandCondition | CommandCondition[];
     requires?: CommandCondition | CommandCondition[];
 }
 
-type WithCommandContext = Message | CommandInteraction | CommandMessage;
+type WithCommandContext = Message | CommandInteraction | CommandRequest;
 
 /**
  * Checks a provided command requirement against a message.
@@ -87,5 +87,5 @@ export function checkConditions(
         .filter(result => result)[0] ?? null;
 }
 
-export { InVoiceChannel } from "./InVoiceChannel";
-export { InVoiceWithBot } from "./InVoiceWithBot";
+export { InVoiceChannel } from "./InVoiceChannel.js";
+export { InVoiceWithBot } from "./InVoiceWithBot.js";

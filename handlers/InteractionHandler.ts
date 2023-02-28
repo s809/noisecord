@@ -1,17 +1,17 @@
 import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags, Snowflake } from "discord.js";
-import { CommandRegistry } from "../CommandRegistry";
-import { Command, CommandHandler, ContextMenuCommand, ParsedArguments } from "../definitions";
-import { InteractionCommandMessage } from "../messageTypes/InteractionCommandMessage";
-import { ArgumentParseError, CommandResultError } from "./errors";
-import { HandlerOptions } from "./HandlerOptions";
-import { EventHandler } from "./EventHandler";
-import { Translator } from "../Translator";
+import { CommandRegistry } from "../CommandRegistry.js";
+import { Command, CommandHandler, ContextMenuCommand, ParsedArguments } from "../definitions.js";
+import { InteractionCommandRequest } from "../messageTypes/InteractionCommandRequest.js";
+import { ArgumentParseError, CommandResultError } from "./errors.js";
+import { HandlerOptions } from "./HandlerOptions.js";
+import { EventHandler } from "./EventHandler.js";
+import { Translator } from "../Translator.js";
 import assert from "assert";
-import { CommandMessage } from "../messageTypes/CommandMessage";
+import { CommandRequest } from "../messageTypes/CommandRequest.js";
 
-type CommandMessageType = InteractionCommandMessage | ContextMenuCommandInteraction;
+type CommandRequestType = InteractionCommandRequest | ContextMenuCommandInteraction;
 
-export interface InteractionHandlerOptions extends HandlerOptions<CommandMessage | ContextMenuCommandInteraction> {
+export interface InteractionHandlerOptions extends HandlerOptions<CommandRequest | ContextMenuCommandInteraction> {
     registerApplicationCommands?: boolean;
 }
 
@@ -21,8 +21,8 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
     protected readonly eventName = "interactionCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {
-        const getInteraction = (msg: CommandMessageType) => {
-            if (msg instanceof InteractionCommandMessage)
+        const getInteraction = (msg: CommandRequestType) => {
+            if (msg instanceof InteractionCommandRequest)
                 return msg.interaction;
             else
                 return msg;
@@ -31,8 +31,8 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
         super(client, commandRegistry, {
             registerApplicationCommands: options.registerApplicationCommands !== false
         }, {
-            async onSlowCommand(msg: CommandMessageType) {
-                if (msg instanceof InteractionCommandMessage) {
+            async onSlowCommand(msg: CommandRequestType) {
+                if (msg instanceof InteractionCommandRequest) {
                     if (!msg.response)
                         await msg.deferReply();
                 } else {
@@ -43,7 +43,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                     }
                 }
             },
-            async onSuccess(msg: CommandMessageType) {
+            async onSuccess(msg: CommandRequestType) {
                 const interaction = getInteraction(msg);
                 if (!interaction.deferred && !interaction.replied) {
                     await msg.reply({
@@ -57,7 +57,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                     });
                 }
             },
-            async onFailure(msg: CommandMessageType, e) {
+            async onFailure(msg: CommandRequestType, e) {
                 const content = e instanceof CommandResultError
                     ? e.message
                     : String(e.stack);
@@ -130,8 +130,8 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
         }
 
         const commandTranslator = await this.translatorManager.getTranslator(interaction, command.translationPath);
-        const commandMessage = new InteractionCommandMessage(command, commandTranslator, interaction);
-        await this.executeCommand(commandMessage, () => command.handler!(commandMessage, argsObj), commandTranslator);
+        const CommandRequest = new InteractionCommandRequest(command, commandTranslator, interaction);
+        await this.executeCommand(CommandRequest, () => command.handler!(CommandRequest, argsObj), commandTranslator);
     }
 
     private async handleContextMenuInteraction(interaction: ContextMenuCommandInteraction) {

@@ -7,11 +7,29 @@
     },
     "parent_test": {
       "name": "test",
-      "description": "test"
+      "description": "test",
+      "args": {
+        "arg": {
+          "name": "arg",
+          "description": "arg"
+        },
+        "arg2": {
+          "name": "arg2",
+          "description": "arg2"
+        }
+      }
     },
     "test": {
       "name": "test",
       "description": "test"
+    }
+  },
+  "context_menu_commands": {
+    "cm-message": {
+      "name": "cm-message"
+    },
+    "cm-user": {
+      "name": "cm-user"
     }
   }
 }

@@ -1,11 +1,11 @@
 import { CommandInteraction, InteractionReplyOptions, Message, MessageReplyOptions } from 'discord.js';
-import { Translator } from '../Translator';
-import { Command } from '../definitions';
-import { CommandMessage } from './CommandMessage';
-import { MessageCommandResponse } from "./MessageCommandResponse";
-import { InteractionCommandResponse } from "./InteractionCommandResponse";
+import { Translator } from "../Translator.js";
+import { Command } from "../definitions.js";
+import { CommandRequest } from "./CommandRequest.js";
+import { MessageCommandResponse } from "./MessageCommandResponse.js";
+import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 
-export class InteractionCommandMessage<InGuild extends boolean = boolean> extends CommandMessage<InGuild> {
+export class InteractionCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
     constructor(command: Command, translator: Translator, readonly interaction: CommandInteraction) {
         super(command, translator);
         this.interaction = interaction;
@@ -48,19 +48,19 @@ export class InteractionCommandMessage<InGuild extends boolean = boolean> extend
         return null;
     }
 
-    inGuild(): this is InteractionCommandMessage<true> {
+    inGuild(): this is InteractionCommandRequest<true> {
         return this.interaction.inGuild();
     }
 
-    get channel(): CommandMessage<InGuild>["channel"] {
+    get channel(): CommandRequest<InGuild>["channel"] {
         return this.interaction.channel as any;
     }
 
-    get guild(): CommandMessage<InGuild>["guild"] {
+    get guild(): CommandRequest<InGuild>["guild"] {
         return this.interaction.guild as any;
     }
 
-    get member(): CommandMessage<InGuild>["member"] {
+    get member(): CommandRequest<InGuild>["member"] {
         return this.interaction.member as any;
     }
 

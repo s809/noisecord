@@ -1,5 +1,5 @@
 import { CommandInteraction, InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, WebhookEditMessageOptions, MessageCreateOptions, MessageFlags } from 'discord.js';
-import { CommandResponse } from './CommandResponse';
+import { CommandResponse } from "./CommandResponse.js";
 
 export class InteractionCommandResponse extends CommandResponse {
     constructor(readonly interaction: CommandInteraction, message: Message) {

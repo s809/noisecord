@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { CommandInteraction, Guild, Message, TextChannel, User } from "discord.js";
 import sinon from "sinon";
-import { NameOrContext, TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager";
+import { NameOrContext, TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
 
 const translationOptions: TranslatorManagerOptions = {
     translationFileDirectory: "./testData/translations/normal",

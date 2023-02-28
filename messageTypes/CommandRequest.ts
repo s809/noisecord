@@ -1,9 +1,9 @@
 import { Guild, GuildMember, If, InteractionReplyOptions, TextBasedChannel, GuildTextBasedChannel, MessageReplyOptions, User, Snowflake, InteractionCollector, CollectedInteraction, MappedInteractionTypes } from 'discord.js';
-import { Translator } from '../Translator';
-import { Command } from '../definitions';
-import { CommandResponse } from './CommandResponse';
+import { Translator } from "../Translator.js";
+import { Command } from "../definitions.js";
+import { CommandResponse } from "./CommandResponse.js";
 
-export abstract class CommandMessage<InGuild extends boolean = boolean> {    
+export abstract class CommandRequest<InGuild extends boolean = boolean> {    
     response: CommandResponse | null = null;
 
     constructor(readonly command: Command, readonly translator: Translator) { }
@@ -22,7 +22,7 @@ export abstract class CommandMessage<InGuild extends boolean = boolean> {
 
     abstract get content(): string | null;
 
-    abstract inGuild(): this is CommandMessage<true>;
+    abstract inGuild(): this is CommandRequest<true>;
 
     // { send: never } is to avoid breaking interaction-ish flow
     // Use sendSeparate() instead
