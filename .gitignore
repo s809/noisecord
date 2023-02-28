@@ -1,14 +1,8 @@
 # Dependency directories
 node_modules/
 
-# Package lock file
-package-lock.json
-
 # TypeScript build artifacts
 build/
-
-# Configuration file
-config.json
 
 # Mocha coverage reports
 coverage/
