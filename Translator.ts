@@ -5,7 +5,7 @@ import format from "string-format";
 type FormatParameters = Parameters<typeof format>[1][];
 export class Translator {
     readonly localeString: LocaleString;
-    readonly setLanguageRegex: RegExp;
+    readonly setLocaleRegex: RegExp;
     readonly booleanValues: [string[], string[]];
 
     private data: any;
@@ -28,9 +28,15 @@ export class Translator {
             this.data = dataOrRoot;
         }
         
-        this.localeString = get(this.data, "locale_string")!;
-        this.setLanguageRegex = new RegExp(`^${get(this.data, "set_language_regex")}$`, "iu");
-        this.booleanValues = get(this.data, "boolean_values");
+        const getOrThrow = (key: string) => {
+            const value = get(this.data, key);
+            if (!value)
+                throw new Error(`${key} is missing.`);
+            return value;
+        }
+        this.localeString = getOrThrow("locale_string")!;
+        this.setLocaleRegex = new RegExp(`^${getOrThrow("set_locale_regex")}$`, "iu");
+        this.booleanValues = getOrThrow("boolean_values");
 
         if (prefixOrFallback instanceof Translator) {
             this.prefix = prefixOrFallback.prefix;

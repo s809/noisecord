@@ -1,4 +1,4 @@
-import { CommandInteraction, Guild, GuildResolvable, LocaleString, Message, User } from "discord.js";
+import { CommandInteraction, Guild, GuildResolvable, LocaleString, LocalizationMap, Message, User } from "discord.js";
 import { readdir, readFile } from "fs/promises";
 import path from "path";
 import { Translator } from "./Translator.js";
@@ -16,6 +16,8 @@ export type NameOrContext = string | Message | CommandInteraction | GuildResolva
 export class TranslatorManager {
     private translators = new Map<LocaleString, Map<string | null, Translator>>();
     
+    readonly setLocaleRegexes = {} as Record<LocaleString, RegExp>;
+
     public get fallbackLocale() {
         return this.fallbackTranslator.localeString;
     }
@@ -36,6 +38,7 @@ export class TranslatorManager {
             this.translators.set(translator.localeString, new Map([
                 [null, translator]
             ]));
+            this.setLocaleRegexes[translator.localeString] = translator.setLocaleRegex;
         }
 
         if (!this.translators.has(this.options.defaultLocale))

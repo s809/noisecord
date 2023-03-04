@@ -31,6 +31,13 @@ describe("TranslatorManager", () => {
         expect(translatorManager.fallbackLocale).equal("en-US");
     });
 
+    it("#setLocaleRegexes", () => {
+        expect(translatorManager.setLocaleRegexes).deep.equal({
+            "en-US": /^en$/iu,
+            "ru": /^ru$/iu
+        });
+    });
+
     describe("#getTranslator()", () => {
         async function validate(value: NameOrContext) {
             const found = await translatorManager.getTranslator(value);
