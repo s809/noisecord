@@ -1,4 +1,4 @@
-import { ApplicationCommandChannelOptionData, ApplicationCommandNumericOptionData, ApplicationCommandOptionType, ApplicationCommandPermissions, ApplicationCommandPermissionType, ApplicationCommandStringOptionData, Awaitable, CachedManager, Client, Guild, GuildChannel, Message, PermissionFlagsBits, PermissionsBitField, Snowflake, StageChannel } from "discord.js";
+import { ApplicationCommandChannelOptionData, ApplicationCommandNumericOptionData, ApplicationCommandOptionType, ApplicationCommandPermissions, ApplicationCommandPermissionType, ApplicationCommandStringOptionData, Awaitable, CachedManager, Client, Guild, GuildChannel, Message, PermissionFlagsBits, PermissionsBitField, Snowflake } from "discord.js";
 import { CommandRegistry } from "../CommandRegistry.js";
 import { checkConditions } from "../conditions/index.js";
 import { Command, CommandHandler, ParsedArguments } from "../definitions.js";
@@ -100,8 +100,7 @@ export class MessageHandler extends EventHandler<[Message], ConvertedOptions> {
         // Check conditions
         const checkResult = checkConditions(msg, command);
         if (checkResult) {
-            if (!(msg.channel instanceof StageChannel))
-                await msg.channel.send(checkResult);
+            await msg.channel.send(checkResult);
             return;
         }
 
@@ -113,10 +112,8 @@ export class MessageHandler extends EventHandler<[Message], ConvertedOptions> {
             if (!(e instanceof ArgumentParseError))
                 throw e;
             
-            if (!(msg.channel instanceof StageChannel)) {
-                await msg.channel.send(e.message + "\n"
-                    + translator.translate("strings.command_usage", this.commandRegistry.getCommandUsageString(command, prefix, translator)));
-            }
+            await msg.channel.send(e.message + "\n"
+                + translator.translate("strings.command_usage", this.commandRegistry.getCommandUsageString(command, prefix, translator)));
             return;
         }
 

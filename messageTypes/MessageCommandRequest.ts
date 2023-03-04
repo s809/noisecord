@@ -1,4 +1,4 @@
-import { Message, MessageReplyOptions, StageChannel, TextBasedChannel } from 'discord.js';
+import { Message, MessageReplyOptions, TextBasedChannel } from 'discord.js';
 import { Translator } from "../Translator.js";
 import { Command } from "../definitions.js";
 import { CommandRequest } from "./CommandRequest.js";
@@ -24,7 +24,7 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     async sendSeparate(options: string | MessageReplyOptions) {
         options = structuredClone(options);
         delete (options as any).ephemeral;
-        return new MessageCommandResponse(await (this.message.channel as Exclude<TextBasedChannel, StageChannel>).send(options));
+        return new MessageCommandResponse(await this.message.channel.send(options));
     }
 
     get content() {

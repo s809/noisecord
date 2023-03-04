@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags, Snowflake, StageChannel } from "discord.js";
+import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags } from "discord.js";
 import { CommandRegistry } from "../CommandRegistry.js";
 import { Command, CommandHandler, ContextMenuCommand, ParsedArguments } from "../definitions.js";
 import { InteractionCommandRequest } from "../messageTypes/InteractionCommandRequest.js";
@@ -70,8 +70,7 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                         fetchReply: true
                     });
                 } else {
-                    if (!(msg.channel instanceof StageChannel))
-                        await msg.channel?.send(content);
+                    await msg.channel?.send(content);
                 }
             },
         });
