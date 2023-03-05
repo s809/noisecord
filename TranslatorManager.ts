@@ -32,13 +32,20 @@ export class TranslatorManager {
 
     async init() {
         for (let file of await readdir(this.options.translationFileDirectory)) {
-            const data = JSON.parse(await readFile(path.join(this.options.translationFileDirectory, file), "utf8"));
-            const translator = new Translator(data);
+            try {
+                const data = JSON.parse(await readFile(path.join(this.options.translationFileDirectory, file), "utf8"));
+                const translator = new Translator(data);
 
-            this.translators.set(translator.localeString, new Map([
-                [null, translator]
-            ]));
-            this.setLocaleRegexes[translator.localeString] = translator.setLocaleRegex;
+                this.translators.set(translator.localeString, new Map([
+                    [null, translator]
+                ]));
+                this.setLocaleRegexes[translator.localeString] = translator.setLocaleRegex;
+            } catch (e: unknown) {
+                if (!(e instanceof Error))
+                    e = new Error(`${e}`);
+                (e as Error).message += `\nFile: ${file}`;
+                throw e;
+            }
         }
 
         if (!this.translators.has(this.options.defaultLocale))
