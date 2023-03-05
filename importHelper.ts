@@ -1,4 +1,5 @@
 import { readdir } from "fs/promises";
+import { resolve } from "path/posix";
 
 export const isTsNode = !!(process as any)[Symbol.for("ts-node.register.instance")];
 
@@ -12,6 +13,7 @@ export const isTsNode = !!(process as any)[Symbol.for("ts-node.register.instance
 export async function importModules<T>(dir: string): Promise<[string, T][]> {
     const modules = [];
 
+    console.log("start", dir)
     for (const entry of await readdir(dir, { withFileTypes: true })) {
         if (!entry.isDirectory() && (isTsNode
             ? (entry.name === "index.ts" || !entry.name.endsWith(".ts"))
@@ -19,7 +21,10 @@ export async function importModules<T>(dir: string): Promise<[string, T][]> {
             continue;
         
         const path = `${dir}/${entry.name}`;
-        modules.push(Promise.all([path, import(path).then(m => m.default as T)]));
+        const importPath = entry.isDirectory()
+            ? path + (isTsNode ? "/index.ts" : "/index.js")
+            : path;
+        modules.push(Promise.all([path, import(resolve(importPath)).then(m => m.default as T)]));
     }
 
     return Promise.all(modules);

@@ -109,7 +109,7 @@ export class CreateCommandUtil {
                 this.addError("Subcommands cannot define DM permission.");
             partialCommand.allowDMs = inheritedOptions.allowDMs;
 
-            if (!partialCommand.ownerOnly && inheritedOptions.ownerOnly)
+            if (partialCommand.ownerOnly === false && inheritedOptions.ownerOnly)
                 this.addError("Owner-only categories cannot contain not owner-only commands.");
             partialCommand.ownerOnly = inheritedOptions.ownerOnly;
         } else {
