@@ -13,7 +13,6 @@ export const isTsNode = !!(process as any)[Symbol.for("ts-node.register.instance
 export async function importModules<T>(dir: string): Promise<[string, T][]> {
     const modules = [];
 
-    console.log("start", dir)
     for (const entry of await readdir(dir, { withFileTypes: true })) {
         if (!entry.isDirectory() && (isTsNode
             ? (entry.name === "index.ts" || !entry.name.endsWith(".ts"))

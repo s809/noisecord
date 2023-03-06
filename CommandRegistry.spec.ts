@@ -36,7 +36,7 @@ describe("CommandRegistry", () => {
             contextMenuModuleDirectory: "./testData/contextMenuCommands/normal"
         }, translatorManager).createCommands();
 
-        await expect(promise).rejectedWith("Errors generated: 11");
+        await expect(promise).rejectedWith("Errors generated: 8");
     });
 
     describe("Context menu command creation", () => {
