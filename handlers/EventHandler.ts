@@ -30,7 +30,7 @@ export abstract class EventHandler<Args extends any[], TConvertedOptions extends
     }
 
     async init() {
-        this.client.on(this.eventName, this.handle);
+        this.client.on(this.eventName, this.handle.bind(this));
         return this;
     }
 
