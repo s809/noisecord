@@ -115,8 +115,8 @@ export class TranslatorManager {
         let translator = translatorsInLocale.get(prefix ?? null);
         if (!translator && prefix) {
             translator = translatorsInLocale.get(null)!.makePrefixed(usingFallback
-                ? prefix
-                : await this.getTranslator(this.options.defaultLocale, prefix));
+                ? await this.getTranslator(this.options.defaultLocale, prefix)
+                : prefix);
             
             translatorsInLocale.set(prefix, translator);
         }

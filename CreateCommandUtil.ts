@@ -22,7 +22,9 @@ export function createCommand(definition: CommandDefinition): Partial<Command> {
         handler: definition.handler ?? null,
         alwaysReactOnSuccess: definition.alwaysReactOnSuccess ?? false,
 
-        conditions: castArray(definition.conditions),
+        conditions: definition.conditions
+            ? castArray(definition.conditions)
+            : [],
 
         subcommands: new Map(),
 
