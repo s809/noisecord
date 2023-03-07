@@ -199,8 +199,10 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                     commands.set(command.path, command);
 
                     for (const childCommand of this.commandRegistry.iterateSubcommands(command.subcommands)) {
-                        if (childCommand.interactionCommand)
+                        if (childCommand.interactionCommand) {
                             childCommand.interactionCommand.id = appCommand.id;
+                            commands.set(childCommand.path, childCommand);
+                        }
                     }
                     break;
                 }

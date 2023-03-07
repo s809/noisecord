@@ -18,12 +18,14 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     }
 
     async reply(options: string | MessageReplyOptions) {
-        return this.sendSeparate(options as MessageReplyOptions);
+        return this.sendSeparate(options);
     }
 
     async sendSeparate(options: string | MessageReplyOptions) {
-        options = structuredClone(options);
-        delete (options as any).ephemeral;
+        if (typeof options === "object") {
+            options = { ...options };
+            delete (options as MessageReplyOptions & { ephemeral?: boolean }).ephemeral;
+        }
         return new MessageCommandResponse(await this.message.channel.send(options));
     }
 
