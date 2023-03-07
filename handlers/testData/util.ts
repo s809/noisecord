@@ -490,7 +490,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                             ["no"],
                             ["yes"]
                         ],
-                        translate: (...args: string[]) => `${base}: ${args.join(" ")}`,
+                        translate: (...args: string[]) => `${base}: ${args.map(x => typeof x === "object" ? JSON.stringify(x) : x).join(" ")}`,
                         getTranslationFromRecord(object: LocalizationMap) {
                             return object["en-US"];
                         }

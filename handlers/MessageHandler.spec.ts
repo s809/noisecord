@@ -1,9 +1,9 @@
 import { expect } from "chai";
-import { ChannelType, Guild, GuildBasedChannel, GuildMember, Message, Role, TextBasedChannel, User } from "discord.js";
+import { ChannelType, Guild, GuildBasedChannel, GuildMember, Message, Role } from "discord.js";
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
-import { failureEmoji, loadingEmoji, MessageHandler, MessageHandlerOptions, successEmoji } from "./MessageHandler.js";
+import { loadingEmoji, MessageHandler, MessageHandlerOptions, successEmoji } from "./MessageHandler.js";
 import { createHandler, IdConstants } from "./testData/util.js";
 
 describe(MessageHandler.name, () => {
@@ -522,12 +522,12 @@ describe(MessageHandler.name, () => {
         describe("Argument count", () => {
             it("Min", () => shouldFail("!arguments-count a", `
 command_processor: errors.too_few_arguments
-command_processor: strings.command_usage <usage:arguments-count>
+command_processor: strings.command_usage {"usage":"<usage:arguments-count>"}
             `.trim()));
 
             it("Max", () => shouldFail("!arguments-count a b c d", `
 command_processor: errors.too_many_arguments
-command_processor: strings.command_usage <usage:arguments-count>
+command_processor: strings.command_usage {"usage":"<usage:arguments-count>"}
             `.trim()));
         });
 
@@ -539,43 +539,43 @@ command_processor: strings.command_usage <usage:arguments-count>
         describe("Argument types", () => {
             describe("String", () => {
                 it("Min length", () => shouldFail("!args-string a", `
-command_processor: errors.value_too_short "a" (command_processor: strings.argument_name argString) 2
-command_processor: strings.command_usage <usage:args-string>`.trim()));
+command_processor: errors.value_too_short "a" (command_processor: strings.argument_name {"name":"argString"}) 2
+command_processor: strings.command_usage {"usage":"<usage:args-string>"}`.trim()));
                 
                 it("Max length", () => shouldFail("!args-string aaaa", `
-command_processor: errors.value_too_long "aaaa" (command_processor: strings.argument_name argString) 3
-command_processor: strings.command_usage <usage:args-string>`.trim()));
+command_processor: errors.value_too_long "aaaa" (command_processor: strings.argument_name {"name":"argString"}) 3
+command_processor: strings.command_usage {"usage":"<usage:args-string>"}`.trim()));
                 
                 describe("Choices", () => {
                     it("Default choice", () => shouldSucceed("!args-string-choices a"));
                     it("Localized choice", () => shouldSucceed("!args-string-choices tr_a"));
                     it("Invalid choice", () => shouldFail("!args-string-choices tr_b", `
-command_processor: errors.value_not_allowed "tr_b" (command_processor: strings.argument_name argString) "tr_a"
-command_processor: strings.command_usage <usage:args-string-choices>`.trim()));
+command_processor: errors.value_not_allowed "tr_b" (command_processor: strings.argument_name {"name":"argString"}) "tr_a"
+command_processor: strings.command_usage {"usage":"<usage:args-string-choices>"}`.trim()));
                 });
             });
 
             describe("Number/integer", () => {
                 it("Min value", () => shouldFail("!args-number 1", `
-command_processor: errors.value_too_small "1" (command_processor: strings.argument_name argNumber) 2
-command_processor: strings.command_usage <usage:args-number>`.trim()));
+command_processor: errors.value_too_small "1" (command_processor: strings.argument_name {"name":"argNumber"}) 2
+command_processor: strings.command_usage {"usage":"<usage:args-number>"}`.trim()));
                 it("Max value", () => shouldFail("!args-number 4", `
-command_processor: errors.value_too_large "4" (command_processor: strings.argument_name argNumber) 3
-command_processor: strings.command_usage <usage:args-number>`.trim()));
+command_processor: errors.value_too_large "4" (command_processor: strings.argument_name {"name":"argNumber"}) 3
+command_processor: strings.command_usage {"usage":"<usage:args-number>"}`.trim()));
 
                 describe("Choices", () => {
                     it("Valid choice", () => shouldSucceed("!args-integer 1"));
                     it("Invalid choice", () => shouldFail("!args-integer 2", `
-command_processor: errors.value_not_allowed "2" (command_processor: strings.argument_name argInteger) 1
-command_processor: strings.command_usage <usage:args-integer>`.trim()));
+command_processor: errors.value_not_allowed "2" (command_processor: strings.argument_name {"name":"argInteger"}) 1
+command_processor: strings.command_usage {"usage":"<usage:args-integer>"}`.trim()));
                 })
             });
 
             describe("Boolean", () => {
                 it("Valid boolean", () => shouldSucceed("!args-boolean yes"));
                 it("Invalid boolean", () => shouldFail("!args-boolean test", `
-command_processor: errors.invalid_boolean "test" (command_processor: strings.argument_name argBoolean)
-command_processor: strings.command_usage <usage:args-boolean>`.trim()));
+command_processor: errors.invalid_boolean "test" (command_processor: strings.argument_name {"name":"argBoolean"})
+command_processor: strings.command_usage {"usage":"<usage:args-boolean>"}`.trim()));
             });
 
             describe("Resolvable", () => {
@@ -595,15 +595,15 @@ command_processor: strings.command_usage <usage:args-boolean>`.trim()));
                             content: `!args-resolvable test ${IdConstants.User1} ${IdConstants.Role1}`,
                             ...messagePart
                         }, `
-command_processor: errors.invalid_channel "test" (command_processor: strings.argument_name argChannel)
-command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+command_processor: errors.invalid_channel "test" (command_processor: strings.argument_name {"name":"argChannel"})
+command_processor: strings.command_usage {"usage":"<usage:args-resolvable>"}`.trim()));
 
                         it("Missing id", () => shouldFail({
                             content: `!args-resolvable 10${IdConstants.Channel1} ${IdConstants.User1} ${IdConstants.Role1}`,
                             ...messagePart
                         }, `
-command_processor: errors.invalid_channel "10${IdConstants.Channel1}" (command_processor: strings.argument_name argChannel)
-command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+command_processor: errors.invalid_channel "10${IdConstants.Channel1}" (command_processor: strings.argument_name {"name":"argChannel"})
+command_processor: strings.command_usage {"usage":"<usage:args-resolvable>"}`.trim()));
                     });
                     
                     describe("User", () => {
@@ -611,15 +611,15 @@ command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
                             content: `!args-resolvable ${IdConstants.Channel1} test ${IdConstants.Role1}`,
                             ...messagePart
                         }, `
-command_processor: errors.invalid_user "test" (command_processor: strings.argument_name argUser)
-command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+command_processor: errors.invalid_user "test" (command_processor: strings.argument_name {"name":"argUser"})
+command_processor: strings.command_usage {"usage":"<usage:args-resolvable>"}`.trim()));
 
                         it("Missing id", () => shouldFail({
                             content: `!args-resolvable ${IdConstants.Channel1} 10${IdConstants.User1} ${IdConstants.Role1}`,
                             ...messagePart
                         }, `
-command_processor: errors.invalid_user "10${IdConstants.User1}" (command_processor: strings.argument_name argUser)
-command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+command_processor: errors.invalid_user "10${IdConstants.User1}" (command_processor: strings.argument_name {"name":"argUser"})
+command_processor: strings.command_usage {"usage":"<usage:args-resolvable>"}`.trim()));
                     });
 
                     describe("Role", () => {
@@ -627,15 +627,15 @@ command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
                             content: `!args-resolvable ${IdConstants.Channel1} ${IdConstants.User1} test`,
                             ...messagePart
                         }, `
-command_processor: errors.invalid_role "test" (command_processor: strings.argument_name argRole)
-command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+command_processor: errors.invalid_role "test" (command_processor: strings.argument_name {"name":"argRole"})
+command_processor: strings.command_usage {"usage":"<usage:args-resolvable>"}`.trim()));
 
                         it("Missing id", () => shouldFail({
                             content: `!args-resolvable ${IdConstants.Channel1} ${IdConstants.User1} 10${IdConstants.Role1}`,
                             ...messagePart
                         }, `
-command_processor: errors.invalid_role "10${IdConstants.Role1}" (command_processor: strings.argument_name argRole)
-command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
+command_processor: errors.invalid_role "10${IdConstants.Role1}" (command_processor: strings.argument_name {"name":"argRole"})
+command_processor: strings.command_usage {"usage":"<usage:args-resolvable>"}`.trim()));
                     });
                 });
 
@@ -649,8 +649,8 @@ command_processor: strings.command_usage <usage:args-resolvable>`.trim()));
                         content: `!args-channel-types ${IdConstants.Channel2}`,
                         ...messagePart
                     }, `
-command_processor: errors.channel_constraints_not_met "<#${IdConstants.Channel2}>" (command_processor: strings.argument_name argChannel)
-command_processor: strings.command_usage <usage:args-channel-types>`.trim()));
+command_processor: errors.channel_constraints_not_met "<#${IdConstants.Channel2}>" (command_processor: strings.argument_name {"name":"argChannel"})
+command_processor: strings.command_usage {"usage":"<usage:args-channel-types>"}`.trim()));
                 });
             });
         });

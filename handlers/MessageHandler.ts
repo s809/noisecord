@@ -113,7 +113,7 @@ export class MessageHandler extends EventHandler<[Message], ConvertedOptions> {
                 throw e;
             
             await msg.channel.send(e.message + "\n"
-                + translator.translate("strings.command_usage", this.commandRegistry.getCommandUsageString(command, prefix, translator)));
+                + translator.translate("strings.command_usage", { usage: this.commandRegistry.getCommandUsageString(command, prefix, translator) }));
             return;
         }
 
@@ -281,7 +281,7 @@ export class MessageHandler extends EventHandler<[Message], ConvertedOptions> {
             } catch (e) {
                 if (Array.isArray(e)) {
                     const argName = translator.getTranslationFromRecord(arg.nameLocalizations!);
-                    const valueWithArgName = `"${e[1]}" (${translator.translate("strings.argument_name", argName)})`;
+                    const valueWithArgName = `"${e[1]}" (${translator.translate("strings.argument_name", { name: argName })})`;
 
                     e = new ArgumentParseError(translator.translate(`errors.${e[0]}`, valueWithArgName, ...e.slice(2)));
                 }
