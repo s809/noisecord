@@ -6,8 +6,8 @@ import { NameOrContext, TranslatorManager, TranslatorManagerOptions } from "./Tr
 const translationOptions: TranslatorManagerOptions = {
     translationFileDirectory: "./testData/translations/normal",
     defaultLocale: "en-US",
-    getUserLanguage: async () => "ru",
-    getGuildLanguage: async () => "ru",
+    getUserLocale: async () => "ru",
+    getGuildLocale: async () => "ru",
 };
 
 const translationOptionsEmpty: TranslatorManagerOptions = {

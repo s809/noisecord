@@ -11,8 +11,8 @@ const options: CommandFrameworkOptions = {
     translationOptions: {
         translationFileDirectory: "./testData/translations/normal",
         defaultLocale: "en-US",
-        getUserLanguage: async () => "en-US",
-        getGuildLanguage: async () => "en-US",
+        getUserLocale: async () => "en-US",
+        getGuildLocale: async () => "en-US",
     },
     messageCommands: {
         prefix: "!",

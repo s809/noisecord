@@ -8,8 +8,8 @@ const defaultDiscordLocale: LocaleString = "en-US";
 export interface TranslatorManagerOptions {
     translationFileDirectory: string;
     defaultLocale: LocaleString;
-    getUserLanguage: (user: User) => Promise<LocaleString | null>;
-    getGuildLanguage: (guild: Guild) => Promise<LocaleString | null>;
+    getUserLocale: (user: User) => Promise<LocaleString | null>;
+    getGuildLocale: (guild: Guild) => Promise<LocaleString | null>;
 }
 
 export type NameOrContext = string | Message | CommandInteraction | GuildResolvable | User;
@@ -55,7 +55,7 @@ export class TranslatorManager {
         return this;
     }
 
-    async getLanguage(nameOrContext: NameOrContext): Promise<string | null> {
+    async getLocale(nameOrContext: NameOrContext): Promise<string | null> {
         if (typeof nameOrContext === "string") return nameOrContext;
 
         /*
@@ -93,23 +93,23 @@ export class TranslatorManager {
         }
 
         if (user) {
-            return await this.options.getUserLanguage(user)
+            return await this.options.getUserLocale(user)
                 ?? (interactionLocale !== defaultDiscordLocale
                     ? interactionLocale
                     : null);
         } else if (guild) {
-            return await this.options.getGuildLanguage(guild)
-                ?? this.getLanguage((await guild.fetchOwner()).user);
+            return await this.options.getGuildLocale(guild)
+                ?? this.getLocale((await guild.fetchOwner()).user);
         } else {
             throw new Error("Invalid context.");
         }
     }
 
     async getTranslator(nameOrContext: NameOrContext, prefix?: string) {
-        const language = (await this.getLanguage(nameOrContext)) ?? this.options.defaultLocale;
+        const locale = (await this.getLocale(nameOrContext)) ?? this.options.defaultLocale;
 
         let usingFallback = false;
-        const translatorsInLocale = this.translators.get(language as LocaleString)
+        const translatorsInLocale = this.translators.get(locale as LocaleString)
             ?? (usingFallback = true, this.translators.get(this.options.defaultLocale)!);
 
         let translator = translatorsInLocale.get(prefix ?? null);

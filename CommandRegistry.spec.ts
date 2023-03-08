@@ -10,8 +10,8 @@ describe("CommandRegistry", () => {
         translatorManager = await new TranslatorManager({
             translationFileDirectory: "./testData/translations/normal",
             defaultLocale: "en-US",
-            getUserLanguage: async () => "ru",
-            getGuildLanguage: async () => "ru",
+            getUserLocale: async () => "ru",
+            getGuildLocale: async () => "ru",
         }).init();
         commandRegistry = await new CommandRegistry({
             commandModuleDirectory: "./testData/commands/normal",
@@ -27,8 +27,8 @@ describe("CommandRegistry", () => {
         const translatorManager = await new TranslatorManager({
             translationFileDirectory: "./testData/translations/normal",
             defaultLocale: "en-US",
-            getUserLanguage: async () => "ru",
-            getGuildLanguage: async () => "ru",
+            getUserLocale: async () => "ru",
+            getGuildLocale: async () => "ru",
         }).init();
 
         const promise = new CommandRegistry({
