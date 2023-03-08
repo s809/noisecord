@@ -8,8 +8,8 @@ const defaultDiscordLocale: LocaleString = "en-US";
 export interface TranslatorManagerOptions {
     translationFileDirectory: string;
     defaultLocale: LocaleString;
-    getUserLanguage: (user: User) => Promise<LocaleString>;
-    getGuildLanguage: (guild: Guild) => Promise<LocaleString>;
+    getUserLanguage: (user: User) => Promise<LocaleString | null>;
+    getGuildLanguage: (guild: Guild) => Promise<LocaleString | null>;
 }
 
 export type NameOrContext = string | Message | CommandInteraction | GuildResolvable | User;
@@ -72,7 +72,7 @@ export class TranslatorManager {
         */
 
         let user: User | undefined;
-        let interactionLocale: LocaleString | undefined;
+        let interactionLocale: LocaleString = defaultDiscordLocale;
         let guild: Guild | null | undefined;
 
         if (nameOrContext instanceof CommandInteraction) {
