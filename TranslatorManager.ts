@@ -116,17 +116,18 @@ export class TranslatorManager {
     async getTranslator(nameOrContext: NameOrContext, prefix?: string): Promise<Translator> {
         const locale = (await this.getLocale(nameOrContext)) ?? this.options.defaultLocale;
 
-        let usingFallback = false;
-        const translatorsInLocale = this.translators.get(locale as LocaleString)
-            ?? (usingFallback = true, this.translators.get(this.options.defaultLocale)!);
-
+        const translatorsInLocale = this.translators.get(locale as LocaleString);
+        if (!translatorsInLocale)
+            return this.getTranslator(this.options.defaultLocale, prefix);
+        
         let translator = translatorsInLocale.get(prefix ?? null);
-        if (!translator && prefix) {
-            translator = new Translator(translatorsInLocale.get(null)!, usingFallback
-                ? await this.getTranslator(this.options.defaultLocale, prefix)
-                : prefix);
-            
-            translatorsInLocale.set(prefix, translator);
+        if (!translator) {
+            // prefix always exists at this point since translatorsInLocale && !translator
+            // (at least null is always present)
+            translator = new Translator(translatorsInLocale.get(null)!, locale === this.options.defaultLocale
+                ? prefix!
+                : await this.getTranslator(this.options.defaultLocale, prefix));
+            translatorsInLocale.set(prefix!, translator);
         }
 
         return translator!;
