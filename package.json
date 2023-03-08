@@ -1,17 +1,18 @@
 {
   "name": "@s809/noisecord",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "repository": "github:s809/noisecord",
   "type": "module",
-  "main": "./build/index.js",
-  "types": "./build/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/noisecord.d.ts",
   "files": [
-    "./build"
+    "./dist/**/*.js",
+    "./dist/noisecord.d.ts"
   ],
   "scripts": {
     "build": "tsc",
-    "clean": "rimraf ./build",
-    "prepack": "npm run build",
+    "clean": "rimraf ./dist",
+    "prepack": "npm run build && api-extractor run --local",
     "test": "mocha",
     "test:cov": "c8 npm test"
   },
@@ -41,6 +42,7 @@
     "typescript": "^4.9.5"
   },
   "devDependencies": {
+    "@microsoft/api-extractor": "^7.34.4",
     "@types/chai": "^4.3.4",
     "@types/chai-as-promised": "^7.1.5",
     "@types/chai-subset": "^1.3.3",

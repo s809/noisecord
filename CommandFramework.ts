@@ -5,6 +5,10 @@ import { Client } from "discord.js";
 import { InteractionHandler, InteractionHandlerOptions } from "./handlers/InteractionHandler.js";
 import { MessageHandler, MessageHandlerOptions } from "./handlers/MessageHandler.js";
 
+/** 
+ * Options used to initialize {@link CommandFramework}.
+ * @public
+ */
 export interface CommandFrameworkOptions {
     commandRegistryOptions: CommandRegistryOptions;
     translationOptions: TranslatorManagerOptions;
@@ -12,23 +16,38 @@ export interface CommandFrameworkOptions {
     messageCommands?: MessageHandlerOptions;
 }
 
+/** 
+ * Entry point for using a command framework.
+ * @public 
+ */
 export class CommandFramework {
+    /**
+     * Tree of commands.
+     * @public
+     */
     get commands(): ReadonlyMap<string, Readonly<Command>> {
         if (!this.commandRegistry)
             throw new Error(`${this.init.name}() was not called before use of ${this.constructor.name} instance.`);
         return this.commandRegistry.commands;
     }
+    /** @public */
     commandRegistry?: CommandRegistry;
 
+    /** @public */
     translatorManager?: TranslatorManager;
 
-    client?: Client;
+    private client?: Client;
 
-    messageHandler: MessageHandler | null = null;
-    interactionHandler: InteractionHandler | null = null;
+    private messageHandler: MessageHandler | null = null;
+    private interactionHandler: InteractionHandler | null = null;
 
+    /** @public */
     constructor(private options: CommandFrameworkOptions) {}
 
+    /** 
+     * Initializes everything related to the framework.
+     * @public 
+     */
     async init(client: Client) {
         this.translatorManager = await new TranslatorManager(this.options.translationOptions).init();
         this.commandRegistry = await new CommandRegistry(this.options.commandRegistryOptions, this.translatorManager).createCommands();
@@ -48,11 +67,14 @@ export class CommandFramework {
 
     private async attachCommandHandlers() {
         if (this.options.messageCommands)
-            this.messageHandler = await new MessageHandler(this.client!, this.commandRegistry!, this.options.messageCommands).init();
+            this.messageHandler = await new MessageHandler(this.client!, this.commandRegistry!, this.options.messageCommands);
         if (this.options.interactionCommands)
-            this.interactionHandler = await new InteractionHandler(this.client!, this.commandRegistry!, this.options.interactionCommands).init();
+            this.interactionHandler = await new InteractionHandler(this.client!, this.commandRegistry!, this.options.interactionCommands);
 
         if (!this.options.messageCommands && !this.options.interactionCommands)
             throw new Error("None of command handlers are attached.");
+        
+        this.messageHandler?.init();
+        this.interactionHandler?.init();
     }
 }

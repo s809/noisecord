@@ -4,14 +4,13 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
 
-    "stripInternal": true,
     "removeComments": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "noImplicitOverride": true,
 
-    "outDir": "./build",
+    "outDir": "./dist",
     "inlineSourceMap": true,
     "declaration": true,
 
@@ -27,7 +26,7 @@
   "exclude": [
     ".vscode",
     ".git",
-    "build",
+    "dist",
     "node_modules",
 
     "testData",

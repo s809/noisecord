@@ -7,5 +7,5 @@ etc/*
 !etc/.gitkeep
 temp/
 
-# Mocha coverage reports
+# Coverage reports
 coverage/
