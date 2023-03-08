@@ -4,6 +4,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
 
+    "stripInternal": true,
     "removeComments": true,
     "noImplicitAny": true,
     "strictNullChecks": true,

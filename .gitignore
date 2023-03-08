@@ -1,8 +1,11 @@
 # Dependency directories
 node_modules/
 
-# TypeScript build artifacts
-build/
+# Artifacts
+dist/
+etc/*
+!etc/.gitkeep
+temp/
 
 # Mocha coverage reports
 coverage/

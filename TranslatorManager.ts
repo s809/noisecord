@@ -52,6 +52,14 @@ export class TranslatorManager {
             throw new Error("No matching localization file found for default locale.");
         this._fallbackTranslator = this.translators.get(this.options.defaultLocale)?.get(null)!;
 
+        for (const map of this.translators.values()) {
+            const translator = map.get(null)!;
+            if (translator.localeString === this.fallbackLocale)
+                continue;
+            
+            translator.fallback = this.fallbackTranslator;
+        }
+
         return this;
     }
 
@@ -105,7 +113,7 @@ export class TranslatorManager {
         }
     }
 
-    async getTranslator(nameOrContext: NameOrContext, prefix?: string) {
+    async getTranslator(nameOrContext: NameOrContext, prefix?: string): Promise<Translator> {
         const locale = (await this.getLocale(nameOrContext)) ?? this.options.defaultLocale;
 
         let usingFallback = false;
@@ -114,7 +122,7 @@ export class TranslatorManager {
 
         let translator = translatorsInLocale.get(prefix ?? null);
         if (!translator && prefix) {
-            translator = translatorsInLocale.get(null)!.makePrefixed(usingFallback
+            translator = new Translator(translatorsInLocale.get(null)!, usingFallback
                 ? await this.getTranslator(this.options.defaultLocale, prefix)
                 : prefix);
             

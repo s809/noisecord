@@ -14,12 +14,20 @@ export class Translator {
     /** Translator of same locale without prefix. */
     readonly root: Translator | null = null;
     /** Translator of fallback locale with same prefix. */
-    readonly fallback: Translator | null = null;
+    get fallback() {
+        return this._fallback;
+    }
+    /** @internal */
+    set fallback(fallback) {
+        this._fallback = fallback;
+    }
+    private _fallback: Translator | null = null;
 
+    /** @internal */
     constructor(data: object);
-    constructor(root: Translator, prefix: string);
-    constructor(root: Translator, fallback: Translator);
+    /** @internal */
     constructor(root: Translator, prefixOrFallback: string | Translator);
+    /** @internal */
     constructor(dataOrRoot: object | Translator, prefixOrFallback?: string | Translator) {
         if (dataOrRoot instanceof Translator) {
             this.data = dataOrRoot.data;
@@ -81,9 +89,5 @@ export class Translator {
      */
     getTranslationFromRecord(obj: Partial<Record<LocaleString, any>>): any {
         return obj[this.localeString] ?? this.fallback?.getTranslationFromRecord(obj);
-    }
-
-    makePrefixed(prefixOrFallback: string | Translator) {
-        return new Translator(this.root ?? this, prefixOrFallback);
     }
 }

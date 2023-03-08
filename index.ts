@@ -1,6 +1,5 @@
 export * from "./CommandFramework.js";
 export * from "./CommandRegistry.js";
-export * from "./CreateCommandUtil.js";
 export * from "./definitions.js";
 export * from "./Translator.js";
 export * from "./TranslatorManager.js";
