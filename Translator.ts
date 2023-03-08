@@ -62,8 +62,12 @@ export class Translator {
      * @returns String with translation or passed path, if it was not found.
      */
     translate(path: string, ...args: FormatParameters): string {
-        return this.tryTranslate(`${this.prefix}.${path}`, ...args)
-            ?? this.fallback?.tryTranslate(path, ...args)
+        const prefixedPath = this.prefix
+            ? `${this.prefix}.${path}`
+            : path;
+
+        return this.tryTranslate(prefixedPath, ...args)
+            ?? this.fallback?.tryTranslate(prefixedPath, ...args)
             ?? this.root?.translate(path, ...args)
             ?? path;
     }
