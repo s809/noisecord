@@ -29,11 +29,11 @@ export function createCommand(definition: CommandDefinition): Partial<Command> {
         subcommands: new Map(),
 
         // Inherited
-        interactionCommand: !isNil(definition.interactionCommand)
+        interactionCommand: definition.interactionCommand === true
             ? {
                 id: null
             }
-            : definition.interactionCommand,
+            : null,
         defaultMemberPermissions: definition.defaultMemberPermissions!,
         allowDMs: definition.allowDMs,
         ownerOnly: definition.ownerOnly
