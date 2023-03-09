@@ -4,7 +4,7 @@ import sinon from "sinon";
 import { NameOrContext, TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
 
 const translationOptions: TranslatorManagerOptions = {
-    translationFileDirectory: "./testData/translations/normal",
+    translationFileDirectory: "./src/testData/translations/normal",
     defaultLocale: "en-US",
     getUserLocale: async () => "ru",
     getGuildLocale: async () => "ru",
@@ -12,7 +12,7 @@ const translationOptions: TranslatorManagerOptions = {
 
 const translationOptionsEmpty: TranslatorManagerOptions = {
     ...translationOptions,
-    translationFileDirectory: "./testData/translations/empty"
+    translationFileDirectory: "./src/testData/translations/empty"
 };
 
 describe("TranslatorManager", () => {

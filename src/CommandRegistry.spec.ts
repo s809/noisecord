@@ -8,14 +8,14 @@ describe("CommandRegistry", () => {
 
     beforeEach(async () => { 
         translatorManager = await new TranslatorManager({
-            translationFileDirectory: "./testData/translations/normal",
+            translationFileDirectory: "./src/testData/translations/normal",
             defaultLocale: "en-US",
             getUserLocale: async () => "ru",
             getGuildLocale: async () => "ru",
         }).init();
         commandRegistry = await new CommandRegistry({
-            commandModuleDirectory: "./testData/commands/normal",
-            contextMenuModuleDirectory: "./testData/contextMenuCommands/normal"
+            commandModuleDirectory: "./src/testData/commands/normal",
+            contextMenuModuleDirectory: "./src/testData/contextMenuCommands/normal"
         }, translatorManager).createCommands();
     });
 
@@ -25,15 +25,15 @@ describe("CommandRegistry", () => {
         this.timeout(5000);
 
         const translatorManager = await new TranslatorManager({
-            translationFileDirectory: "./testData/translations/normal",
+            translationFileDirectory: "./src/testData/translations/normal",
             defaultLocale: "en-US",
             getUserLocale: async () => "ru",
             getGuildLocale: async () => "ru",
         }).init();
 
         const promise = new CommandRegistry({
-            commandModuleDirectory: "./testData/commands/errors",
-            contextMenuModuleDirectory: "./testData/contextMenuCommands/normal"
+            commandModuleDirectory: "./src/testData/commands/errors",
+            contextMenuModuleDirectory: "./src/testData/contextMenuCommands/normal"
         }, translatorManager).createCommands();
 
         await expect(promise).rejectedWith("Errors generated: 8");
@@ -42,7 +42,7 @@ describe("CommandRegistry", () => {
     describe("Context menu command creation", () => {
         it("No command directory", async () => {
             commandRegistry = new CommandRegistry({
-                commandModuleDirectory: "./testData/commands/normal",
+                commandModuleDirectory: "./src/testData/commands/normal",
                 contextMenuModuleDirectory: undefined
             }, translatorManager);
             await expect(commandRegistry.createContextMenuCommands()).eventually.empty;

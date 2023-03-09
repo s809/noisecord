@@ -20,7 +20,7 @@
     ]
   },
   "include": [
-    "./**/*"
+    "src/**/*"
   ],
   "exclude": [
     ".vscode",
@@ -28,7 +28,7 @@
     "dist",
     "node_modules",
 
-    "testData",
-    "**/*.spec.ts"
+    "src/**/testData",
+    "src/**/*.spec.ts"
   ]
 }

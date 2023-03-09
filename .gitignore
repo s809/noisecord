@@ -3,8 +3,6 @@ node_modules/
 
 # Artifacts
 dist/
-etc/*
-!etc/.gitkeep
 temp/
 
 # Coverage reports

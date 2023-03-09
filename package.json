@@ -7,7 +7,8 @@
   "types": "./dist/noisecord.d.ts",
   "files": [
     "./dist/**/*.js",
-    "./dist/noisecord.d.ts"
+    "./dist/noisecord.d.ts",
+    "./dist/tsdoc-metadata.json"
   ],
   "scripts": {
     "build": "tsc",
@@ -20,12 +21,12 @@
     "all": true,
     "check-coverage": true,
     "exclude": [
-      "**/*.d.ts",
-      "**/*.spec.ts",
-      "**/testData/**"
+      "src/**/*.d.ts",
+      "src/**/*.spec.ts",
+      "src/**/testData/**"
     ],
     "include": [
-      "**/*.ts"
+      "src/**/*.ts"
     ],
     "reporter": [
       "text",
