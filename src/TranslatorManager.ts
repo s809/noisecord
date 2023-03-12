@@ -2,7 +2,7 @@ import { CommandInteraction, Guild, GuildResolvable, LocaleString, LocalizationM
 import { readdir, readFile } from "fs/promises";
 import path from "path";
 import { Translator } from "./Translator.js";
-import { getValueOrThrowInitError } from "./util.js";
+import { _getValueOrThrowInitError } from "./util.js";
 
 const defaultDiscordLocale: LocaleString = "en-US";
 
@@ -27,7 +27,7 @@ export class TranslatorManager {
         return this.fallbackTranslator.localeString;
     }
     public get fallbackTranslator(): Translator {
-        return getValueOrThrowInitError(this._fallbackTranslator, this);
+        return _getValueOrThrowInitError(this._fallbackTranslator, this);
     }
     private _fallbackTranslator?: Translator;
 

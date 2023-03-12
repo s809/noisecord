@@ -3,10 +3,10 @@ import { ChannelType, Guild, GuildBasedChannel, GuildMember, Message, Role } fro
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
-import { loadingEmoji, MessageHandler, MessageHandlerOptions, successEmoji } from "./MessageHandler.js";
+import { loadingEmoji, _MessageHandler, MessageHandlerOptions, successEmoji } from "./MessageHandler.js";
 import { createHandler, IdConstants } from "./testData/util.js";
 
-describe(MessageHandler.name, () => {
+describe(_MessageHandler.name, () => {
     type Clean<T> = Omit<T, "toString" | "valueOf">;
     type CleanSome<T, ToPick extends keyof T, U = {}> = Clean<Merge<Merge<T, {
         [K in ToPick]: Clean<T[K]>
@@ -72,7 +72,7 @@ describe(MessageHandler.name, () => {
     }
 
     async function handleCommand(contentOrOverrides: string | MessageOverrides) {
-        const handler = await createHandler(MessageHandler, undefined, handlerOptions).init();
+        const handler = await createHandler(_MessageHandler, undefined, handlerOptions).init();
         const message = createMessage(typeof contentOrOverrides === "object"
             ? contentOrOverrides
             : {
@@ -104,7 +104,7 @@ describe(MessageHandler.name, () => {
 
 
     it("Ignore bots and webhooks", async () => {
-        const handler = await createHandler(MessageHandler).init();
+        const handler = await createHandler(_MessageHandler).init();
         await handler.handle(createMessage({
             author: {
                 bot: true

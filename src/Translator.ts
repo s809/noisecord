@@ -2,7 +2,8 @@ import { LocaleString } from "discord.js";
 import { get } from "lodash-es";
 import format from "string-format";
 
-type FormatParameters = Parameters<typeof format>[1][];
+/** @public */
+export type FormatParameters = Parameters<typeof format>[1][];
 
 /** @public */
 export class Translator {

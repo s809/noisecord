@@ -4,10 +4,10 @@ import { merge } from "lodash-es";
 import sinon from "sinon";
 import { CommandRegistry } from "../CommandRegistry.js";
 import { ContextMenuCommand } from "../definitions.js";
-import { InteractionHandler } from "./InteractionHandler.js";
+import {  _InteractionHandler } from "./InteractionHandler.js";
 import { makeFakeCommand, createHandler, IdConstants } from "./testData/util.js";
 
-describe(InteractionHandler.name, () => {
+describe(_InteractionHandler.name, () => {
     describe("Registration of interaction commands", () => {
         it("Filter away non slash commands", async () => {
             const commands = [
@@ -15,7 +15,7 @@ describe(InteractionHandler.name, () => {
                 makeFakeCommand("test2")
             ];
 
-            await createHandler(InteractionHandler, commands).init();
+            await createHandler(_InteractionHandler, commands).init();
 
             expect(commands[0].interactionCommand).null;
             expect(commands[1].interactionCommand).exist;
@@ -47,7 +47,7 @@ describe(InteractionHandler.name, () => {
                 })
             ];
 
-            await createHandler(InteractionHandler, commands).init();
+            await createHandler(_InteractionHandler, commands).init();
 
             for (const [i, command] of commands.entries()) {
                 expect([
@@ -82,7 +82,7 @@ describe(InteractionHandler.name, () => {
                 }
             ];
 
-            const handler = new InteractionHandler(
+            const handler = new _InteractionHandler(
                 {
                     on: sinon.stub(),
                     application: {
@@ -122,7 +122,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                expect(createHandler(InteractionHandler, commands).init()).rejectedWith("cannot have a handler");
+                expect(createHandler(_InteractionHandler, commands).init()).rejectedWith("cannot have a handler");
             });
 
             it("Command without either subcommands or handler", async () => {
@@ -132,7 +132,7 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                expect(createHandler(InteractionHandler, commands).init()).rejectedWith("must have a handler");
+                expect(createHandler(_InteractionHandler, commands).init()).rejectedWith("must have a handler");
             });
 
             it("Too many nested commands", async () => {
@@ -152,14 +152,14 @@ describe(InteractionHandler.name, () => {
                     })
                 ];
 
-                expect(createHandler(InteractionHandler, commands).init()).rejectedWith("depth was exceeded");
+                expect(createHandler(_InteractionHandler, commands).init()).rejectedWith("depth was exceeded");
             });
         });
     });
 
     describe("Interaction handling", () => {
         it("Ignore non-command interactions", async () => {
-            const handler = await createHandler(InteractionHandler).init();
+            const handler = await createHandler(_InteractionHandler).init();
             await handler.handle({
                 isCommand: () => false
             } as unknown as Interaction);
@@ -169,7 +169,7 @@ describe(InteractionHandler.name, () => {
             async function handleChatInteraction(path: string, overrides?: object) {
                 const parts = path.split("/");
 
-                const handler = await createHandler(InteractionHandler).init();
+                const handler = await createHandler(_InteractionHandler).init();
                 let deferred = false;
                 let replied = false;
                 const interaction = merge({
@@ -314,7 +314,7 @@ describe(InteractionHandler.name, () => {
 
         describe("Context menu commands", () => {
             async function handleContextMenuInteraction(key: string, overrides?: object) {
-                const handler = await createHandler(InteractionHandler).init();
+                const handler = await createHandler(_InteractionHandler).init();
 
                 const command = [...((handler as any).commandRegistry as CommandRegistry).commandsById.values()]
                     .find(c => (c as ContextMenuCommand).key === key) as ContextMenuCommand | undefined;

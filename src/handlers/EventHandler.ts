@@ -2,16 +2,19 @@ import { Awaitable, Client } from "discord.js";
 import { CommandRegistry } from "../CommandRegistry.js";
 import { TranslatorManager } from "../TranslatorManager.js";
 import { CommandResultError } from "./errors.js";
-import { HandlerOptions } from "./HandlerOptions.js";
+import { _HandlerOptions } from "./HandlerOptions.js";
 import { setTimeout } from "timers/promises";
 import { Translator } from "../Translator.js";
 import { merge } from "lodash-es";
 
-type HandlerOptionsType<T> = T extends HandlerOptions<infer T> ? T : never;
+/** @internal */
+export type _HandlerOptionsType<T> = T extends _HandlerOptions<infer T> ? T : never;
 
-type TypedHandlerOptions<T> = HandlerOptions<HandlerOptionsType<T>>;
+/** @internal */
+export type _TypedHandlerOptions<T> = _HandlerOptions<_HandlerOptionsType<T>>;
 
-export abstract class EventHandler<Args extends any[], TConvertedOptions extends Required<HandlerOptions>> {
+/** @internal */
+export abstract class _EventHandler<Args extends any[], TConvertedOptions extends Required<_HandlerOptions>> {
     protected abstract readonly eventName: string;
 
     protected readonly translatorManager: TranslatorManager;
@@ -20,8 +23,8 @@ export abstract class EventHandler<Args extends any[], TConvertedOptions extends
     protected constructor(
         protected readonly client: Client,
         protected readonly commandRegistry: CommandRegistry,
-        options: Omit<TConvertedOptions, keyof Required<HandlerOptions>> & TypedHandlerOptions<TConvertedOptions>,
-        readonly defaultStatusHandlers: Omit<Required<TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">) {
+        options: Omit<TConvertedOptions, keyof Required<_HandlerOptions>> & _TypedHandlerOptions<TConvertedOptions>,
+        readonly defaultStatusHandlers: Omit<Required<_TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">) {
         this.translatorManager = commandRegistry.translatorManager;
         this.options = {
             slowCommandDelayMs: 1000,
@@ -45,7 +48,7 @@ export abstract class EventHandler<Args extends any[], TConvertedOptions extends
         }) ?? [];
     }
 
-    protected async executeCommand(CommandRequest: HandlerOptionsType<TConvertedOptions>, execute: () => Awaitable<string | void>, translator: Translator) {
+    protected async executeCommand(CommandRequest: _HandlerOptionsType<TConvertedOptions>, execute: () => Awaitable<string | void>, translator: Translator) {
         let result: string | undefined;
         try {
             let finished = false;

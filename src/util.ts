@@ -1,5 +1,5 @@
 /** @internal */
-export function traverseTree<T>(path: string[],
+export function _traverseTree<T>(path: string[],
     root: ReadonlyMap<string, T>,
     getDescendants: (value: T) => Map<string, T> | null | undefined,
     allowPartialResolve: boolean = false): T | null {
@@ -74,7 +74,7 @@ export function parseRoleMention(text: string) {
 }
 
 /** @internal */
-export function getValueOrThrowInitError<T>(value: T | undefined, instance: { init: Function }) {
+export function _getValueOrThrowInitError<T>(value: T | undefined, instance: { init: Function }) {
     if (value === undefined)
         throw new Error(`${instance.init.name}() was not called before use of ${instance.constructor.name} instance.`);
     return value;

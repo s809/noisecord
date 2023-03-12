@@ -6,15 +6,19 @@ import { MessageCommandRequest } from "../messageTypes/MessageCommandRequest.js"
 import { Translator } from "../Translator.js";
 import { parseChannelMention, parseRoleMention, parseUserMention } from "../util.js";
 import { ArgumentParseError, CommandResultError } from "./errors.js";
-import { HandlerOptions } from "./HandlerOptions.js";
-import { EventHandler } from "./EventHandler.js";
+import { _HandlerOptions } from "./HandlerOptions.js";
+import { _EventHandler } from "./EventHandler.js";
 import { IterableElement } from "type-fest";
 
+/** @public */
 export const loadingEmoji = "🔄";
+/** @public */
 export const successEmoji = "✅";
+/** @public */
 export const failureEmoji = "❌";
 
-export interface MessageHandlerOptions extends HandlerOptions {
+/** @public */
+export interface MessageHandlerOptions extends _HandlerOptions {
     /**
      * Sets a prefix.
      * 
@@ -33,12 +37,14 @@ export interface MessageHandlerOptions extends HandlerOptions {
     ignorePermissionsFor?: Snowflake | Snowflake[] | ((msg: Message) => Awaitable<boolean>);
 };
 
-interface ConvertedOptions extends Required<HandlerOptions> {
+/** @internal */
+export interface _MessageHandlerConvertedOptions extends Required<_HandlerOptions> {
     getPrefix: (msg: Message) => Awaitable<string | null>;
     shouldIgnorePermissions: (msg: Message) => Awaitable<boolean>;
 };
 
-export class MessageHandler extends EventHandler<[Message], ConvertedOptions> {
+/** @internal */
+export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerConvertedOptions> {
     protected readonly eventName = "messageCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions) {

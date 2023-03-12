@@ -3,21 +3,21 @@ import { CommandRegistry } from "../CommandRegistry.js";
 import { Command, CommandHandler, ContextMenuCommand, ParsedArguments } from "../definitions.js";
 import { InteractionCommandRequest } from "../messageTypes/InteractionCommandRequest.js";
 import { ArgumentParseError, CommandResultError } from "./errors.js";
-import { HandlerOptions } from "./HandlerOptions.js";
-import { EventHandler } from "./EventHandler.js";
+import { _HandlerOptions } from "./HandlerOptions.js";
+import { _EventHandler } from "./EventHandler.js";
 import { Translator } from "../Translator.js";
 import assert from "assert";
 import { CommandRequest } from "../messageTypes/CommandRequest.js";
 
 type ContainsInteraction = InteractionCommandRequest | ContextMenuCommandInteraction;
 
-export interface InteractionHandlerOptions extends HandlerOptions<CommandRequest | ContextMenuCommandInteraction> {
+/** @public */
+export interface InteractionHandlerOptions extends _HandlerOptions<CommandRequest | ContextMenuCommandInteraction> {
     registerApplicationCommands?: boolean;
 }
 
-interface ConvertedOptions extends Required<InteractionHandlerOptions> { }
-
-export class InteractionHandler extends EventHandler<[Interaction], ConvertedOptions> {
+/** @internal */
+export class _InteractionHandler extends _EventHandler<[Interaction], Required<InteractionHandlerOptions>> {
     protected readonly eventName = "interactionCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {

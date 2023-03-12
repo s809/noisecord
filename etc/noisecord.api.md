@@ -19,6 +19,7 @@ import { GuildMember } from 'discord.js';
 import { GuildResolvable } from 'discord.js';
 import { GuildTextBasedChannel } from 'discord.js';
 import { If } from 'discord.js';
+import { Interaction } from 'discord.js';
 import { InteractionCollector } from 'discord.js';
 import { InteractionReplyOptions } from 'discord.js';
 import { IterableElement } from 'type-fest';
@@ -29,7 +30,6 @@ import { Message } from 'discord.js';
 import { MessageApplicationCommandData } from 'discord.js';
 import { MessageCollectorOptionsParams } from 'discord.js';
 import { MessageComponentType } from 'discord.js';
-import { MessageContextMenuCommandInteraction } from 'discord.js';
 import { MessageCreateOptions } from 'discord.js';
 import { MessageEditOptions } from 'discord.js';
 import { MessageFlagsBitField } from 'discord.js';
@@ -41,7 +41,6 @@ import { Snowflake } from 'discord.js';
 import { TextBasedChannel } from 'discord.js';
 import { User } from 'discord.js';
 import { UserApplicationCommandData } from 'discord.js';
-import { UserContextMenuCommandInteraction } from 'discord.js';
 import { WebhookEditMessageOptions } from 'discord.js';
 
 // @public (undocumented)
@@ -149,12 +148,8 @@ export class CommandFramework {
 export interface CommandFrameworkOptions {
     // (undocumented)
     commandRegistryOptions: CommandRegistryOptions;
-    // Warning: (ae-forgotten-export) The symbol "InteractionHandlerOptions" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     interactionCommands?: InteractionHandlerOptions;
-    // Warning: (ae-forgotten-export) The symbol "MessageHandlerOptions" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     messageCommands?: MessageHandlerOptions;
     // (undocumented)
@@ -179,7 +174,7 @@ export class CommandRegistry {
     // @internal (undocumented)
     createCommands(): Promise<this>;
     // @internal (undocumented)
-    createContextMenuCommands(): Promise<ContextMenuCommand<UserContextMenuCommandInteraction<CacheType> | MessageContextMenuCommandInteraction<CacheType>>[]>;
+    createContextMenuCommands(): Promise<ContextMenuCommand<ContextMenuCommandInteraction<CacheType>>[]>;
     // (undocumented)
     getCommandUsageString(command: Command, prefix: string, translator: Translator): string;
     iterateCommands(): Iterable<Command>;
@@ -265,10 +260,8 @@ export class CommandResultError extends Error {
     constructor(message: string);
 }
 
-// Warning: (ae-forgotten-export) The symbol "ContextMenuCommandInteractions" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = ContextMenuCommandInteractions> extends ContextMenuCommandDefinition<T> {
+export interface ContextMenuCommand<T extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> extends ContextMenuCommandDefinition<T> {
     // (undocumented)
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
     // (undocumented)
@@ -276,7 +269,7 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = C
 }
 
 // @public (undocumented)
-export interface ContextMenuCommandDefinition<T extends ContextMenuCommandInteractions = ContextMenuCommandInteractions> {
+export interface ContextMenuCommandDefinition<T extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> {
     // (undocumented)
     handler: (interaction: T, translator: Translator) => void;
     // (undocumented)
@@ -294,12 +287,53 @@ export function defineCommand<T extends CommandDefinition | ContextMenuCommandDe
 // @public (undocumented)
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
-// Warning: (ae-internal-missing-underscore) The name "getValueOrThrowInitError" should be prefixed with an underscore because the declaration is marked as @internal
-//
 // @internal (undocumented)
-export function getValueOrThrowInitError<T>(value: T | undefined, instance: {
+export abstract class _EventHandler<Args extends any[], TConvertedOptions extends Required<_HandlerOptions>> {
+    protected constructor(client: Client, commandRegistry: CommandRegistry, options: Omit<TConvertedOptions, keyof Required<_HandlerOptions>> & _TypedHandlerOptions<TConvertedOptions>, defaultStatusHandlers: Omit<Required<_TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">);
+    // (undocumented)
+    protected readonly client: Client;
+    // (undocumented)
+    protected readonly commandRegistry: CommandRegistry;
+    // (undocumented)
+    readonly defaultStatusHandlers: Omit<Required<_TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">;
+    // (undocumented)
+    protected abstract readonly eventName: string;
+    // (undocumented)
+    protected executeCommand(CommandRequest: _HandlerOptionsType<TConvertedOptions>, execute: () => Awaitable<string | void>, translator: Translator): Promise<void>;
+    // (undocumented)
+    protected abstract handle(...args: Args): Promise<void>;
+    // (undocumented)
+    init(): Promise<this>;
+    // (undocumented)
+    protected readonly options: TConvertedOptions;
+    // (undocumented)
+    protected splitByWhitespace(str: string): string[];
+    // (undocumented)
+    protected readonly translatorManager: TranslatorManager;
+}
+
+// @public (undocumented)
+export const failureEmoji = "\u274C";
+
+// @public (undocumented)
+export type FormatParameters = Parameters<typeof format>[1][];
+
+// @internal (undocumented)
+export function _getValueOrThrowInitError<T>(value: T | undefined, instance: {
     init: Function;
 }): T & ({} | null);
+
+// @public (undocumented)
+export interface _HandlerOptions<TCommandRequest = CommandRequest> {
+    onFailure?: (req: TCommandRequest, error: Error) => Awaitable<void>;
+    onSlowCommand?: (req: TCommandRequest) => Awaitable<void>;
+    onSuccess?: (req: TCommandRequest) => Awaitable<void>;
+    // (undocumented)
+    slowCommandDelayMs?: number;
+}
+
+// @internal (undocumented)
+export type _HandlerOptionsType<T> = T extends _HandlerOptions<infer T> ? T : never;
 
 // @public (undocumented)
 export class InteractionCommandResponse extends CommandResponse {
@@ -315,11 +349,31 @@ export class InteractionCommandResponse extends CommandResponse {
     readonly interaction: CommandInteraction;
 }
 
+// @internal (undocumented)
+export class _InteractionHandler extends _EventHandler<[Interaction], Required<InteractionHandlerOptions>> {
+    constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions);
+    // (undocumented)
+    protected readonly eventName = "interactionCreate";
+    // (undocumented)
+    handle(interaction: Interaction): Promise<void>;
+    // (undocumented)
+    init(): Promise<this>;
+}
+
+// @public (undocumented)
+export interface InteractionHandlerOptions extends _HandlerOptions<CommandRequest | ContextMenuCommandInteraction> {
+    // (undocumented)
+    registerApplicationCommands?: boolean;
+}
+
 // @public (undocumented)
 export const InVoiceChannel: CommandCondition;
 
 // @public (undocumented)
 export const InVoiceWithBot: CommandCondition;
+
+// @public (undocumented)
+export const loadingEmoji = "\uD83D\uDD04";
 
 // @public (undocumented)
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
@@ -361,6 +415,29 @@ export class MessageCommandResponse extends CommandResponse {
     edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
 }
 
+// @internal (undocumented)
+export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerConvertedOptions> {
+    constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions);
+    // (undocumented)
+    protected readonly eventName = "messageCreate";
+    // (undocumented)
+    handle(msg: Message): Promise<void>;
+}
+
+// @internal (undocumented)
+export interface _MessageHandlerConvertedOptions extends Required<_HandlerOptions> {
+    // (undocumented)
+    getPrefix: (msg: Message) => Awaitable<string | null>;
+    // (undocumented)
+    shouldIgnorePermissions: (msg: Message) => Awaitable<boolean>;
+}
+
+// @public (undocumented)
+export interface MessageHandlerOptions extends _HandlerOptions {
+    ignorePermissionsFor?: Snowflake | Snowflake[] | ((msg: Message) => Awaitable<boolean>);
+    prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string | null>);
+}
+
 // @public
 export function parseChannelMention(text: string): string | null;
 
@@ -375,6 +452,9 @@ export function parseRoleMention(text: string): string | null;
 
 // @public
 export function parseUserMention(text: string): string | null;
+
+// @public (undocumented)
+export const successEmoji = "\u2705";
 
 // @public (undocumented)
 export const textChannels: readonly [ChannelType.GuildAnnouncement, ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread, ChannelType.GuildText];
@@ -399,7 +479,6 @@ export class Translator {
     setFallback(fallback: Translator): void;
     // (undocumented)
     readonly setLocaleRegex: RegExp;
-    // Warning: (ae-forgotten-export) The symbol "FormatParameters" needs to be exported by the entry point index.d.ts
     translate(path: string, ...args: FormatParameters): string;
     tryTranslate(path: string, ...args: FormatParameters): string | null;
 }
@@ -435,10 +514,11 @@ export interface TranslatorManagerOptions {
     translationFileDirectory: string;
 }
 
-// Warning: (ae-internal-missing-underscore) The name "traverseTree" should be prefixed with an underscore because the declaration is marked as @internal
-//
 // @internal (undocumented)
-export function traverseTree<T>(path: string[], root: ReadonlyMap<string, T>, getDescendants: (value: T) => Map<string, T> | null | undefined, allowPartialResolve?: boolean): T | null;
+export function _traverseTree<T>(path: string[], root: ReadonlyMap<string, T>, getDescendants: (value: T) => Map<string, T> | null | undefined, allowPartialResolve?: boolean): T | null;
+
+// @internal (undocumented)
+export type _TypedHandlerOptions<T> = _HandlerOptions<_HandlerOptionsType<T>>;
 
 // (No @packageDocumentation comment for this package)
 

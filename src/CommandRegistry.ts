@@ -8,7 +8,7 @@ import { Command, CommandDefinition, ContextMenuCommand, ContextMenuCommandDefin
 import { importModules, isTsNode } from "./importHelper.js";
 import { Translator } from "./Translator.js";
 import { TranslatorManager } from "./TranslatorManager.js";
-import { DeeplyNestedMap, traverseTree } from "./util.js";
+import { DeeplyNestedMap, _traverseTree } from "./util.js";
 
 /** @public */
 export interface CommandRegistryOptions {
@@ -160,7 +160,7 @@ export class CommandRegistry {
         if (typeof path === "string")
             path = path.split("/");
 
-        return traverseTree(path,
+        return _traverseTree(path,
             this.commands,
             command => command.subcommands,
             allowPartialResolve);
@@ -176,7 +176,7 @@ export class CommandRegistry {
             ? translatorSubMap!
             : fallbackSubMap;
 
-        const result = traverseTree(path,
+        const result = _traverseTree(path,
             subMap,
             v => v instanceof Map ? v : null,
             true);
