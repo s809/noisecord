@@ -8,6 +8,7 @@ export class InteractionCommandResponse extends CommandResponse {
         super(message);
     }
 
+    /** Edits the message, if possible. */
     async edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions) {
         this.message = this.message!.flags.has(MessageFlags.Loading)
             ? await this.interaction.followUp(options as InteractionReplyOptions)
@@ -15,10 +16,12 @@ export class InteractionCommandResponse extends CommandResponse {
         return this;
     }
 
+    /** Deletes the message, if possible.*/
     async delete() {
         await this.interaction.deleteReply();
     }
 
+    /** Creates collector of message components. */
     createMessageComponentCollector<T extends MessageComponentType>(
         options?: MessageCollectorOptionsParams<T>
     ) {

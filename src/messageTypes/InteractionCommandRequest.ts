@@ -5,7 +5,10 @@ import { CommandRequest } from "./CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 
-/** @public */
+/** 
+ * Command request data from an interaction.
+ * @public 
+ */
 export class InteractionCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
     /** @internal */
     constructor(command: Command, translator: Translator, readonly interaction: CommandInteraction) {
@@ -13,14 +16,16 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
         this.interaction = interaction;
     }
 
+    /** Completes with minimal side effects (or with none, if possible). */
     override async completeSilently() {
         if (!this.interaction.deferred && !this.interaction.replied)
             await this.interaction.deferReply({ ephemeral: true });
         await this.interaction.deleteReply().catch(() => { });
     }
 
+    /** Defers the reply, if possible. */
     async deferReply(ephemeral = true) {
-        return this.response ??= new InteractionCommandResponse(
+        return this._response ??= new InteractionCommandResponse(
             this.interaction,
             await this.interaction.deferReply({
                 ephemeral,
@@ -29,8 +34,9 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
         );
     }
 
+    /** Replies to the command. */
     async reply(options: string | InteractionReplyOptions) {
-        return this.response = this.response
+        return this._response = this.response
             ? await this.response.edit(options)
             : new InteractionCommandResponse(
                 this.interaction,
@@ -42,6 +48,7 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
             );
     }
 
+    /** Sends a new message. */
     async sendSeparate(options: string | MessageReplyOptions) {
         return new MessageCommandResponse(await this.interaction.channel!.send(options));
     }

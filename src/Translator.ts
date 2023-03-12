@@ -5,13 +5,27 @@ import format from "string-format";
 /** @public */
 export type FormatParameters = Parameters<typeof format>[1][];
 
-/** @public */
+/** 
+ * Provides functions for translating text to a specific locale.
+ * @public
+ */
 export class Translator {
+    /**
+     * Contains locale to which everything will be translated to
+     */
     readonly localeString: LocaleString;
+    /**
+     * RegExp for setting locale of specified locale
+     */
     readonly setLocaleRegex: RegExp;
+    /** 
+     * Array of arrays of translations of boolean values.
+     * Index 0 - negative values (e.g. "false"),
+     * index 1 - positive values (e.g. "true").
+     */
     readonly booleanValues: [string[], string[]];
 
-    private data: any;
+    private data: any;                            
     private prefix: string | null = null;
     
     /** Translator of same locale without prefix. */

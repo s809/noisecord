@@ -159,7 +159,7 @@ export interface CommandFrameworkOptions {
 // @public (undocumented)
 export type CommandHandler = (req: CommandRequest, args: ParsedArguments) => Awaitable<string | void>;
 
-// @public (undocumented)
+// @public
 export class CommandRegistry {
     // @internal
     constructor(options: CommandRegistryOptions, translatorManager: TranslatorManager);
@@ -175,18 +175,16 @@ export class CommandRegistry {
     createCommands(): Promise<this>;
     // @internal (undocumented)
     createContextMenuCommands(): Promise<ContextMenuCommand<ContextMenuCommandInteraction<CacheType>>[]>;
-    // (undocumented)
     getCommandUsageString(command: Command, prefix: string, translator: Translator): string;
     iterateCommands(): Iterable<Command>;
     iterateSubcommands(list: ReadonlyMap<string, Command>): Iterable<Command>;
-    // (undocumented)
     resolveCommandByLocalizedPath(path: string | string[], translator: Translator, allowFallback?: boolean): Command | null;
     resolveCommandByPath(path: string | string[], allowPartialResolve?: boolean): Command | null;
     // (undocumented)
     readonly translatorManager: TranslatorManager;
 }
 
-// @public (undocumented)
+// @public
 export interface CommandRegistryOptions {
     // (undocumented)
     commandModuleDirectory?: string;
@@ -194,7 +192,7 @@ export interface CommandRegistryOptions {
     contextMenuModuleDirectory?: string;
 }
 
-// @public (undocumented)
+// @public
 export abstract class CommandRequest<InGuild extends boolean = boolean> {
     // @internal
     constructor(command: Command, translator: Translator);
@@ -208,11 +206,9 @@ export abstract class CommandRequest<InGuild extends boolean = boolean> {
     get channelId(): string;
     // (undocumented)
     readonly command: Command;
-    // (undocumented)
     completeSilently(): Promise<void>;
     // (undocumented)
     abstract get content(): string | null;
-    // (undocumented)
     abstract deferReply(ephemeral?: boolean): Promise<CommandResponse>;
     // (undocumented)
     abstract get guild(): If<InGuild, Guild>;
@@ -222,33 +218,25 @@ export abstract class CommandRequest<InGuild extends boolean = boolean> {
     abstract inGuild(): this is CommandRequest<true>;
     // (undocumented)
     abstract get member(): If<InGuild, GuildMember>;
-    // (undocumented)
     abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<CommandResponse>;
-    // (undocumented)
     replyOrSendSeparate(options: InteractionReplyOptions | MessageReplyOptions): Promise<CommandResponse>;
+    get response(): CommandResponse | null;
     // (undocumented)
-    response: CommandResponse | null;
-    // (undocumented)
+    _response: CommandResponse | null;
     abstract sendSeparate(options: string | MessageReplyOptions): Promise<CommandResponse>;
     // (undocumented)
     readonly translator: Translator;
 }
 
-// @public (undocumented)
+// @public
 export abstract class CommandResponse {
     // @internal
     constructor(message?: Message<boolean> | undefined);
-    // (undocumented)
     get content(): string | undefined;
-    // (undocumented)
     abstract createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes[T]>;
-    // (undocumented)
     abstract delete(): Promise<void>;
-    // (undocumented)
     abstract edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
-    // (undocumented)
     get embeds(): Embed[] | undefined;
-    // (undocumented)
     get flags(): Readonly<MessageFlagsBitField> | undefined;
     // (undocumented)
     protected message?: Message<boolean> | undefined;
@@ -312,7 +300,7 @@ export abstract class _EventHandler<Args extends any[], TConvertedOptions extend
     protected readonly translatorManager: TranslatorManager;
 }
 
-// @public (undocumented)
+// @public
 export const failureEmoji = "\u274C";
 
 // @public (undocumented)
@@ -339,11 +327,8 @@ export type _HandlerOptionsType<T> = T extends _HandlerOptions<infer T> ? T : ne
 export class InteractionCommandResponse extends CommandResponse {
     // @internal
     constructor(interaction: CommandInteraction, message: Message);
-    // (undocumented)
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
-    // (undocumented)
     delete(): Promise<void>;
-    // (undocumented)
     edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
     // (undocumented)
     readonly interaction: CommandInteraction;
@@ -360,7 +345,7 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
     init(): Promise<this>;
 }
 
-// @public (undocumented)
+// @public
 export interface InteractionHandlerOptions extends _HandlerOptions<CommandRequest | ContextMenuCommandInteraction> {
     // (undocumented)
     registerApplicationCommands?: boolean;
@@ -372,10 +357,10 @@ export const InVoiceChannel: CommandCondition;
 // @public (undocumented)
 export const InVoiceWithBot: CommandCondition;
 
-// @public (undocumented)
+// @public
 export const loadingEmoji = "\uD83D\uDD04";
 
-// @public (undocumented)
+// @public
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
     // @internal
     constructor(command: Command, translator: Translator, message: Message);
@@ -385,7 +370,6 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     get channel(): CommandRequest<InGuild>["channel"];
     // (undocumented)
     get content(): string;
-    // (undocumented)
     deferReply(): Promise<MessageCommandResponse>;
     // (undocumented)
     get guild(): CommandRequest<InGuild>["guild"];
@@ -395,9 +379,7 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     get member(): CommandRequest<InGuild>["member"];
     // (undocumented)
     readonly message: Message;
-    // (undocumented)
     reply(options: string | MessageReplyOptions): Promise<MessageCommandResponse>;
-    // (undocumented)
     sendSeparate(options: string | MessageReplyOptions): Promise<MessageCommandResponse>;
 }
 
@@ -407,11 +389,8 @@ export class MessageCommandResponse extends CommandResponse {
     constructor(message: Message);
     // @internal
     constructor(deferChannel: TextBasedChannel);
-    // (undocumented)
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
-    // (undocumented)
     delete(): Promise<void>;
-    // (undocumented)
     edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
 }
 
@@ -432,7 +411,7 @@ export interface _MessageHandlerConvertedOptions extends Required<_HandlerOption
     shouldIgnorePermissions: (msg: Message) => Awaitable<boolean>;
 }
 
-// @public (undocumented)
+// @public
 export interface MessageHandlerOptions extends _HandlerOptions {
     ignorePermissionsFor?: Snowflake | Snowflake[] | ((msg: Message) => Awaitable<boolean>);
     prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string | null>);
@@ -453,7 +432,7 @@ export function parseRoleMention(text: string): string | null;
 // @public
 export function parseUserMention(text: string): string | null;
 
-// @public (undocumented)
+// @public
 export const successEmoji = "\u2705";
 
 // @public (undocumented)
@@ -462,22 +441,19 @@ export const textChannels: readonly [ChannelType.GuildAnnouncement, ChannelType.
 // @public (undocumented)
 export type TranslationContextResolvable = string | Message | CommandInteraction | GuildResolvable | User;
 
-// @public (undocumented)
+// @public
 export class Translator {
     // @internal
     constructor(data: object);
     // @internal
     constructor(root: Translator, prefixOrFallback: string | Translator);
-    // (undocumented)
     readonly booleanValues: [string[], string[]];
     get fallback(): Translator | null;
     getTranslationFromRecord(obj: Partial<Record<LocaleString, any>>): any;
-    // (undocumented)
     readonly localeString: LocaleString;
     readonly root: Translator | null;
     // @internal (undocumented)
     setFallback(fallback: Translator): void;
-    // (undocumented)
     readonly setLocaleRegex: RegExp;
     translate(path: string, ...args: FormatParameters): string;
     tryTranslate(path: string, ...args: FormatParameters): string | null;

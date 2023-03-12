@@ -4,7 +4,10 @@ import { Command } from "../definitions.js";
 import { CommandRequest } from "./CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
 
-/** @public */
+/** 
+ * Command request data from a message.
+ * @public 
+ */
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
     readonly message: Message;
 
@@ -15,14 +18,17 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
         this.message = message;
     }
 
+    /** Defers the reply, if possible. */
     async deferReply() {
-        return this.response = new MessageCommandResponse(this.message.channel);
+        return this._response = new MessageCommandResponse(this.message.channel);
     }
 
+    /** Replies to the command. */
     async reply(options: string | MessageReplyOptions) {
         return this.sendSeparate(options);
     }
 
+    /** Sends a new message. */
     async sendSeparate(options: string | MessageReplyOptions) {
         if (typeof options === "object") {
             options = { ...options };

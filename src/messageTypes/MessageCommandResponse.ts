@@ -19,6 +19,7 @@ export class MessageCommandResponse extends CommandResponse {
         }
     }
 
+    /** Edits the message, if possible. */
     async edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions) {
         this.message = this.message
             ? await this.message.edit(options as MessageEditOptions)
@@ -26,10 +27,12 @@ export class MessageCommandResponse extends CommandResponse {
         return this;
     }
 
+    /** Deletes the message, if possible.*/
     async delete() {
         await this.message?.delete().catch(() => { });
     }
 
+    /** Creates collector of message components. */
     createMessageComponentCollector<T extends MessageComponentType>(
         options?: MessageCollectorOptionsParams<T>
     ) {

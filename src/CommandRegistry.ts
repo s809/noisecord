@@ -10,13 +10,19 @@ import { Translator } from "./Translator.js";
 import { TranslatorManager } from "./TranslatorManager.js";
 import { DeeplyNestedMap, _traverseTree } from "./util.js";
 
-/** @public */
+/** 
+ * Options used to initialize {@link CommandRegistry}
+ * @public 
+ */
 export interface CommandRegistryOptions {
     commandModuleDirectory?: string;
     contextMenuModuleDirectory?: string;
 }
 
-/** @public */
+/** 
+ * Contains the data/functions for working with commands.
+ * @public 
+ */
 export class CommandRegistry {
     readonly commands: Map<string, Command> = new Map();
     readonly commandsByLocale: Map<LocaleString, DeeplyNestedMap<Command>> = new Map();
@@ -166,6 +172,14 @@ export class CommandRegistry {
             allowPartialResolve);
     }
 
+    /**
+     * Resolves command by its localized path.
+     *
+     * @param path - Path to command.
+     * @param translator - Translator to use for searching.
+     * @param allowFallback - Whether to allow fallback to default locale if the given path is inconsistent/in default locale.
+     * @returns Command, if it was found.
+     */
     resolveCommandByLocalizedPath(path: string | string[], translator: Translator, allowFallback = true): Command | null {
         if (typeof path === "string")
             path = path.split("/");
@@ -183,6 +197,13 @@ export class CommandRegistry {
         return result && !(result instanceof Map) ? result : null;
     }
 
+    /**
+     * Returns the given command's usage string.
+     * @param command - Command to give the usage string to.
+     * @param prefix - Prefix to place in front of command string.
+     * @param translator - Translator to use for localization.
+     * @returns Usage string.
+     */
     getCommandUsageString(command: Command, prefix: string, translator: Translator) {
         let map = this.commands;
         const localizedCommandPath = command.path.split("/").map(a => {

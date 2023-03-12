@@ -3,23 +3,35 @@ import { Translator } from "../Translator.js";
 import { Command } from "../definitions.js";
 import { CommandResponse } from "./CommandResponse.js";
 
-/** @public */
+/** 
+ * Abstract instance of command related data.
+ * @public 
+ */
 export abstract class CommandRequest<InGuild extends boolean = boolean> {
-    response: CommandResponse | null = null;
+    /** Response, if a command request was replied. */
+    get response() {
+        return this._response;
+    }
+    _response: CommandResponse | null = null;
 
     /** @internal */
     constructor(readonly command: Command, readonly translator: Translator) { }
 
+    /** Completes with minimal side effects (or with none, if possible). */
     async completeSilently() { };
 
+    /** Defers the reply, if possible. */
     abstract deferReply(ephemeral?: boolean): Promise<CommandResponse>;
 
+    /** Replies to the command request. */
     abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<CommandResponse>;
 
+    /** Replies to the command request or sends a new message if it cannot reply. */
     async replyOrSendSeparate(options: InteractionReplyOptions | MessageReplyOptions) {
         return this.reply(options).catch(() => this.sendSeparate(options as MessageReplyOptions));
     }
 
+    /** Sends a new message. */
     abstract sendSeparate(options: string | MessageReplyOptions): Promise<CommandResponse>;
 
     abstract get content(): string | null;

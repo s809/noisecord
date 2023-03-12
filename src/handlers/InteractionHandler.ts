@@ -11,7 +11,10 @@ import { CommandRequest } from "../messageTypes/CommandRequest.js";
 
 type ContainsInteraction = InteractionCommandRequest | ContextMenuCommandInteraction;
 
-/** @public */
+/** 
+ * Options for setting up an interaction handler.
+ * @public 
+ */
 export interface InteractionHandlerOptions extends _HandlerOptions<CommandRequest | ContextMenuCommandInteraction> {
     registerApplicationCommands?: boolean;
 }

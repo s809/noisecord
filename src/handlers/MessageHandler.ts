@@ -10,14 +10,28 @@ import { _HandlerOptions } from "./HandlerOptions.js";
 import { _EventHandler } from "./EventHandler.js";
 import { IterableElement } from "type-fest";
 
-/** @public */
+/** 
+ * Default emote for loading state on a message command.
+ * @public 
+ */
 export const loadingEmoji = "🔄";
-/** @public */
+
+/** 
+ * Default emote for success state on a message command.
+ * @public 
+ */
 export const successEmoji = "✅";
-/** @public */
+
+/** 
+ * Default emote for failure state on a message command.
+ * @public 
+ */
 export const failureEmoji = "❌";
 
-/** @public */
+/** 
+ * Options for setting up a message handler.
+ * @public 
+ */
 export interface MessageHandlerOptions extends _HandlerOptions {
     /**
      * Sets a prefix.

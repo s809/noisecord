@@ -31,11 +31,13 @@ export class CommandFramework {
         return this.commandRegistry.commands;
     }
     
+    /** @see CommandRegistry */
     get commandRegistry() {
         return _getValueOrThrowInitError(this._commandRegistry, this);
     }
     private _commandRegistry?: CommandRegistry;
     
+    /** @see TranslatorManager */
     get translatorManager() {
         return _getValueOrThrowInitError(this._translatorManager, this);
     }
