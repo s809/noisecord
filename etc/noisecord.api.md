@@ -138,11 +138,11 @@ export interface CommandDefinition {
 export class CommandFramework {
     constructor(options: CommandFrameworkOptions);
     // (undocumented)
-    commandRegistry?: CommandRegistry;
+    get commandRegistry(): CommandRegistry;
     get commands(): ReadonlyMap<string, Readonly<Command>>;
     init(client: Client): Promise<this>;
     // (undocumented)
-    translatorManager?: TranslatorManager;
+    get translatorManager(): TranslatorManager;
 }
 
 // @public
@@ -293,6 +293,13 @@ export function defineCommand<T extends CommandDefinition | ContextMenuCommandDe
 
 // @public (undocumented)
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+
+// Warning: (ae-internal-missing-underscore) The name "getValueOrThrowInitError" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getValueOrThrowInitError<T>(value: T | undefined, instance: {
+    init: Function;
+}): T & ({} | null);
 
 // @public (undocumented)
 export class InteractionCommandResponse extends CommandResponse {

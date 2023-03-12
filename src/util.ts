@@ -73,6 +73,13 @@ export function parseRoleMention(text: string) {
     return parseMention(text, "@&");
 }
 
+/** @internal */
+export function getValueOrThrowInitError<T>(value: T | undefined, instance: { init: Function }) {
+    if (value === undefined)
+        throw new Error(`${instance.init.name}() was not called before use of ${instance.constructor.name} instance.`);
+    return value;
+}
+
 /** @public */
 export type DistributiveOmit<T, K extends keyof any> = T extends any
     ? Omit<T, K>

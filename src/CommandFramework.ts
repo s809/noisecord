@@ -4,6 +4,7 @@ import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager
 import { Client } from "discord.js";
 import { InteractionHandler, InteractionHandlerOptions } from "./handlers/InteractionHandler.js";
 import { MessageHandler, MessageHandlerOptions } from "./handlers/MessageHandler.js";
+import { getValueOrThrowInitError } from "./util.js";
 
 /** 
  * Options used to initialize {@link CommandFramework}.
@@ -29,8 +30,16 @@ export class CommandFramework {
             throw new Error(`${this.init.name}() was not called before use of ${this.constructor.name} instance.`);
         return this.commandRegistry.commands;
     }
-    commandRegistry?: CommandRegistry;
-    translatorManager?: TranslatorManager;
+    
+    get commandRegistry() {
+        return getValueOrThrowInitError(this._commandRegistry, this);
+    }
+    private _commandRegistry?: CommandRegistry;
+    
+    get translatorManager() {
+        return getValueOrThrowInitError(this._translatorManager, this);
+    }
+    private _translatorManager?: TranslatorManager;
 
     private client?: Client;
 
@@ -43,8 +52,8 @@ export class CommandFramework {
      * Initializes everything related to the framework.
      */
     async init(client: Client) {
-        this.translatorManager = await new TranslatorManager(this.options.translationOptions).init();
-        this.commandRegistry = await new CommandRegistry(this.options.commandRegistryOptions, this.translatorManager).createCommands();
+        this._translatorManager = await new TranslatorManager(this.options.translationOptions).init();
+        this._commandRegistry = await new CommandRegistry(this.options.commandRegistryOptions, this.translatorManager).createCommands();
 
         this.client = client;
         if (client.isReady())
