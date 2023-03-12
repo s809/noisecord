@@ -4,10 +4,11 @@ import { resolve } from "path/posix";
 export const isTsNode = !!(process as any)[Symbol.for("ts-node.register.instance")];
 
 /**
- * Imports modules in a given directory. \
+ * Imports modules in a given directory.
+ *
  * Ignores index.js/ts (depends on whether running in ts-node).
  * 
- * @param dir Path to directory.
+ * @param dir - Path to directory.
  * @returns Imported modules.
  */
 export async function importModules<T>(dir: string): Promise<[string, T][]> {

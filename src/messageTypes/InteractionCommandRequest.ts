@@ -5,7 +5,9 @@ import { CommandRequest } from "./CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 
+/** @public */
 export class InteractionCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
+    /** @internal */
     constructor(command: Command, translator: Translator, readonly interaction: CommandInteraction) {
         super(command, translator);
         this.interaction = interaction;

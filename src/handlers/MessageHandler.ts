@@ -26,7 +26,8 @@ export interface MessageHandlerOptions extends HandlerOptions {
      */
     prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string | null>);
     /**
-     * Allows specific users to execute commands regardless of their permissions. \
+     * Allows specific users to execute commands regardless of their permissions.
+ *
      * A function can be passed if there's a need for custom processing.
      */
     ignorePermissionsFor?: Snowflake | Snowflake[] | ((msg: Message) => Awaitable<boolean>);
@@ -60,20 +61,20 @@ export class MessageHandler extends EventHandler<[Message], ConvertedOptions> {
                 return false;
             }
         }, {
-            async onSlowCommand(msg: MessageCommandRequest) {
-                await msg.message.react(loadingEmoji).catch(() => { });
+            async onSlowCommand(req: MessageCommandRequest) {
+                await req.message.react(loadingEmoji).catch(() => { });
             },
-            async onSuccess(msg: MessageCommandRequest) {
+            async onSuccess(req: MessageCommandRequest) {
                 await Promise.allSettled([
-                    msg.message.reactions.resolve(loadingEmoji)?.users.remove(),
-                    msg.message.react(successEmoji)
+                    req.message.reactions.resolve(loadingEmoji)?.users.remove(),
+                    req.message.react(successEmoji)
                 ]);
             },
-            async onFailure(msg: MessageCommandRequest, e) {
+            async onFailure(req: MessageCommandRequest, e) {
                 await Promise.allSettled([
-                    msg.message.reactions.resolve(loadingEmoji)?.users.remove(),
-                    msg.message.react(failureEmoji),
-                    msg.reply(e instanceof CommandResultError
+                    req.message.reactions.resolve(loadingEmoji)?.users.remove(),
+                    req.message.react(failureEmoji),
+                    req.reply(e instanceof CommandResultError
                         ? e.message
                         : String(e.stack))
                 ]);
@@ -118,8 +119,8 @@ export class MessageHandler extends EventHandler<[Message], ConvertedOptions> {
         }
 
         const commandTranslator = await this.translatorManager.getTranslator(msg, command.translationPath);
-        const CommandRequest = new MessageCommandRequest(command, commandTranslator, msg);
-        await this.executeCommand(CommandRequest, () => command.handler!(CommandRequest, argsObj), commandTranslator);
+        const commandRequest = new MessageCommandRequest(command, commandTranslator, msg);
+        await this.executeCommand(commandRequest, () => command.handler!(commandRequest, argsObj), commandTranslator);
     }
 
     private async checkCommandPermissions(msg: Message, command: Command): Promise<boolean> {

@@ -5,6 +5,7 @@ import { CommandRequest } from "../../messageTypes/CommandRequest.js";
 import { setTimeout } from "timers/promises";
 import sinon from "sinon";
 import { merge } from "lodash-es";
+import { CommandContextResolvable } from "../../conditions/index.js";
 
 enum _IdConstants {
     GuildNone,
@@ -237,8 +238,8 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             }
         }],
         ["auto/manually-replied", {
-            handler: async (msg: CommandRequest) => {
-                await msg.reply({
+            handler: async (req: CommandRequest) => {
+                await req.reply({
                     content: "YAAY",
                     ephemeral: false
                 });
@@ -313,7 +314,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
         ["conditions", {
             conditions: [{
                 name: "Test condition",
-                check: (msg: Message) => msg.guildId === IdConstants.Guild1,
+                check: (context: CommandContextResolvable) => context.guildId === IdConstants.Guild1,
                 failureMessage: "Test condition error"
             }]
         }],
@@ -510,8 +511,8 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             }, {
                 key: "cm-manually-replied",
                 type: ApplicationCommandType.Message,
-                handler: async (msg: ContextMenuCommandInteraction) => {
-                    await msg.reply({
+                handler: async (req: ContextMenuCommandInteraction) => {
+                    await req.reply({
                         content: "YAAY",
                         ephemeral: false
                     });

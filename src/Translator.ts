@@ -1,8 +1,10 @@
-import { CommandInteraction, GuildResolvable, LocaleString, Message, User } from "discord.js";
+import { LocaleString } from "discord.js";
 import { get } from "lodash-es";
 import format from "string-format";
 
 type FormatParameters = Parameters<typeof format>[1][];
+
+/** @public */
 export class Translator {
     readonly localeString: LocaleString;
     readonly setLocaleRegex: RegExp;
@@ -18,7 +20,7 @@ export class Translator {
         return this._fallback;
     }
     /** @internal */
-    set fallback(fallback) {
+    setFallback(fallback: Translator) {
         this._fallback = fallback;
     }
     private _fallback: Translator | null = null;
@@ -48,7 +50,7 @@ export class Translator {
 
         if (prefixOrFallback instanceof Translator) {
             this.prefix = prefixOrFallback.prefix;
-            this.fallback = prefixOrFallback;
+            this._fallback = prefixOrFallback;
         } else if (prefixOrFallback) {
             this.prefix = prefixOrFallback;
         }
@@ -57,8 +59,8 @@ export class Translator {
     /**
      * Get a translation string.
      * 
-     * @param path Path of translation entry.
-     * @param args Arguments for string interpolation.
+     * @param path - Path of translation entry.
+     * @param args - Arguments for string interpolation.
      * @returns String with translation or passed path, if it was not found.
      */
     translate(path: string, ...args: FormatParameters): string {
@@ -75,8 +77,8 @@ export class Translator {
     /**
      * Get a translation string.
      * 
-     * @param path Path of translation entry.
-     * @param args Arguments for string interpolation.
+     * @param path - Path of translation entry.
+     * @param args - Arguments for string interpolation.
      * @returns String with translation or null, if it was not found.
      */
     tryTranslate(path: string, ...args: FormatParameters): string | null {
@@ -88,7 +90,7 @@ export class Translator {
      * Gets a translation value from object using this translator's locale string as a key.
      * Tries to get result by a default locale key if this translator's key was not found.
      * 
-     * @param obj Object to get value from.
+     * @param obj - Object to get value from.
      * @returns Value from object or undefined.
      */
     getTranslationFromRecord(obj: Partial<Record<LocaleString, any>>): any {

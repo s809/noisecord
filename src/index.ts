@@ -10,5 +10,4 @@ export * from "./messageTypes/InteractionCommandResponse.js";
 export * from "./messageTypes/MessageCommandRequest.js";
 export * from "./messageTypes/MessageCommandResponse.js";
 export * from "./handlers/errors.js";
-export * from "./messageTypes/errors.js";
 export * from "./conditions/index.js"

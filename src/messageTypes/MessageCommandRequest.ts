@@ -4,9 +4,11 @@ import { Command } from "../definitions.js";
 import { CommandRequest } from "./CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
 
+/** @public */
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
     readonly message: Message;
 
+    /** @internal */
     constructor(command: Command, translator: Translator, message: Message) {
         super(command, translator);
 

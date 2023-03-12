@@ -23,17 +23,13 @@ export interface CommandFrameworkOptions {
 export class CommandFramework {
     /**
      * Tree of commands.
-     * @public
      */
     get commands(): ReadonlyMap<string, Readonly<Command>> {
         if (!this.commandRegistry)
             throw new Error(`${this.init.name}() was not called before use of ${this.constructor.name} instance.`);
         return this.commandRegistry.commands;
     }
-    /** @public */
     commandRegistry?: CommandRegistry;
-
-    /** @public */
     translatorManager?: TranslatorManager;
 
     private client?: Client;
@@ -41,12 +37,10 @@ export class CommandFramework {
     private messageHandler: MessageHandler | null = null;
     private interactionHandler: InteractionHandler | null = null;
 
-    /** @public */
     constructor(private options: CommandFrameworkOptions) {}
 
     /** 
      * Initializes everything related to the framework.
-     * @public 
      */
     async init(client: Client) {
         this.translatorManager = await new TranslatorManager(this.options.translationOptions).init();

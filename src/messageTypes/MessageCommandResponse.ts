@@ -1,11 +1,15 @@
 import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, TextBasedChannel, WebhookEditMessageOptions, MessageCreateOptions } from 'discord.js';
 import { CommandResponse } from "./CommandResponse.js";
 
+/** @public */
 export class MessageCommandResponse extends CommandResponse {
     private channel?: TextBasedChannel;
 
+    /** @internal */
     constructor(message: Message);
+    /** @internal */
     constructor(deferChannel: TextBasedChannel);
+    /** @internal */
     constructor(messageOrDeferChannel: Message | TextBasedChannel) {
         if (messageOrDeferChannel instanceof Message) {
             super(messageOrDeferChannel);

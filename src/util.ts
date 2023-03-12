@@ -1,3 +1,4 @@
+/** @internal */
 export function traverseTree<T>(path: string[],
     root: ReadonlyMap<string, T>,
     getDescendants: (value: T) => Map<string, T> | null | undefined,
@@ -27,8 +28,9 @@ export function traverseTree<T>(path: string[],
 /**
  * Extracts ID from mention.
  * 
- * @param text Text containing mention.
+ * @param text - Text containing mention.
  * @returns Extracted ID.
+ * @public
  */
 export function parseMention(text: string, prefix: string): string | null {
     if (/^\d{1,19}$/.test(text))
@@ -41,8 +43,9 @@ export function parseMention(text: string, prefix: string): string | null {
 /**
  * Extracts channel ID from mention.
  * 
- * @param text Text containing mention.
+ * @param text - Text containing mention.
  * @returns Extracted ID.
+ * @public
  */
 export function parseChannelMention(text: string) {
     return parseMention(text, "#");
@@ -51,8 +54,9 @@ export function parseChannelMention(text: string) {
 /**
  * Extracts user ID from mention.
  * 
- * @param text Text containing mention.
+ * @param text - Text containing mention.
  * @returns Extracted ID.
+ * @public
  */
 export function parseUserMention(text: string) {
     return parseMention(text, "@") ?? parseMention(text, "@!");
@@ -61,15 +65,20 @@ export function parseUserMention(text: string) {
 /**
  * Extracts role ID from mention.
  * 
- * @param text Text containing mention.
+ * @param text - Text containing mention.
  * @returns Extracted ID.
+ * @public
  */
 export function parseRoleMention(text: string) {
     return parseMention(text, "@&");
 }
 
+/** @public */
 export type DistributiveOmit<T, K extends keyof any> = T extends any
     ? Omit<T, K>
     : never;
 
+/** @public */
 export type DeeplyNestedMap<V> = Map<string, V | DeeplyNestedMap<V>>;
+// ти хо а ЭЭЭ(())
+// :wtf2:

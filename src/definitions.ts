@@ -10,12 +10,14 @@ import { Translator } from "./Translator.js";
 import { IterableElement, Merge } from "type-fest";
 import { SimpleMerge } from "type-fest/source/merge.js";
 
+/** @public */
 export const textChannels = [
     ChannelType.GuildAnnouncement,
     ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread,
     ChannelType.GuildText
 ] as const;
 
+/** @public */
 export interface CommandDefinition {
     key: string;
 
@@ -42,6 +44,7 @@ export interface CommandDefinition {
     alwaysReactOnSuccess?: boolean;
 }
 
+/** @public */
 export type Command = SimpleMerge<Required<CommandDefinition>, {
     path: string;
     key: string;
@@ -74,20 +77,25 @@ export type Command = SimpleMerge<Required<CommandDefinition>, {
     subcommands: Map<string, Command>;
 }>
 
+/** @public */
 export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role>;
 
+/** @public */
 export type CommandHandler = (
-    msg: CommandRequest,
+    req: CommandRequest,
     args: ParsedArguments
 ) => Awaitable<string | void>;
 
 type ContextMenuCommandInteractions = UserContextMenuCommandInteraction | MessageContextMenuCommandInteraction;
+
+/** @public */
 export interface ContextMenuCommandDefinition<T extends ContextMenuCommandInteractions = ContextMenuCommandInteractions> {
     key: string;
     type: T["commandType"];
     handler: (interaction: T, translator: Translator) => void;
 }
 
+/** @public */
 export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = ContextMenuCommandInteractions> extends ContextMenuCommandDefinition<T> {
     appCommandId: Snowflake | null;
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
@@ -95,6 +103,7 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteractions = C
 
 /**
  * This function is just for convenience/type checking.
+ * @public
  */
 export function defineCommand<T extends CommandDefinition | ContextMenuCommandDefinition = CommandDefinition>(definition: T) {
     return definition;

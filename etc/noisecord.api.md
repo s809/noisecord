@@ -21,7 +21,6 @@ import { GuildTextBasedChannel } from 'discord.js';
 import { If } from 'discord.js';
 import { InteractionCollector } from 'discord.js';
 import { InteractionReplyOptions } from 'discord.js';
-import { InteractionResponse } from 'discord.js';
 import { IterableElement } from 'type-fest';
 import { LocaleString } from 'discord.js';
 import { LocalizationMap } from 'discord.js';
@@ -47,17 +46,15 @@ import { WebhookEditMessageOptions } from 'discord.js';
 
 // @public (undocumented)
 export class ArgumentParseError extends Error {
+    // @internal
     constructor(message: string);
 }
 
-// Warning: (ae-forgotten-export) The symbol "WithCommandContext" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "CommandConditionCheckResult" needs to be exported by the entry point index.d.ts
-//
 // @public
-export function checkConditions(msg: WithCommandContext, conditions: CommandCondition[]): CommandConditionCheckResult;
+export function checkConditions(context: CommandContextResolvable, conditions: CommandCondition[]): string | null;
 
 // @public
-export function checkConditions(msg: WithCommandContext, command: Command): CommandConditionCheckResult;
+export function checkConditions(context: CommandContextResolvable, command: Command): string | null;
 
 // @public (undocumented)
 export type Command = SimpleMerge<Required<CommandDefinition>, {
@@ -90,11 +87,11 @@ export type Command = SimpleMerge<Required<CommandDefinition>, {
 // @public (undocumented)
 export interface CommandCondition {
     // (undocumented)
-    check: (msg: Message | CommandRequest) => boolean;
+    check: (context: CommandContextResolvable) => boolean;
     // (undocumented)
     failureMessage: string;
     // (undocumented)
-    hideCommand?: boolean | ((msg: Message | CommandRequest) => boolean);
+    hideCommand?: boolean | ((context: CommandContextResolvable) => boolean);
     // (undocumented)
     hideInDescription?: boolean;
     // (undocumented)
@@ -104,6 +101,9 @@ export interface CommandCondition {
     // (undocumented)
     satisfiedBy?: CommandCondition | CommandCondition[];
 }
+
+// @public (undocumented)
+export type CommandContextResolvable = Message | CommandRequest;
 
 // @public (undocumented)
 export interface CommandDefinition {
@@ -162,10 +162,11 @@ export interface CommandFrameworkOptions {
 }
 
 // @public (undocumented)
-export type CommandHandler = (msg: CommandRequest, args: ParsedArguments) => Awaitable<string | void>;
+export type CommandHandler = (req: CommandRequest, args: ParsedArguments) => Awaitable<string | void>;
 
 // @public (undocumented)
 export class CommandRegistry {
+    // @internal
     constructor(options: CommandRegistryOptions, translatorManager: TranslatorManager);
     // (undocumented)
     readonly commands: Map<string, Command>;
@@ -175,9 +176,9 @@ export class CommandRegistry {
     readonly commandsByLocale: Map<LocaleString, DeeplyNestedMap<Command>>;
     // (undocumented)
     readonly contextMenuCommands: ContextMenuCommand[];
-    // (undocumented)
+    // @internal (undocumented)
     createCommands(): Promise<this>;
-    // (undocumented)
+    // @internal (undocumented)
     createContextMenuCommands(): Promise<ContextMenuCommand<UserContextMenuCommandInteraction<CacheType> | MessageContextMenuCommandInteraction<CacheType>>[]>;
     // (undocumented)
     getCommandUsageString(command: Command, prefix: string, translator: Translator): string;
@@ -200,6 +201,7 @@ export interface CommandRegistryOptions {
 
 // @public (undocumented)
 export abstract class CommandRequest<InGuild extends boolean = boolean> {
+    // @internal
     constructor(command: Command, translator: Translator);
     // (undocumented)
     abstract get author(): User;
@@ -239,11 +241,12 @@ export abstract class CommandRequest<InGuild extends boolean = boolean> {
 
 // @public (undocumented)
 export abstract class CommandResponse {
+    // @internal
     constructor(message?: Message<boolean> | undefined);
     // (undocumented)
     get content(): string | undefined;
     // (undocumented)
-    abstract createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): ReturnType<(Message | InteractionResponse)["createMessageComponentCollector"]>;
+    abstract createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes[T]>;
     // (undocumented)
     abstract delete(): Promise<void>;
     // (undocumented)
@@ -258,6 +261,7 @@ export abstract class CommandResponse {
 
 // @public (undocumented)
 export class CommandResultError extends Error {
+    // @internal
     constructor(message: string);
 }
 
@@ -292,6 +296,7 @@ export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K
 
 // @public (undocumented)
 export class InteractionCommandResponse extends CommandResponse {
+    // @internal
     constructor(interaction: CommandInteraction, message: Message);
     // (undocumented)
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
@@ -304,11 +309,6 @@ export class InteractionCommandResponse extends CommandResponse {
 }
 
 // @public (undocumented)
-export class InteractionReplyError extends Error {
-    constructor();
-}
-
-// @public (undocumented)
 export const InVoiceChannel: CommandCondition;
 
 // @public (undocumented)
@@ -316,6 +316,7 @@ export const InVoiceWithBot: CommandCondition;
 
 // @public (undocumented)
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
+    // @internal
     constructor(command: Command, translator: Translator, message: Message);
     // (undocumented)
     get author(): User;
@@ -341,7 +342,9 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
 
 // @public (undocumented)
 export class MessageCommandResponse extends CommandResponse {
+    // @internal
     constructor(message: Message);
+    // @internal
     constructor(deferChannel: TextBasedChannel);
     // (undocumented)
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
@@ -350,9 +353,6 @@ export class MessageCommandResponse extends CommandResponse {
     // (undocumented)
     edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
 }
-
-// @public (undocumented)
-export type NameOrContext = string | Message | CommandInteraction | GuildResolvable | User;
 
 // @public
 export function parseChannelMention(text: string): string | null;
@@ -373,6 +373,9 @@ export function parseUserMention(text: string): string | null;
 export const textChannels: readonly [ChannelType.GuildAnnouncement, ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread, ChannelType.GuildText];
 
 // @public (undocumented)
+export type TranslationContextResolvable = string | Message | CommandInteraction | GuildResolvable | User;
+
+// @public (undocumented)
 export class Translator {
     // @internal
     constructor(data: object);
@@ -381,11 +384,12 @@ export class Translator {
     // (undocumented)
     readonly booleanValues: [string[], string[]];
     get fallback(): Translator | null;
-    set fallback(fallback: Translator | null);
     getTranslationFromRecord(obj: Partial<Record<LocaleString, any>>): any;
     // (undocumented)
     readonly localeString: LocaleString;
     readonly root: Translator | null;
+    // @internal (undocumented)
+    setFallback(fallback: Translator): void;
     // (undocumented)
     readonly setLocaleRegex: RegExp;
     // Warning: (ae-forgotten-export) The symbol "FormatParameters" needs to be exported by the entry point index.d.ts
@@ -401,12 +405,12 @@ export class TranslatorManager {
     // (undocumented)
     get fallbackTranslator(): Translator;
     // (undocumented)
-    getLocale(nameOrContext: NameOrContext): Promise<string | null>;
+    getLocale(nameOrContext: TranslationContextResolvable): Promise<string | null>;
     // (undocumented)
     getLocalizations(translationPath: string): Partial<Record<"en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", string>>;
     // (undocumented)
-    getTranslator(nameOrContext: NameOrContext, prefix?: string): Promise<Translator>;
-    // (undocumented)
+    getTranslator(nameOrContext: TranslationContextResolvable, prefix?: string): Promise<Translator>;
+    // @internal (undocumented)
     init(): Promise<this>;
     // (undocumented)
     readonly setLocaleRegexes: Record<"en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", RegExp>;
@@ -424,7 +428,9 @@ export interface TranslatorManagerOptions {
     translationFileDirectory: string;
 }
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "traverseTree" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export function traverseTree<T>(path: string[], root: ReadonlyMap<string, T>, getDescendants: (value: T) => Map<string, T> | null | undefined, allowPartialResolve?: boolean): T | null;
 
 // (No @packageDocumentation comment for this package)

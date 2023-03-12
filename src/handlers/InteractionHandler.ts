@@ -21,32 +21,32 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
     protected readonly eventName = "interactionCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {
-        const getInteraction = (msg: ContainsInteraction) => {
-            if (msg instanceof InteractionCommandRequest)
-                return msg.interaction;
+        const getInteraction = (req: ContainsInteraction) => {
+            if (req instanceof InteractionCommandRequest)
+                return req.interaction;
             else
-                return msg;
+                return req;
         }
         
         super(client, commandRegistry, {
             registerApplicationCommands: options.registerApplicationCommands !== false
         }, {
-            async onSlowCommand(msg: ContainsInteraction) {
-                if (msg instanceof InteractionCommandRequest) {
-                    if (!msg.response)
-                        await msg.deferReply();
+            async onSlowCommand(req: ContainsInteraction) {
+                if (req instanceof InteractionCommandRequest) {
+                    if (!req.response)
+                        await req.deferReply();
                 } else {
-                    if (!msg.deferred && !msg.replied) {
-                        await msg.deferReply({
+                    if (!req.deferred && !req.replied) {
+                        await req.deferReply({
                             ephemeral: true
                         });
                     }
                 }
             },
-            async onSuccess(msg: ContainsInteraction) {
-                const interaction = getInteraction(msg);
+            async onSuccess(req: ContainsInteraction) {
+                const interaction = getInteraction(req);
                 if (!interaction.deferred && !interaction.replied) {
-                    await msg.reply({
+                    await req.reply({
                         content: "OK",
                         ephemeral: true
                     });
@@ -57,20 +57,20 @@ export class InteractionHandler extends EventHandler<[Interaction], ConvertedOpt
                     });
                 }
             },
-            async onFailure(msg: ContainsInteraction, e) {
+            async onFailure(req: ContainsInteraction, e) {
                 const content = e instanceof CommandResultError
                     ? e.message
                     : String(e.stack);
 
-                const interaction = getInteraction(msg);
+                const interaction = getInteraction(req);
                 if (!interaction.replied || !(await interaction.fetchReply()).flags.has(MessageFlags.Loading)) {
-                    await msg.reply({
+                    await req.reply({
                         content,
                         ephemeral: true,
                         fetchReply: true
                     });
                 } else {
-                    await msg.channel?.send(content);
+                    await req.channel?.send(content);
                 }
             },
         });

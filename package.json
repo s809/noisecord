@@ -13,9 +13,10 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf ./dist",
-    "prepack": "npm run build && api-extractor run --local",
+    "prepack": "npm run build && api-extractor run",
     "test": "mocha",
-    "test:cov": "c8 npm test"
+    "test:cov": "c8 npm test",
+    "api": "npm run build && api-extractor run --local"
   },
   "c8": {
     "all": true,

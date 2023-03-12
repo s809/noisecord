@@ -10,19 +10,23 @@ import { Translator } from "./Translator.js";
 import { TranslatorManager } from "./TranslatorManager.js";
 import { DeeplyNestedMap, traverseTree } from "./util.js";
 
+/** @public */
 export interface CommandRegistryOptions {
     commandModuleDirectory?: string;
     contextMenuModuleDirectory?: string;
 }
 
+/** @public */
 export class CommandRegistry {
     readonly commands: Map<string, Command> = new Map();
     readonly commandsByLocale: Map<LocaleString, DeeplyNestedMap<Command>> = new Map();
     readonly contextMenuCommands: ContextMenuCommand[] = [];
     readonly commandsById: Map<Snowflake, Map<string, Command> | ContextMenuCommand> = new Map();
 
+    /** @internal */
     constructor(private options: CommandRegistryOptions, readonly translatorManager: TranslatorManager) { }
 
+    /** @internal */
     async createCommands() {
         if (!this.options.commandModuleDirectory) return this;
 
@@ -118,6 +122,7 @@ export class CommandRegistry {
         return this;
     }
 
+    /** @internal */
     async createContextMenuCommands() {
         if (!this.options.contextMenuModuleDirectory)
             return this.contextMenuCommands;
@@ -147,8 +152,8 @@ export class CommandRegistry {
     /**
      * Resolves command by its path.
      *
-     * @param path Path to command.
-     * @param allowPartialResolve Whether to allow resolving to closest match.
+     * @param path - Path to command.
+     * @param allowPartialResolve - Whether to allow resolving to closest match.
      * @returns Command, if it was found.
      */
     resolveCommandByPath(path: string | string[], allowPartialResolve: boolean = false): Command | null {
@@ -200,7 +205,7 @@ export class CommandRegistry {
     /**
      * Recursively iterates a map with commands.
      *
-     * @param list List of commands to iterate.
+     * @param list - List of commands to iterate.
      */
     *iterateSubcommands(list: ReadonlyMap<string, Command>): Iterable<Command> {
         for (const command of list.values()) {

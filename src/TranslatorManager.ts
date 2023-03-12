@@ -5,6 +5,7 @@ import { Translator } from "./Translator.js";
 
 const defaultDiscordLocale: LocaleString = "en-US";
 
+/** @public */
 export interface TranslatorManagerOptions {
     translationFileDirectory: string;
     defaultLocale: LocaleString;
@@ -12,7 +13,10 @@ export interface TranslatorManagerOptions {
     getGuildLocale: (guild: Guild) => Promise<LocaleString | null>;
 }
 
-export type NameOrContext = string | Message | CommandInteraction | GuildResolvable | User;
+/** @public */
+export type TranslationContextResolvable = string | Message | CommandInteraction | GuildResolvable | User;
+
+/** @public */
 export class TranslatorManager {
     private translators = new Map<LocaleString, Map<string | null, Translator>>();
     
@@ -30,6 +34,7 @@ export class TranslatorManager {
 
     constructor(private options: TranslatorManagerOptions) {}
 
+    /** @internal */
     async init() {
         for (let file of await readdir(this.options.translationFileDirectory)) {
             try {
@@ -57,13 +62,13 @@ export class TranslatorManager {
             if (translator.localeString === this.fallbackLocale)
                 continue;
             
-            translator.fallback = this.fallbackTranslator;
+            translator.setFallback(this.fallbackTranslator);
         }
 
         return this;
     }
 
-    async getLocale(nameOrContext: NameOrContext): Promise<string | null> {
+    async getLocale(nameOrContext: TranslationContextResolvable): Promise<string | null> {
         if (typeof nameOrContext === "string") return nameOrContext;
 
         /*
@@ -113,7 +118,7 @@ export class TranslatorManager {
         }
     }
 
-    async getTranslator(nameOrContext: NameOrContext, prefix?: string): Promise<Translator> {
+    async getTranslator(nameOrContext: TranslationContextResolvable, prefix?: string): Promise<Translator> {
         const locale = (await this.getLocale(nameOrContext)) ?? this.options.defaultLocale;
 
         const translatorsInLocale = this.translators.get(locale as LocaleString);

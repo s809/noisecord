@@ -3,9 +3,11 @@ import { Translator } from "../Translator.js";
 import { Command } from "../definitions.js";
 import { CommandResponse } from "./CommandResponse.js";
 
-export abstract class CommandRequest<InGuild extends boolean = boolean> {    
+/** @public */
+export abstract class CommandRequest<InGuild extends boolean = boolean> {
     response: CommandResponse | null = null;
 
+    /** @internal */
     constructor(readonly command: Command, readonly translator: Translator) { }
 
     async completeSilently() { };
