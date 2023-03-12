@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { CommandInteraction, Guild, Message, TextChannel, User } from "discord.js";
 import sinon from "sinon";
-import { NameOrContext, TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
+import { TranslationContextResolvable, TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
 
 const translationOptions: TranslatorManagerOptions = {
     translationFileDirectory: "./src/testData/translations/normal",
@@ -39,7 +39,7 @@ describe("TranslatorManager", () => {
     });
 
     describe("#getTranslator()", () => {
-        async function validate(value: NameOrContext) {
+        async function validate(value: TranslationContextResolvable) {
             const found = await translatorManager.getTranslator(value);
             expect(found.localeString).equal("ru");
         }
