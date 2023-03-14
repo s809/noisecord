@@ -1,14 +1,14 @@
 import { expect } from "chai";
 import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
-import { createCommand, CreateCommandUtil } from "./CreateCommandUtil.js";
-import { CommandDefinition } from "./definitions.js";
-import { TranslatorManager } from "./TranslatorManager.js";
+import { createCommand, CommandCreationHelper } from "./CommandCreationHelper.js";
+import { CommandDefinition } from "../definitions.js";
+import { TranslatorManager } from "../TranslatorManager.js";
 
-describe("CreateCommandUtil", () => {
-    let createCommandUtil: CreateCommandUtil;
+describe("CommandCreationHelper", () => {
+    let commandCreationHelper: CommandCreationHelper;
 
     beforeEach(() => {
-        createCommandUtil = new CreateCommandUtil({
+        commandCreationHelper = new CommandCreationHelper({
             getLocalizations: _ => ({
                 "en-US": "test",
                 "ru": "test2"
@@ -19,7 +19,7 @@ describe("CreateCommandUtil", () => {
 
     describe("no errors", () => {
         it("no action", () => {
-            createCommandUtil.throwIfErrors();
+            commandCreationHelper.throwIfErrors();
         });
 
         it("create command", () => {
@@ -32,21 +32,21 @@ describe("CreateCommandUtil", () => {
 
             partialCommand.path = partialCommand.key;
 
-            createCommandUtil.setHeader(1, "Command config");
-            createCommandUtil.fillInheritableOptions(partialCommand, inheritedOptions);
+            commandCreationHelper.setHeader(1, "Command config");
+            commandCreationHelper.fillInheritableOptions(partialCommand, inheritedOptions);
 
-            createCommandUtil.setHeader(1, "Command translations");
-            createCommandUtil.fillTranslations(partialCommand);
+            commandCreationHelper.setHeader(1, "Command translations");
+            commandCreationHelper.fillTranslations(partialCommand);
 
-            createCommandUtil.setHeader(1, "Command arguments");
-            createCommandUtil.fillArguments(partialCommand, definition.args);
+            commandCreationHelper.setHeader(1, "Command arguments");
+            commandCreationHelper.fillArguments(partialCommand, definition.args);
 
-            createCommandUtil.throwIfErrors();
+            commandCreationHelper.throwIfErrors();
         });
     });
 
     describe("errors", () => {
-        describe(`#${CreateCommandUtil.prototype.fillInheritableOptions.name}`, () => {
+        describe(`#${CommandCreationHelper.prototype.fillInheritableOptions.name}`, () => {
             for (const inputs of [
                 {
                     title: "Allowing a child to be usable as interaction command",
@@ -87,7 +87,7 @@ describe("CreateCommandUtil", () => {
                 }
             ] as const) {
                 it(inputs.title, () => {
-                    createCommandUtil.fillInheritableOptions({
+                    commandCreationHelper.fillInheritableOptions({
                         conditions: [],
                         ...inputs.partialCommand
                     }, {
@@ -99,12 +99,12 @@ describe("CreateCommandUtil", () => {
                         allowDMs: true,
                         ...inputs.inheritedOptions
                     });
-                    expect(() => createCommandUtil.throwIfErrors()).throws(inputs.check);
+                    expect(() => commandCreationHelper.throwIfErrors()).throws(inputs.check);
                 });
             }
         });
 
-        describe(`#${CreateCommandUtil.prototype.fillTranslations.name}`, () => {
+        describe(`#${CommandCreationHelper.prototype.fillTranslations.name}`, () => {
             for (const inputs of [
                 {
                     title: "No matching name",
@@ -146,7 +146,7 @@ describe("CreateCommandUtil", () => {
                 }
             ] as const) {
                 it(inputs.title, () => {
-                    const createCommandUtil = new CreateCommandUtil({
+                    const commandCreationHelper = new CommandCreationHelper({
                         getLocalizations: translationPath => {
                             switch (translationPath) {
                                 case "commands.path_to_command.name":
@@ -160,14 +160,14 @@ describe("CreateCommandUtil", () => {
                         fallbackLocale: "en-US"
                     } as TranslatorManager);
 
-                    createCommandUtil.fillTranslations({ path: "path/to/command" });
+                    commandCreationHelper.fillTranslations({ path: "path/to/command" });
 
-                    expect(() => createCommandUtil.throwIfErrors()).throws(inputs.check);
+                    expect(() => commandCreationHelper.throwIfErrors()).throws(inputs.check);
                 });
             }
         });
 
-        describe(`#${CreateCommandUtil.prototype.fillArguments.name}`, () => {
+        describe(`#${CommandCreationHelper.prototype.fillArguments.name}`, () => {
             for (const inputs of [
                 {
                     title: "Missing argument name",
@@ -219,7 +219,7 @@ describe("CreateCommandUtil", () => {
                 },
             ] as const) {
                 it(inputs.title, () => {
-                    const createCommandUtil = new CreateCommandUtil({
+                    const commandCreationHelper = new CommandCreationHelper({
                         getLocalizations: translationPath => ({
                             ...translationPath.split(".")[4] !== inputs.missingTranslation
                                 && { "en-US": "test" }
@@ -236,14 +236,14 @@ describe("CreateCommandUtil", () => {
                         }] as any
                     } as const;
 
-                    createCommandUtil.fillArguments({
+                    commandCreationHelper.fillArguments({
                         translationPath: "commands.path_to_command",
                         nameTranslations: { "en-US": "test" }
                     }, inputs.args?.map(arg => ({ 
                         ...argsFiller, ...arg
                     })) ?? [argsFiller]);
 
-                    expect(() => createCommandUtil.throwIfErrors()).throws(inputs.check);
+                    expect(() => commandCreationHelper.throwIfErrors()).throws(inputs.check);
                 });
             }
         });

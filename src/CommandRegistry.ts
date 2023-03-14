@@ -2,10 +2,10 @@ import { LocaleString, Snowflake } from "discord.js";
 import path from "path";
 import {
     createCommand,
-    CreateCommandUtil, InheritableOptions
-} from "./CreateCommandUtil.js";
+    CommandCreationHelper, InheritableOptions
+} from "./helpers/CommandCreationHelper.js";
 import { Command, CommandDefinition, ContextMenuCommand, ContextMenuCommandDefinition } from "./definitions.js";
-import { importModules, isTsNode } from "./importHelper.js";
+import { importModules, isTsNode } from "./helpers/importHelper.js";
 import { Translator } from "./Translator.js";
 import { TranslatorManager } from "./TranslatorManager.js";
 import { DeeplyNestedMap, _traverseTree } from "./util.js";
@@ -58,7 +58,7 @@ export class CommandRegistry {
             );
             return chain;
         }
-        const createCommandUtil = new CreateCommandUtil(this.translatorManager);
+        const commandCreationHelper = new CommandCreationHelper(this.translatorManager);
 
         // Create and add commands to tree
         for (const [filePath, definition] of queue) {
@@ -83,22 +83,22 @@ export class CommandRegistry {
                 partialCommand.path = `${inheritedOptions.path}/${partialCommand.key}`;
             else
                 partialCommand.path = partialCommand.key;
-            createCommandUtil.setHeader(0, partialCommand.path!)
+            commandCreationHelper.setHeader(0, partialCommand.path!)
 
-            createCommandUtil.setHeader(1, "Command config");
-            createCommandUtil.fillInheritableOptions(partialCommand, inheritedOptions);
+            commandCreationHelper.setHeader(1, "Command config");
+            commandCreationHelper.fillInheritableOptions(partialCommand, inheritedOptions);
 
-            createCommandUtil.setHeader(1, "Command translations");
-            createCommandUtil.fillTranslations(partialCommand);
+            commandCreationHelper.setHeader(1, "Command translations");
+            commandCreationHelper.fillTranslations(partialCommand);
 
-            createCommandUtil.setHeader(1, "Command arguments");
-            createCommandUtil.fillArguments(partialCommand, definition.args);
+            commandCreationHelper.setHeader(1, "Command arguments");
+            commandCreationHelper.fillArguments(partialCommand, definition.args);
 
             const command = partialCommand as Command;
             (lastParent?.subcommands ?? this.commands).set(command.key, command);
         }
 
-        createCommandUtil.throwIfErrors();
+        commandCreationHelper.throwIfErrors();
 
         // Fill commandsByLocale
         for (const command of this.iterateCommands()) {

@@ -1,9 +1,10 @@
 import { PermissionResolvable } from "discord.js";
-import { CommandCondition } from "./conditions/index.js";
-import { Command, CommandDefinition } from "./definitions.js";
+import { CommandCondition } from "../conditions/index.js";
+import { Command, CommandDefinition } from "../definitions.js";
 import { ApplicationCommandOptionType, LocaleString, PermissionFlagsBits } from "discord.js";
-import { TranslatorManager } from "./TranslatorManager.js";
-import { castArray, isNil } from "lodash-es";
+import { TranslatorManager } from "../TranslatorManager.js";
+import { castArray } from "lodash-es";
+import { ErrorCollector } from "./ErrorCollector.js";
 
 export interface InheritableOptions {
     path: string;
@@ -40,44 +41,9 @@ export function createCommand(definition: CommandDefinition): Partial<Command> {
     };
 }
 
-export class CreateCommandUtil {
-    private errorContents = "";
-    private errorCount = 0;
-
-    private headerChain: string[] = ["(vibe check)"];
-    private indent = 0;
-
-    constructor(private translatorManager: TranslatorManager) { }
-
-    throwIfErrors() {
-        if (!this.errorContents.length) return;
-
-        throw new Error(
-            "Failed to initialize commands.\n" +
-            this.errorContents + "\n" +
-            `Errors generated: ${this.errorCount}`
-        );
-    }
-
-    setHeader(level: number, header: string) {
-        this.headerChain.splice(level, this.headerChain.length, header);
-        if (this.indent > level)
-            this.indent = level;
-    }
-
-    private addError(message: string) {
-        const indentString = "    ";
-
-        for (const header of this.headerChain.slice(this.indent)) {
-            if (this.indent === 0)
-                this.errorContents += "\n";
-
-            this.errorContents += indentString.repeat(this.indent) + header + ":\n";
-            this.indent++;
-        }
-
-        this.errorContents += indentString.repeat(this.indent - 1) + "  - " + message + "\n";
-        this.errorCount++;
+export class CommandCreationHelper extends ErrorCollector {
+    constructor(private translatorManager: TranslatorManager) {
+        super();
     }
 
     private checkLocalizations(a: any, b: any, name: string, name2?: string) {
@@ -138,7 +104,7 @@ export class CreateCommandUtil {
         }
         this.checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
 
-        let nextLevel = this.headerChain.length;
+        let nextLevel = this.headerChainLength;
         this.setHeader(nextLevel++, "Name translations");
         for (const [localeString, nameTranslation] of Object.entries(nameTranslations)) {
             this.setHeader(nextLevel, localeString);
@@ -161,7 +127,7 @@ export class CreateCommandUtil {
 
         const argStringTranslations = {} as Record<LocaleString, string>;
 
-        const nextLevel = this.headerChain.length;
+        const nextLevel = this.headerChainLength;
         const convertedArgs = args?.map(arg => {
             this.setHeader(nextLevel, `Argument: ${arg.key}`);
 
