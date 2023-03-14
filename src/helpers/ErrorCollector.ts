@@ -22,6 +22,7 @@ const groupsToString = (collection: Collection<string, ErrorList>, indent = 0) =
     collection.filter(child => child.hasErrors())
         .map((child, name) => `${getIndentString(indent)}${name}:\n${child.toString(indent + 1)}\n`).join("");
 
+/** @public */
 export class ErrorCollector {
     private errorListMap = new Collection<string, ErrorList>([["(vibe check)", new ErrorList()]]);
     private errorListChain: ErrorList[] = [this.errorListMap.get("(vibe check)")!];
@@ -29,7 +30,7 @@ export class ErrorCollector {
 
     constructor(private errorMessage?: string) { }
 
-    get headerChainLength() {
+    get groupChainLength() {
         return this.errorListChain.length;
     }
 

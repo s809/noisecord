@@ -275,6 +275,19 @@ export function defineCommand<T extends CommandDefinition | ContextMenuCommandDe
 // @public (undocumented)
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
 
+// @public (undocumented)
+export class ErrorCollector {
+    constructor(errorMessage?: string | undefined);
+    // (undocumented)
+    addError(message: string): void;
+    // (undocumented)
+    get headerChainLength(): number;
+    // (undocumented)
+    setHeader(level: number, header: string): void;
+    // (undocumented)
+    throwIfErrors(): void;
+}
+
 // @internal (undocumented)
 export abstract class _EventHandler<Args extends any[], TConvertedOptions extends Required<_HandlerOptions>> {
     protected constructor(client: Client, commandRegistry: CommandRegistry, options: Omit<TConvertedOptions, keyof Required<_HandlerOptions>> & _TypedHandlerOptions<TConvertedOptions>, defaultStatusHandlers: Omit<Required<_TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">);

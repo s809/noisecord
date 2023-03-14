@@ -2,7 +2,9 @@ export * from "./CommandFramework.js";
 export * from "./CommandRegistry.js";
 export * from "./definitions.js";
 export * from "./conditions/index.js";
+
 export * from "./util.js";
+export * from "./helpers/ErrorCollector.js";
 
 export * from "./Translator.js";
 export * from "./TranslatorManager.js";

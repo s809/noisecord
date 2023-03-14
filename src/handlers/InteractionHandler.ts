@@ -232,11 +232,6 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
                 continue;
 
             try {
-                if (command.handler && command.subcommands.size)
-                    throw new Error("Commands with subcommands cannot have a handler.");
-                if (!command.handler && !command.subcommands.size)
-                    throw new Error("Commands without subcommands must have a handler.");
-
                 if (!command.interactionCommand)
                     continue;
 

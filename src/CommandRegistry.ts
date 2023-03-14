@@ -97,13 +97,14 @@ export class CommandRegistry {
             const command = partialCommand as Command;
             (lastParent?.subcommands ?? this.commands).set(command.key, command);
         }
-
-        commandCreationHelper.throwIfErrors();
-
-        // Fill commandsByLocale
+        
         for (const command of this.iterateCommands()) {
-            const parentChain = getParentChain(command.path);
+            commandCreationHelper.setHeader(0, command.path);
+            commandCreationHelper.setHeader(1, "Tree validity");
+            commandCreationHelper.checkTreeValidity(command);
 
+            // Fill commandsByLocale
+            const parentChain = getParentChain(command.path);
             for (const [locale, translation] of Object.entries(command.nameTranslations)) {
                 let localeCommands = this.commandsByLocale.get(locale as LocaleString);
                 if (!localeCommands) {
@@ -124,6 +125,8 @@ export class CommandRegistry {
                         : command);
             }
         }
+
+        commandCreationHelper.throwIfErrors();
 
         return this;
     }

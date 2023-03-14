@@ -90,6 +90,13 @@ export class CommandCreationHelper extends ErrorCollector {
             this.addError("Owner-only commands cannot be usable as application commands.");
     }
 
+    checkTreeValidity(command: Command) {
+        if (command.handler && command.subcommands.size)
+            this.addError("Commands with subcommands cannot have a handler.");
+        if (!command.handler && !command.subcommands.size)
+            this.addError("Commands without subcommands must have a handler.");
+    }
+
     fillTranslations(partialCommand: Partial<Command>) {
         const translationPath = `commands.${partialCommand.path!.replaceAll("/", "_")}`;
         partialCommand.translationPath = translationPath;
@@ -104,7 +111,7 @@ export class CommandCreationHelper extends ErrorCollector {
         }
         this.checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
 
-        let nextLevel = this.headerChainLength;
+        let nextLevel = this.groupChainLength;
         this.setHeader(nextLevel++, "Name translations");
         for (const [localeString, nameTranslation] of Object.entries(nameTranslations)) {
             this.setHeader(nextLevel, localeString);
@@ -127,7 +134,7 @@ export class CommandCreationHelper extends ErrorCollector {
 
         const argStringTranslations = {} as Record<LocaleString, string>;
 
-        const nextLevel = this.headerChainLength;
+        const nextLevel = this.groupChainLength;
         const convertedArgs = args?.map(arg => {
             this.setHeader(nextLevel, `Argument: ${arg.key}`);
 
