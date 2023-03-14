@@ -281,7 +281,7 @@ export class ErrorCollector {
     // (undocumented)
     addError(message: string): void;
     // (undocumented)
-    get headerChainLength(): number;
+    get groupChainLength(): number;
     // (undocumented)
     setHeader(level: number, header: string): void;
     // (undocumented)
