@@ -43,7 +43,7 @@ export function createCommand(definition: CommandDefinition): Partial<Command> {
 
 export class CommandCreationHelper extends ErrorCollector {
     constructor(private translatorManager: TranslatorManager) {
-        super();
+        super("while creating commands");
     }
 
     private checkLocalizations(a: any, b: any, name: string, name2?: string) {

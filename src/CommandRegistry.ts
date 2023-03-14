@@ -100,7 +100,6 @@ export class CommandRegistry {
         
         for (const command of this.iterateCommands()) {
             commandCreationHelper.setHeader(0, command.path);
-            commandCreationHelper.setHeader(1, "Tree validity");
             commandCreationHelper.checkTreeValidity(command);
 
             // Fill commandsByLocale
