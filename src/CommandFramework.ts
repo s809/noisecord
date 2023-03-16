@@ -43,7 +43,7 @@ export class CommandFramework {
         return _getValueOrThrowInitError(this._translatorManager, this);
     }
     private _translatorManager?: TranslatorManager;
-    readonly _translationChecker = new TranslationChecker();
+    readonly translationChecker = new TranslationChecker();
 
     private client?: Client;
 
@@ -58,7 +58,7 @@ export class CommandFramework {
     async init(client: Client) {
         this._translatorManager = await new TranslatorManager(this.options.translationOptions).init();
         this._commandRegistry = await new CommandRegistry(this.options.commandRegistryOptions, this._translatorManager).createCommands();
-        this._translationChecker.runChecks(this._translatorManager);
+        this.translationChecker.runChecks(this._translatorManager);
 
         this.client = client;
         if (client.isReady())

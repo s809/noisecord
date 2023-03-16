@@ -1,6 +1,6 @@
 {
   "name": "@s809/noisecord",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "repository": "github:s809/noisecord",
   "type": "module",
   "main": "./dist/index.js",
@@ -63,9 +63,6 @@
     "sinon": "^15.0.2",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.9.1"
-  },
-  "overrides": {
-    "discord-api-types": "0.37.20"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"

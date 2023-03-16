@@ -154,7 +154,7 @@ export class CommandFramework {
     get commands(): ReadonlyMap<string, Readonly<Command>>;
     init(client: Client): Promise<this>;
     // (undocumented)
-    readonly _translationChecker: TranslationChecker;
+    readonly translationChecker: TranslationChecker;
     // (undocumented)
     get translatorManager(): TranslatorManager;
 }
@@ -520,13 +520,13 @@ export class Translator {
 export class TranslatorManager {
     constructor(options: TranslatorManagerOptions);
     // (undocumented)
-    get fallbackLocale(): "en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi";
+    get fallbackLocale(): "id" | "en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi";
     // (undocumented)
     get fallbackTranslator(): Translator;
     // (undocumented)
     getLocale(nameOrContext: TranslationContextResolvable): Promise<string | null>;
     // (undocumented)
-    getLocalizations(translationPath: string): Partial<Record<"en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", string>>;
+    getLocalizations(translationPath: string): Partial<Record<"id" | "en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", string>>;
     // (undocumented)
     getTranslator(nameOrContext: TranslationContextResolvable, prefix?: string): Promise<Translator>;
     // @internal (undocumented)
@@ -534,7 +534,7 @@ export class TranslatorManager {
     // (undocumented)
     readonly rootTranslators: Translator[];
     // (undocumented)
-    readonly setLocaleRegexes: Record<"en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", RegExp>;
+    readonly setLocaleRegexes: Record<"id" | "en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", RegExp>;
 }
 
 // @public (undocumented)
