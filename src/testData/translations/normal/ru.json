@@ -28,5 +28,10 @@
       "name": "тест",
       "description": "тест"
     }
+  },
+  "translation_checker": {
+    "test": {
+      "all": "Алл локалес"
+    }
   }
 }

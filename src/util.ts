@@ -1,3 +1,5 @@
+import { UnionToIntersection } from "type-fest";
+
 /** @internal */
 export function _traverseTree<T>(path: string[],
     root: ReadonlyMap<string, T>,
@@ -87,5 +89,8 @@ export type DistributiveOmit<T, K extends keyof any> = T extends any
 
 /** @public */
 export type DeeplyNestedMap<V> = Map<string, V | DeeplyNestedMap<V>>;
-// ти хо а ЭЭЭ(())
-// :wtf2:
+
+/** @public */
+export type UnionToIntersectionRecursive<T> = {
+    [K in keyof T]: T[K] extends {} ? UnionToIntersection<T[K]> : UnionToIntersectionRecursive<T[K]>;
+}

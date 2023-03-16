@@ -36,5 +36,11 @@
     "cm-user": {
       "name": "cm-user"
     }
+  },
+  "translation_checker": {
+    "test": {
+      "all": "All locales",
+      "default_only": "Default locale only"
+    }
   }
 }

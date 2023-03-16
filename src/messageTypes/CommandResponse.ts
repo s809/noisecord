@@ -1,4 +1,4 @@
-import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, WebhookEditMessageOptions, MessageCreateOptions, InteractionCollector, MappedInteractionTypes } from 'discord.js';
+import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, InteractionCollector, MappedInteractionTypes, InteractionEditReplyOptions } from 'discord.js';
 
 /** 
  * Abstract instance of response-to-command related data.
@@ -9,7 +9,7 @@ export abstract class CommandResponse {
     constructor(protected message?: Message) { }
     
     /** Edits the message, if possible. */
-    abstract edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
+    abstract edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
 
     /** Deletes the message, if possible.*/
     abstract delete(): Promise<void>;

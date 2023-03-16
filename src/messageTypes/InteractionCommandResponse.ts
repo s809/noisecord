@@ -1,4 +1,4 @@
-import { CommandInteraction, InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, WebhookEditMessageOptions, MessageCreateOptions, MessageFlags } from 'discord.js';
+import { CommandInteraction, InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, MessageFlags, InteractionEditReplyOptions } from 'discord.js';
 import { CommandResponse } from "./CommandResponse.js";
 
 /** @public */
@@ -9,10 +9,10 @@ export class InteractionCommandResponse extends CommandResponse {
     }
 
     /** Edits the message, if possible. */
-    async edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions) {
+    async edit(options: string | MessageCreateOptions | MessageEditOptions  | InteractionReplyOptions) {
         this.message = this.message!.flags.has(MessageFlags.Loading)
             ? await this.interaction.followUp(options as InteractionReplyOptions)
-            : await this.interaction.editReply(options as WebhookEditMessageOptions);
+            : await this.interaction.editReply(options as InteractionEditReplyOptions);
         return this;
     }
 

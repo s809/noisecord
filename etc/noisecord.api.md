@@ -11,6 +11,7 @@ import { Channel } from 'discord.js';
 import { ChannelType } from 'discord.js';
 import { Client } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
+import { ConditionalSimplifyDeep } from 'type-fest/source/conditional-simplify.js';
 import { ContextMenuCommandInteraction } from 'discord.js';
 import { Embed } from 'discord.js';
 import format from 'string-format';
@@ -21,7 +22,9 @@ import { GuildTextBasedChannel } from 'discord.js';
 import { If } from 'discord.js';
 import { Interaction } from 'discord.js';
 import { InteractionCollector } from 'discord.js';
+import { InteractionEditReplyOptions } from 'discord.js';
 import { InteractionReplyOptions } from 'discord.js';
+import { IsLiteral } from 'type-fest';
 import { IterableElement } from 'type-fest';
 import { LocaleString } from 'discord.js';
 import { LocalizationMap } from 'discord.js';
@@ -39,9 +42,19 @@ import { Role } from 'discord.js';
 import { SimpleMerge } from 'type-fest/source/merge.js';
 import { Snowflake } from 'discord.js';
 import { TextBasedChannel } from 'discord.js';
+import { UnionToIntersection } from 'type-fest';
 import { User } from 'discord.js';
 import { UserApplicationCommandData } from 'discord.js';
-import { WebhookEditMessageOptions } from 'discord.js';
+
+// @public (undocumented)
+export class AllLocalesPathTranslator {
+    // @internal
+    constructor(path: string);
+    // (undocumented)
+    getTranslation(context: TranslationContextResolvable, ...args: FormatParameters): Promise<string>;
+    // @internal (undocumented)
+    translatorManager?: TranslatorManager;
+}
 
 // @public (undocumented)
 export class ArgumentParseError extends Error {
@@ -141,6 +154,8 @@ export class CommandFramework {
     get commands(): ReadonlyMap<string, Readonly<Command>>;
     init(client: Client): Promise<this>;
     // (undocumented)
+    readonly _translationChecker: TranslationChecker;
+    // (undocumented)
     get translatorManager(): TranslatorManager;
 }
 
@@ -235,7 +250,7 @@ export abstract class CommandResponse {
     get content(): string | undefined;
     abstract createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes[T]>;
     abstract delete(): Promise<void>;
-    abstract edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
+    abstract edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
     get embeds(): Embed[] | undefined;
     get flags(): Readonly<MessageFlagsBitField> | undefined;
     // (undocumented)
@@ -268,6 +283,16 @@ export interface ContextMenuCommandDefinition<T extends ContextMenuCommandIntera
 
 // @public (undocumented)
 export type DeeplyNestedMap<V> = Map<string, V | DeeplyNestedMap<V>>;
+
+// @public (undocumented)
+export class DefaultLocalePathTranslator {
+    // @internal
+    constructor(path: string);
+    // (undocumented)
+    getTranslation(...args: FormatParameters): string;
+    // @internal (undocumented)
+    translatorManager?: TranslatorManager;
+}
 
 // @public
 export function defineCommand<T extends CommandDefinition | ContextMenuCommandDefinition = CommandDefinition>(definition: T): T;
@@ -342,7 +367,7 @@ export class InteractionCommandResponse extends CommandResponse {
     constructor(interaction: CommandInteraction, message: Message);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
     delete(): Promise<void>;
-    edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
+    edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionReplyOptions): Promise<this>;
     // (undocumented)
     readonly interaction: CommandInteraction;
 }
@@ -404,7 +429,7 @@ export class MessageCommandResponse extends CommandResponse {
     constructor(deferChannel: TextBasedChannel);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
     delete(): Promise<void>;
-    edit(options: string | MessageCreateOptions | MessageEditOptions | WebhookEditMessageOptions | InteractionReplyOptions): Promise<this>;
+    edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
 }
 
 // @internal (undocumented)
@@ -445,6 +470,16 @@ export function parseRoleMention(text: string): string | null;
 // @public
 export function parseUserMention(text: string): string | null;
 
+// @public (undocumented)
+export type PathTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
+    [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]: K extends `${string}.${infer Rest}` ? PathTranslators<{
+        [K2 in Rest]: Input[K];
+    }> : K extends string ? IsLiteral<Input[K]> extends true ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : never : never;
+}>, PathTranslatorTypes>;
+
+// @public (undocumented)
+export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTranslator;
+
 // @public
 export const successEmoji = "\u2705";
 
@@ -452,12 +487,21 @@ export const successEmoji = "\u2705";
 export const textChannels: readonly [ChannelType.GuildAnnouncement, ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread, ChannelType.GuildText];
 
 // @public (undocumented)
+export class TranslationChecker extends ErrorCollector {
+    // @internal
+    constructor();
+    checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): PathTranslators<Paths>;
+    // @internal (undocumented)
+    runChecks(translatorManager: TranslatorManager): void;
+}
+
+// @public (undocumented)
 export type TranslationContextResolvable = string | Message | CommandInteraction | GuildResolvable | User;
 
 // @public
 export class Translator {
     // @internal
-    constructor(data: object);
+    constructor(data: object, errorCollector: ErrorCollector);
     // @internal
     constructor(root: Translator, prefixOrFallback: string | Translator);
     readonly booleanValues: [string[], string[]];
@@ -488,6 +532,8 @@ export class TranslatorManager {
     // @internal (undocumented)
     init(): Promise<this>;
     // (undocumented)
+    readonly rootTranslators: Translator[];
+    // (undocumented)
     readonly setLocaleRegexes: Record<"en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", RegExp>;
 }
 
@@ -508,6 +554,11 @@ export function _traverseTree<T>(path: string[], root: ReadonlyMap<string, T>, g
 
 // @internal (undocumented)
 export type _TypedHandlerOptions<T> = _HandlerOptions<_HandlerOptionsType<T>>;
+
+// @public (undocumented)
+export type UnionToIntersectionRecursive<T> = {
+    [K in keyof T]: T[K] extends {} ? UnionToIntersection<T[K]> : UnionToIntersectionRecursive<T[K]>;
+};
 
 // (No @packageDocumentation comment for this package)
 

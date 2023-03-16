@@ -1,6 +1,7 @@
 import { LocaleString } from "discord.js";
 import { get } from "lodash-es";
 import format from "string-format";
+import { ErrorCollector } from "./index.js";
 
 /** @public */
 export type FormatParameters = Parameters<typeof format>[1][];
@@ -41,11 +42,11 @@ export class Translator {
     private _fallback: Translator | null = null;
 
     /** @internal */
-    constructor(data: object);
+    constructor(data: object, errorCollector: ErrorCollector);
     /** @internal */
     constructor(root: Translator, prefixOrFallback: string | Translator);
     /** @internal */
-    constructor(dataOrRoot: object | Translator, prefixOrFallback?: string | Translator) {
+    constructor(dataOrRoot: object | Translator, param2?: string | Translator | ErrorCollector) {
         if (dataOrRoot instanceof Translator) {
             this.data = dataOrRoot.data;
             this.root = dataOrRoot;
@@ -53,21 +54,25 @@ export class Translator {
             this.data = dataOrRoot;
         }
         
-        const getOrThrow = (key: string) => {
+        const getOrError = (key: string) => {
             const value = get(this.data, key);
-            if (!value)
-                throw new Error(`${key} is missing.`);
+            if (!value) {
+                if (param2 instanceof ErrorCollector)
+                    param2.addError(`${key} is missing.`);
+                else
+                    throw new Error(`${key} is missing.`);
+            }
             return value;
         }
-        this.localeString = getOrThrow("locale_string")!;
-        this.setLocaleRegex = new RegExp(`^${getOrThrow("set_locale_regex")}$`, "iu");
-        this.booleanValues = getOrThrow("boolean_values");
+        this.localeString = getOrError("locale_string")!;
+        this.setLocaleRegex = new RegExp(`^${getOrError("set_locale_regex")}$`, "iu");
+        this.booleanValues = getOrError("boolean_values");
 
-        if (prefixOrFallback instanceof Translator) {
-            this.prefix = prefixOrFallback.prefix;
-            this._fallback = prefixOrFallback;
-        } else if (prefixOrFallback) {
-            this.prefix = prefixOrFallback;
+        if (param2 instanceof Translator) {
+            this.prefix = param2.prefix;
+            this._fallback = param2;
+        } else if (typeof param2 === "string") {
+            this.prefix = param2;
         }
     }
 

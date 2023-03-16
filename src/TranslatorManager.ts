@@ -1,6 +1,7 @@
 import { CommandInteraction, Guild, GuildResolvable, LocaleString, LocalizationMap, Message, User } from "discord.js";
 import { readdir, readFile } from "fs/promises";
 import path from "path";
+import { ErrorCollector } from "./index.js";
 import { Translator } from "./Translator.js";
 import { _getValueOrThrowInitError } from "./util.js";
 
@@ -22,6 +23,7 @@ export class TranslatorManager {
     private translators = new Map<LocaleString, Map<string | null, Translator>>();
     
     readonly setLocaleRegexes = {} as Record<LocaleString, RegExp>;
+    readonly rootTranslators: Translator[] = [];
 
     public get fallbackLocale() {
         return this.fallbackTranslator.localeString;
@@ -35,14 +37,19 @@ export class TranslatorManager {
 
     /** @internal */
     async init() {
+        const errorCollector = new ErrorCollector("while initializing translators");
+
         for (let file of await readdir(this.options.translationFileDirectory)) {
+            errorCollector.setHeader(0, `File: ${file}`);
+
             try {
                 const data = JSON.parse(await readFile(path.join(this.options.translationFileDirectory, file), "utf8"));
-                const translator = new Translator(data);
+                const translator = new Translator(data, errorCollector);
 
                 this.translators.set(translator.localeString, new Map([
                     [null, translator]
                 ]));
+                this.rootTranslators.push(translator);
                 this.setLocaleRegexes[translator.localeString] = translator.setLocaleRegex;
             } catch (e: unknown) {
                 if (!(e instanceof Error))
@@ -52,8 +59,10 @@ export class TranslatorManager {
             }
         }
 
-        if (!this.translators.has(this.options.defaultLocale))
-            throw new Error("No matching localization file found for default locale.");
+        if (!this.translators.has(this.options.defaultLocale)) {
+            errorCollector.setHeader(0, "Default locale");
+            errorCollector.addError("No matching localization file found for default locale.");
+        }
         this._fallbackTranslator = this.translators.get(this.options.defaultLocale)?.get(null)!;
 
         for (const map of this.translators.values()) {
@@ -63,6 +72,8 @@ export class TranslatorManager {
             
             translator.setFallback(this.fallbackTranslator);
         }
+
+        errorCollector.throwIfErrors();
 
         return this;
     }

@@ -8,6 +8,7 @@ export * from "./helpers/ErrorCollector.js";
 
 export * from "./Translator.js";
 export * from "./TranslatorManager.js";
+export * from "./helpers/TranslationChecker.js";
 
 export * from "./messageTypes/CommandRequest.js";
 export * from "./messageTypes/CommandResponse.js";

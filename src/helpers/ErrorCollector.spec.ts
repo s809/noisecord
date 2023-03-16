@@ -10,14 +10,14 @@ describe(ErrorCollector.name, () => {
 
     describe("No errors", () => { 
         it("Empty collector", () => {
-            expect(() => errorCollector.throwIfErrors()).not.throw;
+            errorCollector.throwIfErrors();
         });
 
         it("Empty levels", () => {
             errorCollector.setHeader(0, "Level 1");
             errorCollector.setHeader(1, "Level 1-1");
 
-            expect(() => errorCollector.throwIfErrors()).not.throw;
+            errorCollector.throwIfErrors();
         });
     });
 
