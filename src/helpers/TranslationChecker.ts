@@ -1,6 +1,6 @@
 import { IsLiteral } from "type-fest";
 import { ConditionalSimplifyDeep } from "type-fest/source/conditional-simplify.js";
-import { CommandRequest } from "../index.js";
+import { CommandRequest, Translator } from "../index.js";
 import { FormatParameters } from "../Translator.js";
 import { TranslationContextResolvable, TranslatorManager } from "../TranslatorManager.js";
 import { UnionToIntersectionRecursive } from "../util.js";
@@ -45,12 +45,15 @@ export class AllLocalesPathTranslator {
     constructor(private path: string) { }
 
     getTranslation(context: TranslationContextResolvable, ...args: FormatParameters): Promise<string>;
-    getTranslation(context: CommandRequest, ...args: FormatParameters): string;
-    getTranslation(context: TranslationContextResolvable | CommandRequest, ...args: FormatParameters) {
+    getTranslation(context: CommandRequest | Translator, ...args: FormatParameters): string;
+    getTranslation(context: TranslationContextResolvable | CommandRequest | Translator, ...args: FormatParameters) {
         if (context instanceof CommandRequest) {
             const translator = context.translator.fallback ?? context.translator;
             return translator.translate(this.path, ...args);
         }
+
+        if (context instanceof Translator)
+            return (context.fallback ?? context).translate(this.path, ...args);
 
         return (async () => {
             const translator = await this.translatorManager!.getTranslator(context);
