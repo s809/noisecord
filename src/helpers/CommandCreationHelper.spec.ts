@@ -36,7 +36,7 @@ describe("CommandCreationHelper", () => {
             commandCreationHelper.fillInheritableOptions(partialCommand, inheritedOptions);
 
             commandCreationHelper.setHeader(1, "Command translations");
-            commandCreationHelper.fillTranslations(partialCommand);
+            commandCreationHelper.fillTranslations(partialCommand, "commands.test");
 
             commandCreationHelper.setHeader(1, "Command arguments");
             commandCreationHelper.fillArguments(partialCommand, definition.args);
@@ -160,7 +160,7 @@ describe("CommandCreationHelper", () => {
                         fallbackLocale: "en-US"
                     } as TranslatorManager);
 
-                    commandCreationHelper.fillTranslations({ path: "path/to/command" });
+                    commandCreationHelper.fillTranslations({ path: "path/to/command" }, "commands.path_to_command");
 
                     expect(() => commandCreationHelper.throwIfErrors()).throws(inputs.check);
                 });

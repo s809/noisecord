@@ -557,6 +557,11 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             },
             getCommandUsageString(command: Command) {
                 return `<usage:${command.path}>`;
+            },
+            getCommandTranslationPath(pathOrKey: string, contextMenu?: boolean): string {
+                return contextMenu
+                    ? `context_menu_commands.${pathOrKey}`
+                    : `commands.${pathOrKey.replaceAll("/", "_")}`;
             }
         } as unknown as CommandRegistry,
         options

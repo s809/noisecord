@@ -189,6 +189,10 @@ export class CommandRegistry {
     readonly contextMenuCommands: ContextMenuCommand[];
     // @internal (undocumented)
     createCommands(): Promise<this>;
+    // (undocumented)
+    getCommandTranslationPath(path: string): string;
+    // (undocumented)
+    getCommandTranslationPath(key: string, contextMenu: true): string;
     getCommandUsageString(command: Command, prefix: string, translator: Translator): string;
     iterateCommands(): Iterable<Command>;
     iterateSubcommands(list: ReadonlyMap<string, Command>): Iterable<Command>;

@@ -89,7 +89,7 @@ export class CommandRegistry {
             commandCreationHelper.fillInheritableOptions(partialCommand, inheritedOptions);
 
             commandCreationHelper.setHeader(1, "Command translations");
-            commandCreationHelper.fillTranslations(partialCommand);
+            commandCreationHelper.fillTranslations(partialCommand, this.getCommandTranslationPath(partialCommand.path!));
 
             commandCreationHelper.setHeader(1, "Command arguments");
             commandCreationHelper.fillArguments(partialCommand, definition.args);
@@ -140,7 +140,7 @@ export class CommandRegistry {
         for (const [, definition] of definitions) {
             commandCreationHelper.setHeader(0, `Context menu: ${definition.key}`);
 
-            const nameLocalizations = this.translatorManager.getLocalizations(`context_menu_commands.${definition.key}.name`);
+            const nameLocalizations = this.translatorManager.getLocalizations(`${this.getCommandTranslationPath(definition.key, true)}.name`);
             if (!nameLocalizations[this.translatorManager.fallbackLocale])
                 commandCreationHelper.addError(`Context menu command ${definition.key} has no name in default locale (${this.translatorManager.fallbackLocale}).`);
 
@@ -155,6 +155,14 @@ export class CommandRegistry {
                 }
             });
         }
+    }
+
+    getCommandTranslationPath(path: string): string;
+    getCommandTranslationPath(key: string, contextMenu: true): string;
+    getCommandTranslationPath(pathOrKey: string, contextMenu?: boolean): string {
+        return contextMenu
+            ? `context_menu_commands.${pathOrKey}`
+            : `commands.${pathOrKey.replaceAll("/", "_")}`;
     }
 
     /**

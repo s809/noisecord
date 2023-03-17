@@ -144,7 +144,7 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
         if (!command || !command.handler)
             return this.replyUnknownCommand(interaction, translator);
 
-        const commandTranslator = await this.translatorManager.getTranslator(interaction, `context_menu_commands.${command.key}`);
+        const commandTranslator = await this.translatorManager.getTranslator(interaction, this.commandRegistry.getCommandTranslationPath(command.key, true));
         await this.executeCommand(interaction, () => command.handler(interaction as any, commandTranslator), commandTranslator);
     }
 

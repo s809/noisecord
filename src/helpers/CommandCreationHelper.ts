@@ -97,8 +97,7 @@ export class CommandCreationHelper extends ErrorCollector {
             this.addError("Commands without subcommands must have a handler.");
     }
 
-    fillTranslations(partialCommand: Partial<Command>) {
-        const translationPath = `commands.${partialCommand.path!.replaceAll("/", "_")}`;
+    fillTranslations(partialCommand: Partial<Command>, translationPath: string) {
         partialCommand.translationPath = translationPath;
 
         const nameTranslations = this.translatorManager.getLocalizations(`${translationPath}.name`);
