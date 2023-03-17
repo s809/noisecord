@@ -125,22 +125,24 @@ export class CommandRegistry {
             }
         }
 
-        commandCreationHelper.throwIfErrors();
+        await this.createContextMenuCommands(commandCreationHelper);
 
+        commandCreationHelper.throwIfErrors();
         return this;
     }
 
-    /** @internal */
-    async createContextMenuCommands() {
+    private async createContextMenuCommands(commandCreationHelper: CommandCreationHelper) {
         if (!this.options.contextMenuModuleDirectory)
-            return this.contextMenuCommands;
+            return;
 
         const definitions = await importModules<ContextMenuCommandDefinition>(this.options.contextMenuModuleDirectory);
         
         for (const [, definition] of definitions) {
+            commandCreationHelper.setHeader(0, `Context menu: ${definition.key}`);
+
             const nameLocalizations = this.translatorManager.getLocalizations(`context_menu_commands.${definition.key}.name`);
             if (!nameLocalizations[this.translatorManager.fallbackLocale])
-                throw new Error(`Context menu command ${definition.key} has no name in default locale (${this.translatorManager.fallbackLocale}).`);
+                commandCreationHelper.addError(`Context menu command ${definition.key} has no name in default locale (${this.translatorManager.fallbackLocale}).`);
 
             this.contextMenuCommands.push({
                 ...definition,
@@ -153,8 +155,6 @@ export class CommandRegistry {
                 }
             });
         }
-        
-        return this.contextMenuCommands;
     }
 
     /**

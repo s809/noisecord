@@ -6,7 +6,6 @@
 
 import { ApplicationCommandSubCommandData } from 'discord.js';
 import { Awaitable } from 'discord.js';
-import { CacheType } from 'discord.js';
 import { Channel } from 'discord.js';
 import { ChannelType } from 'discord.js';
 import { Client } from 'discord.js';
@@ -190,8 +189,6 @@ export class CommandRegistry {
     readonly contextMenuCommands: ContextMenuCommand[];
     // @internal (undocumented)
     createCommands(): Promise<this>;
-    // @internal (undocumented)
-    createContextMenuCommands(): Promise<ContextMenuCommand<ContextMenuCommandInteraction<CacheType>>[]>;
     getCommandUsageString(command: Command, prefix: string, translator: Translator): string;
     iterateCommands(): Iterable<Command>;
     iterateSubcommands(list: ReadonlyMap<string, Command>): Iterable<Command>;

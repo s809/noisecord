@@ -97,7 +97,7 @@ describe(_InteractionHandler.name, () => {
                         fallbackLocale: "en-US"
                     },
                     commandsById: new Map(),
-                    createContextMenuCommands: () => contextMenuCommands,
+                    contextMenuCommands,
                     commands: new Map(),
                     *iterateCommands() { },
                     *iterateSubcommands() { },

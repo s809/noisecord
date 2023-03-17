@@ -45,11 +45,11 @@ describe("CommandRegistry", () => {
                 commandModuleDirectory: "./src/testData/commands/normal",
                 contextMenuModuleDirectory: undefined
             }, translatorManager);
-            await expect(commandRegistry.createContextMenuCommands()).eventually.empty;
+            expect(commandRegistry.contextMenuCommands).empty;
         });
 
         it("Return correct values", async () => {
-            expect(await commandRegistry.createContextMenuCommands()).containSubset([
+            expect(commandRegistry.contextMenuCommands).containSubset([
                 {
                     key: "cm-message",
                     type: 3,

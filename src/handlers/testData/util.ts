@@ -501,7 +501,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             commandsById: new Map([
                 [IdConstants.ChatInteractionCommands, new Map(commands!.map(command => [command.path, command]))]
             ] as any),
-            createContextMenuCommands: () => [{
+            contextMenuCommands: [{
                 key: "cm-normal",
                 type: ApplicationCommandType.Message
             }, {

@@ -21,7 +21,9 @@ const options: CommandFrameworkOptions = {
 };
 
 describe("CommandFramework", () => {
-    it("when client is not ready", async () => {
+    it("when client is not ready", async function () {
+        this.timeout(5000);
+
         const client = sinon.createStubInstance(Client, {
             isReady: false
         });

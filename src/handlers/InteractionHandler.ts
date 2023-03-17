@@ -178,7 +178,7 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
 
     private async registerApplicationCommands() {
         const chatCommands = this.makeChatCommands();
-        const contextMenuCommands = await this.commandRegistry.createContextMenuCommands();
+        const contextMenuCommands = this.commandRegistry.contextMenuCommands;
 
         const result = await this.client.application!.commands.set(
             (chatCommands as ApplicationCommandDataResolvable[])
