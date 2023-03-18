@@ -47,13 +47,11 @@ export class AllLocalesPathTranslator {
     getTranslation(context: TranslationContextResolvable, ...args: FormatParameters): Promise<string>;
     getTranslation(context: CommandRequest | Translator, ...args: FormatParameters): string;
     getTranslation(context: TranslationContextResolvable | CommandRequest | Translator, ...args: FormatParameters) {
-        if (context instanceof CommandRequest) {
-            const translator = context.translator.fallback ?? context.translator;
-            return translator.translate(this.path, ...args);
-        }
+        if (context instanceof CommandRequest)
+            return context.translator.translate(this.path, ...args);
 
         if (context instanceof Translator)
-            return (context.fallback ?? context).translate(this.path, ...args);
+            return context.translate(this.path, ...args);
 
         return (async () => {
             const translator = await this.translatorManager!.getTranslator(context);
