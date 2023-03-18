@@ -118,7 +118,7 @@ export class TranslationChecker extends ErrorCollector {
 
     /** @internal */
     runChecks(translatorManager: TranslatorManager) {
-        for (const [key, value] of Object.entries(this.toCheck)) {
+        for (const [key, value] of Object.entries(this.toCheck).sort(([name1], [name2]) => name1.localeCompare(name2))) {
             for (const pathTranslator of this.pathTranslatorsToPrepare.get(key)!)
                 pathTranslator.translatorManager = translatorManager;
 
