@@ -57,7 +57,8 @@ export class CommandFramework {
      */
     async init(client: Client) {
         this._translatorManager = await new TranslatorManager(this.options.translationOptions).init();
-        this._commandRegistry = await new CommandRegistry(this.options.commandRegistryOptions, this._translatorManager).createCommands();
+        this._commandRegistry = new CommandRegistry(this.options.commandRegistryOptions, this._translatorManager);
+        await this._commandRegistry.createCommands();
         this.translationChecker.runChecks(this._translatorManager);
 
         this.client = client;
