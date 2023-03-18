@@ -29,7 +29,7 @@ export class DefaultLocalePathTranslator {
     translatorManager?: TranslatorManager;
 
     /** @internal */
-    constructor(private path: string) { }
+    constructor(readonly path: string) { }
     
     getTranslation(...args: FormatParameters) {
         return this.translatorManager!.fallbackTranslator.translate(this.path, ...args);
@@ -42,7 +42,7 @@ export class AllLocalesPathTranslator {
     translatorManager?: TranslatorManager;
 
     /** @internal */
-    constructor(private path: string) { }
+    constructor(readonly path: string) { }
 
     getTranslation(context: TranslationContextResolvable, ...args: FormatParameters): Promise<string>;
     getTranslation(context: CommandRequest | Translator, ...args: FormatParameters): string;
