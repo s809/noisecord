@@ -22,7 +22,7 @@ describe(_MessageHandler.name, () => {
     beforeEach(() => {
         handlerOptions = {
             prefix: "!",
-            ignorePermissionsFor: IdConstants.UserBotOwner
+            ignoreAllPermissionsFor: IdConstants.UserBotOwner
         };
     });
 
@@ -202,10 +202,10 @@ describe(_MessageHandler.name, () => {
     });
 
     describe("Check command permissions", () => {
-        describe("ignorePermissionsFor", () => {
+        describe("ignoreAllPermissionsFor", () => {
             describe("None", () => {
                 beforeEach(() => {
-                    handlerOptions.ignorePermissionsFor = undefined;
+                    handlerOptions.ignoreAllPermissionsFor = undefined;
                 });
 
                 it("Should always ignore", () => shouldIgnore({
@@ -218,7 +218,7 @@ describe(_MessageHandler.name, () => {
 
             describe("String", () => {
                 beforeEach(() => {
-                    handlerOptions.ignorePermissionsFor = IdConstants.User1;
+                    handlerOptions.ignoreAllPermissionsFor = IdConstants.User1;
                 });
 
                 it("Accept owner", () => shouldSucceed({
@@ -238,7 +238,7 @@ describe(_MessageHandler.name, () => {
 
             describe("Array", () => {
                 beforeEach(() => {
-                    handlerOptions.ignorePermissionsFor = [IdConstants.UserBotOwner, IdConstants.User1];
+                    handlerOptions.ignoreAllPermissionsFor = [IdConstants.UserBotOwner, IdConstants.User1];
                 });
 
                 it("Accept owner 1", () => shouldSucceed({
@@ -265,7 +265,7 @@ describe(_MessageHandler.name, () => {
 
             describe("Custom function", () => {
                 beforeEach(() => {
-                    handlerOptions.ignorePermissionsFor = msg => msg.author.id === IdConstants.User1;
+                    handlerOptions.ignoreAllPermissionsFor = msg => msg.author.id === IdConstants.User1;
                 });
 
                 it("Accept owner", () => shouldSucceed({

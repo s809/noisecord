@@ -43,18 +43,27 @@ export interface MessageHandlerOptions extends _HandlerOptions {
      * A function can be passed if there's a need for custom processing.
      */
     prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string | null>);
+    
     /**
-     * Allows specific users to execute commands regardless of their permissions.
- *
+     * Allows specific users to execute any commands (including owner-only) regardless of any permissions.
+     *
      * A function can be passed if there's a need for custom processing.
      */
-    ignorePermissionsFor?: Snowflake | Snowflake[] | ((msg: Message) => Awaitable<boolean>);
+    ignoreAllPermissionsFor?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>);
+
+    /**
+     * Allows specific users to execute owner-only commands.
+     *
+     * A function can be passed if there's a need for custom processing.
+     */
+    ignoreOwnerOnlyFor?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>);
 };
 
 /** @internal */
 export interface _MessageHandlerConvertedOptions extends Required<_HandlerOptions> {
     getPrefix: (msg: Message) => Awaitable<string | null>;
-    shouldIgnorePermissions: (msg: Message) => Awaitable<boolean>;
+    shouldIgnoreAllPermissions: (msg: Message, command: Command) => Awaitable<boolean>;
+    shouldIgnoreOwnerOnly: (msg: Message, command: Command) => Awaitable<boolean>;
 };
 
 /** @internal */
@@ -62,6 +71,18 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
     protected readonly eventName = "messageCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions) {
+        const shouldIgnore = (option?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>)) => {
+            return (msg: Message, command: Command) => {
+                if (typeof option === "string")
+                    return msg.author.id === option;
+                if (Array.isArray(option))
+                    return option.includes(msg.author.id);
+                if (option)
+                    return option(msg, command);
+                return false;
+            };
+        };
+        
         super(client, commandRegistry, {
             getPrefix(msg) {
                 if (typeof options.prefix === "string") return options.prefix;
@@ -71,15 +92,8 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
                     ?? null;
                 return options.prefix(msg);
             },
-            shouldIgnorePermissions(msg) {
-                if (typeof options.ignorePermissionsFor === "string")
-                    return msg.author.id === options.ignorePermissionsFor;
-                if (Array.isArray(options.ignorePermissionsFor))
-                    return options.ignorePermissionsFor.includes(msg.author.id);
-                if (options.ignorePermissionsFor)
-                    return options.ignorePermissionsFor(msg);
-                return false;
-            }
+            shouldIgnoreAllPermissions: shouldIgnore(options.ignoreAllPermissionsFor),
+            shouldIgnoreOwnerOnly: shouldIgnore(options.ignoreOwnerOnlyFor)
         }, {
             async onSlowCommand(req: MessageCommandRequest) {
                 await req.message.react(loadingEmoji).catch(() => { });
@@ -145,8 +159,10 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
 
     private async checkCommandPermissions(msg: Message, command: Command): Promise<boolean> {
         // Owner only check
-        if (command.ownerOnly)
-            return this.options.shouldIgnorePermissions(msg);
+        if (command.ownerOnly) {
+            return this.options.shouldIgnoreAllPermissions(msg, command) ||
+                this.options.shouldIgnoreOwnerOnly(msg, command);
+        }
 
         // For DMs: check if DMs are allowed
         if (!msg.inGuild())
@@ -197,7 +213,7 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
             allowed &&= allowedInChannel;
         }
 
-        return allowed || this.options.shouldIgnorePermissions(msg);
+        return allowed || this.options.shouldIgnoreAllPermissions(msg, command);
     }
 
     private async parseArguments(parts: string[], command: Command, guild: Guild | null, translator: Translator): Promise<ParsedArguments> {

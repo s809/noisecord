@@ -453,12 +453,15 @@ export interface _MessageHandlerConvertedOptions extends Required<_HandlerOption
     // (undocumented)
     getPrefix: (msg: Message) => Awaitable<string | null>;
     // (undocumented)
-    shouldIgnorePermissions: (msg: Message) => Awaitable<boolean>;
+    shouldIgnoreAllPermissions: (msg: Message, command: Command) => Awaitable<boolean>;
+    // (undocumented)
+    shouldIgnoreOwnerOnly: (msg: Message, command: Command) => Awaitable<boolean>;
 }
 
 // @public
 export interface MessageHandlerOptions extends _HandlerOptions {
-    ignorePermissionsFor?: Snowflake | Snowflake[] | ((msg: Message) => Awaitable<boolean>);
+    ignoreAllPermissionsFor?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>);
+    ignoreOwnerOnlyFor?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>);
     prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string | null>);
 }
 

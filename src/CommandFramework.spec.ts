@@ -16,7 +16,8 @@ const options: CommandFrameworkOptions = {
     },
     messageCommands: {
         prefix: "!",
-        ignorePermissionsFor: []
+        ignoreAllPermissionsFor: [],
+        ignoreOwnerOnlyFor: []
     }
 };
 
