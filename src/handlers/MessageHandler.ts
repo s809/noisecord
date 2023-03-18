@@ -160,7 +160,7 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
     private async checkCommandPermissions(msg: Message, command: Command): Promise<boolean> {
         // Owner only check
         if (command.ownerOnly) {
-            return this.options.shouldIgnoreAllPermissions(msg, command) ||
+            return await this.options.shouldIgnoreAllPermissions(msg, command) ||
                 this.options.shouldIgnoreOwnerOnly(msg, command);
         }
 
