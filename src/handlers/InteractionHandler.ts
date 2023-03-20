@@ -189,7 +189,7 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
         for (const appCommand of result.values()) {
             switch (appCommand.type) {
                 case ApplicationCommandType.ChatInput: {
-                    const command = rootCommands.find(x => x.nameTranslations[this.translatorManager.fallbackLocale] === appCommand.name);
+                    const command = rootCommands.find(x => x.key === appCommand.name);
                     assert(command, `Failed to find source command for ${appCommand.name}`);
                     command.interactionCommand!.id = appCommand.id;
 
@@ -238,7 +238,7 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
                 const data: ChatInputApplicationCommandData & {
                     options: typeof command.args.list;
                 } = {
-                    name: command.nameTranslations[this.translatorManager.fallbackLocale]!,
+                    name: command.key,
                     description: command.descriptionTranslations[this.translatorManager.fallbackLocale]!,
                     nameLocalizations: command.nameTranslations,
                     descriptionLocalizations: command.descriptionTranslations,
