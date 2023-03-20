@@ -4,8 +4,10 @@
 
 ```ts
 
+import { ApplicationCommandOptionType } from 'discord.js';
 import { ApplicationCommandSubCommandData } from 'discord.js';
 import { Awaitable } from 'discord.js';
+import { CacheType } from 'discord.js';
 import { Channel } from 'discord.js';
 import { ChannelType } from 'discord.js';
 import { Client } from 'discord.js';
@@ -39,6 +41,7 @@ import { MessageReplyOptions } from 'discord.js';
 import { PermissionResolvable } from 'discord.js';
 import { Role } from 'discord.js';
 import { SimpleMerge } from 'type-fest/source/merge.js';
+import { Simplify } from 'type-fest';
 import { Snowflake } from 'discord.js';
 import { TextBasedChannel } from 'discord.js';
 import { UnionToIntersection } from 'type-fest';
@@ -83,21 +86,27 @@ export type Command = SimpleMerge<Required<CommandDefinition>, {
     defaultMemberPermissions: PermissionResolvable;
     allowDMs: boolean;
     conditions: CommandCondition[];
-    interactionCommand: {
-        id: Snowflake | null;
-    } | null;
-    args: {
-        min: number;
-        max: number;
-        stringTranslations: LocalizationMap;
-        list: (IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
-            key: string;
-        })[];
-        lastArgAsExtras: boolean;
-    };
+    interactionCommand: InteractionCommandData | null;
+    args: CommandArguments;
     handler: CommandHandler | null;
     subcommands: Map<string, Command>;
 }>;
+
+// @public (undocumented)
+export interface CommandArguments {
+    // (undocumented)
+    lastArgAsExtras: boolean;
+    // (undocumented)
+    list: Simplify<(IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
+        key: string;
+    })>[];
+    // (undocumented)
+    max: number;
+    // (undocumented)
+    min: number;
+    // (undocumented)
+    stringTranslations: LocalizationMap;
+}
 
 // @public (undocumented)
 export interface CommandCondition {
@@ -120,27 +129,26 @@ export interface CommandCondition {
 // @public (undocumented)
 export type CommandContextResolvable = Message | CommandRequest;
 
+// Warning: (ae-forgotten-export) The symbol "CommandDefinitionArgument" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export interface CommandDefinition {
+export interface CommandDefinition<Args extends readonly CommandDefinitionArgument[] = CommandDefinitionArgument[]> {
     // (undocumented)
     allowDMs?: boolean;
     // (undocumented)
     alwaysReactOnSuccess?: boolean;
     // (undocumented)
-    args?: (DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
-        key: string;
-        choices?: {
-            key: string;
-            value: string | number;
-        }[];
-        isExtras?: boolean;
-    })[];
+    args?: Args;
     // (undocumented)
     conditions?: CommandCondition | CommandCondition[];
     // (undocumented)
     defaultMemberPermissions?: PermissionResolvable | null;
+    // Warning: (ae-forgotten-export) The symbol "CommandHandlerKey" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    handler?: CommandHandler;
+    handler?: CommandHandler<{
+        -readonly [I in keyof Args as CommandHandlerKey<Args[I]>]: CommandHandlerArgument<Args[I]>;
+    }>;
     // (undocumented)
     interactionCommand?: boolean;
     // (undocumented)
@@ -175,7 +183,12 @@ export interface CommandFrameworkOptions {
 }
 
 // @public (undocumented)
-export type CommandHandler = (req: CommandRequest, args: ParsedArguments) => Awaitable<string | void>;
+export type CommandHandler<Args extends ParsedArguments = ParsedArguments> = (req: CommandRequest, args: Args) => Awaitable<string | void>;
+
+// Warning: (ae-forgotten-export) The symbol "ArgumentToTypeMap" needs to be exported by the entry point index.d.ts
+//
+// @public (undocumented)
+export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]> ? ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never) : never;
 
 // @public
 export class CommandRegistry {
@@ -302,7 +315,10 @@ export class DefaultLocalePathTranslator {
 }
 
 // @public
-export function defineCommand<T extends CommandDefinition | ContextMenuCommandDefinition = CommandDefinition>(definition: T): T;
+export function defineCommand<
+
+// @public
+export function defineContextMenuCommand(definition: ContextMenuCommandDefinition): ContextMenuCommandDefinition<ContextMenuCommandInteraction<CacheType>>;
 
 // @public (undocumented)
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
@@ -367,6 +383,12 @@ export interface _HandlerOptions<TCommandRequest = CommandRequest> {
 
 // @internal (undocumented)
 export type _HandlerOptionsType<T> = T extends _HandlerOptions<infer T> ? T : never;
+
+// @public (undocumented)
+export interface InteractionCommandData {
+    // (undocumented)
+    id: Snowflake | null;
+}
 
 // @public (undocumented)
 export class InteractionCommandResponse extends CommandResponse {
@@ -469,7 +491,7 @@ export interface MessageHandlerOptions extends _HandlerOptions {
 export function parseChannelMention(text: string): string | null;
 
 // @public (undocumented)
-export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role>;
+export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role | undefined>;
 
 // @public
 export function parseMention(text: string, prefix: string): string | null;

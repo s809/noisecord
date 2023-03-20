@@ -11,5 +11,5 @@ export default defineCommand({
         type: ApplicationCommandOptionType.String,
         isExtras: true
     }],
-    handler: () => {}
+    handler: (req, args) => { },
 });

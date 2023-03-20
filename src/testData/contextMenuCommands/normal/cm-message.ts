@@ -1,7 +1,7 @@
 import { ApplicationCommandType } from "discord.js";
-import { ContextMenuCommandDefinition, defineCommand } from "../../../definitions.js";
+import { defineContextMenuCommand } from "../../../definitions.js";
 
-export default defineCommand<ContextMenuCommandDefinition>({
+export default defineContextMenuCommand({
     key: "cm-message",
     type: ApplicationCommandType.Message,
     handler: () => { }

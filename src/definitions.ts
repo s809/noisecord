@@ -2,12 +2,12 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, ContextMenuCommandInteraction, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, ContextMenuCommandInteraction, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { DistributiveOmit } from "./util.js";
 import { CommandCondition } from "./conditions/index.js";
 import { CommandRequest } from "./messageTypes/CommandRequest.js";
 import { Translator } from "./Translator.js";
-import { IterableElement, Merge } from "type-fest";
+import { IterableElement, Simplify } from "type-fest";
 import { SimpleMerge } from "type-fest/source/merge.js";
 
 /** @public */
@@ -18,7 +18,7 @@ export const textChannels = [
 ] as const;
 
 /** @public */
-export interface CommandDefinition {
+export interface CommandDefinition<Args extends readonly CommandDefinitionArgument[] = CommandDefinitionArgument[]> {
     key: string;
 
     ownerOnly?: boolean;
@@ -28,19 +28,10 @@ export interface CommandDefinition {
     
     interactionCommand?: boolean;
 
-    args?: (DistributiveOmit<
-        IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>,
-        "name" | "nameLocalizations" | "description" | "descriptionLocalizations" |
-        "choices"
-    > & {
-        key: string;
-        choices?: {
-            key: string;
-            value: string | number;
-        }[];
-        isExtras?: boolean;
-    })[];
-    handler?: CommandHandler;
+    args?: Args;
+    handler?: CommandHandler<{
+        -readonly [I in keyof Args as CommandHandlerKey<Args[I]>]: CommandHandlerArgument<Args[I]>;
+    }>;
     alwaysReactOnSuccess?: boolean;
 }
 
@@ -59,32 +50,65 @@ export type Command = SimpleMerge<Required<CommandDefinition>, {
     allowDMs: boolean;
     conditions: CommandCondition[];
 
-    interactionCommand: {
-        id: Snowflake | null
-    } | null;
+    interactionCommand: InteractionCommandData | null;
 
-    args: {
-        min: number;
-        max: number;
-        stringTranslations: LocalizationMap;
-        list: (IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
-            key: string;
-        })[],
-        lastArgAsExtras: boolean;
-    };
+    args: CommandArguments;
     handler: CommandHandler | null;
 
     subcommands: Map<string, Command>;
 }>
 
-/** @public */
-export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role>;
+type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
+    key: string;
+    choices?: {
+        key: string;
+        value: string | number;
+    }[];
+    isExtras?: boolean;
+})>;
 
 /** @public */
-export type CommandHandler = (
+export interface CommandArguments {
+    min: number;
+    max: number;
+    stringTranslations: LocalizationMap;
+    list: Simplify<(IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
+        key: string;
+    })>[];
+    lastArgAsExtras: boolean;
+};
+
+/** @public */
+export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role | undefined>;
+
+/** @public */
+export type CommandHandler<Args extends ParsedArguments = ParsedArguments> = (
     req: CommandRequest,
-    args: ParsedArguments
+    args: Args
 ) => Awaitable<string | void>;
+
+/** @public */
+type CommandHandlerKey<T> = T extends CommandDefinitionArgument ? T["key"] : never;
+
+/** @public */
+export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]>
+    ? ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never)
+    : never;
+
+interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
+    [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
+    [ApplicationCommandOptionType.Number]: number;
+    [ApplicationCommandOptionType.Integer]: number;
+    [ApplicationCommandOptionType.Boolean]: boolean;
+    [ApplicationCommandOptionType.Channel]: Channel;
+    [ApplicationCommandOptionType.User]: User;
+    [ApplicationCommandOptionType.Role]: Role;
+}
+
+/** @public */
+export interface InteractionCommandData {
+    id: Snowflake | null;
+}
 
 /** @public */
 export interface ContextMenuCommandDefinition<T extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> {
@@ -103,6 +127,14 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteraction = Co
  * This function is just for convenience/type checking.
  * @public
  */
-export function defineCommand<T extends CommandDefinition | ContextMenuCommandDefinition = CommandDefinition>(definition: T) {
+export function defineCommand<const T extends readonly CommandDefinitionArgument[]>(definition: CommandDefinition<T>) {
+    return definition;
+}
+
+/**
+ * This function is just for convenience/type checking.
+ * @public
+ */
+export function defineContextMenuCommand(definition: ContextMenuCommandDefinition) {
     return definition;
 }
