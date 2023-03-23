@@ -18,7 +18,7 @@ export const textChannels = [
 ] as const;
 
 /** @public */
-export interface CommandDefinition<Args extends readonly CommandDefinitionArgument[] = CommandDefinitionArgument[]> {
+export interface CommandDefinition<Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
     key: string;
 
     ownerOnly?: boolean;
@@ -30,7 +30,7 @@ export interface CommandDefinition<Args extends readonly CommandDefinitionArgume
 
     args?: Args;
     handler?: CommandHandler<{
-        -readonly [I in keyof Args as CommandHandlerKey<Args[I]>]: CommandHandlerArgument<Args[I]>;
+        [Item in Args[number] as Item["key"]]: CommandHandlerArgument<Item>;
     }>;
     alwaysReactOnSuccess?: boolean;
 }
@@ -58,7 +58,8 @@ export type Command = SimpleMerge<Required<CommandDefinition>, {
     subcommands: Map<string, Command>;
 }>
 
-type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
+/** @public */
+export type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
     key: string;
     choices?: {
         key: string;
@@ -88,14 +89,12 @@ export type CommandHandler<Args extends ParsedArguments = ParsedArguments> = (
 ) => Awaitable<string | void>;
 
 /** @public */
-type CommandHandlerKey<T> = T extends CommandDefinitionArgument ? T["key"] : never;
-
-/** @public */
 export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]>
     ? ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never)
     : never;
 
-interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
+/** @public */
+export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
     [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
     [ApplicationCommandOptionType.Number]: number;
     [ApplicationCommandOptionType.Integer]: number;
@@ -127,7 +126,7 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteraction = Co
  * This function is just for convenience/type checking.
  * @public
  */
-export function defineCommand<const T extends readonly CommandDefinitionArgument[]>(definition: CommandDefinition<T>) {
+export function defineCommand<T extends readonly CommandDefinitionArgument[]>(definition: CommandDefinition<T>) {
     return definition;
 }
 

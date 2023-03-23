@@ -68,6 +68,24 @@ export class ArgumentParseError extends Error {
     constructor(message: string);
 }
 
+// @public (undocumented)
+export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
+    // (undocumented)
+    [ApplicationCommandOptionType.Number]: number;
+    // (undocumented)
+    [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
+    // (undocumented)
+    [ApplicationCommandOptionType.Integer]: number;
+    // (undocumented)
+    [ApplicationCommandOptionType.Boolean]: boolean;
+    // (undocumented)
+    [ApplicationCommandOptionType.User]: User;
+    // (undocumented)
+    [ApplicationCommandOptionType.Channel]: Channel;
+    // (undocumented)
+    [ApplicationCommandOptionType.Role]: Role;
+}
+
 // @public
 export function checkConditions(context: CommandContextResolvable, conditions: CommandCondition[]): string | null;
 
@@ -129,10 +147,8 @@ export interface CommandCondition {
 // @public (undocumented)
 export type CommandContextResolvable = Message | CommandRequest;
 
-// Warning: (ae-forgotten-export) The symbol "CommandDefinitionArgument" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export interface CommandDefinition<Args extends readonly CommandDefinitionArgument[] = CommandDefinitionArgument[]> {
+export interface CommandDefinition<Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
     // (undocumented)
     allowDMs?: boolean;
     // (undocumented)
@@ -143,11 +159,9 @@ export interface CommandDefinition<Args extends readonly CommandDefinitionArgume
     conditions?: CommandCondition | CommandCondition[];
     // (undocumented)
     defaultMemberPermissions?: PermissionResolvable | null;
-    // Warning: (ae-forgotten-export) The symbol "CommandHandlerKey" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     handler?: CommandHandler<{
-        -readonly [I in keyof Args as CommandHandlerKey<Args[I]>]: CommandHandlerArgument<Args[I]>;
+        [Item in Args[number] as Item["key"]]: CommandHandlerArgument<Item>;
     }>;
     // (undocumented)
     interactionCommand?: boolean;
@@ -156,6 +170,16 @@ export interface CommandDefinition<Args extends readonly CommandDefinitionArgume
     // (undocumented)
     ownerOnly?: boolean;
 }
+
+// @public (undocumented)
+export type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
+    key: string;
+    choices?: {
+        key: string;
+        value: string | number;
+    }[];
+    isExtras?: boolean;
+})>;
 
 // @public
 export class CommandFramework {
@@ -185,8 +209,6 @@ export interface CommandFrameworkOptions {
 // @public (undocumented)
 export type CommandHandler<Args extends ParsedArguments = ParsedArguments> = (req: CommandRequest, args: Args) => Awaitable<string | void>;
 
-// Warning: (ae-forgotten-export) The symbol "ArgumentToTypeMap" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
 export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]> ? ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never) : never;
 
@@ -315,7 +337,7 @@ export class DefaultLocalePathTranslator {
 }
 
 // @public
-export function defineCommand<
+export function defineCommand<T extends readonly CommandDefinitionArgument[]>(definition: CommandDefinition<T>): CommandDefinition<T>;
 
 // @public
 export function defineContextMenuCommand(definition: ContextMenuCommandDefinition): ContextMenuCommandDefinition<ContextMenuCommandInteraction<CacheType>>;
