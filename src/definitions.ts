@@ -125,7 +125,7 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteraction = Co
  * This function is just for convenience/type checking.
  * @public
  */
-export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = false, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>) {
+export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>) {
     return definition;
 }
 
