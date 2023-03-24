@@ -8,7 +8,6 @@ import { ApplicationCommandOptionType } from 'discord.js';
 import { ApplicationCommandSubCommandData } from 'discord.js';
 import { Awaitable } from 'discord.js';
 import { CacheType } from 'discord.js';
-import { Channel } from 'discord.js';
 import { ChannelType } from 'discord.js';
 import { Client } from 'discord.js';
 import { CommandInteraction } from 'discord.js';
@@ -80,7 +79,7 @@ export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
     // (undocumented)
     [ApplicationCommandOptionType.User]: User;
     // (undocumented)
-    [ApplicationCommandOptionType.Channel]: Channel;
+    [ApplicationCommandOptionType.Channel]: GuildTextBasedChannel;
     // (undocumented)
     [ApplicationCommandOptionType.Role]: Role;
 }
@@ -522,7 +521,7 @@ export interface MessageHandlerOptions extends _HandlerOptions {
 export function parseChannelMention(text: string): string | null;
 
 // @public (undocumented)
-export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role | undefined>;
+export type ParsedArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
 
 // @public
 export function parseMention(text: string, prefix: string): string | null;

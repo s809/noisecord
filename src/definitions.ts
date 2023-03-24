@@ -2,7 +2,7 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, ContextMenuCommandInteraction, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, ContextMenuCommandInteraction, GuildTextBasedChannel, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { DistributiveOmit } from "./util.js";
 import { CommandCondition } from "./conditions/index.js";
 import { CommandRequest } from "./messageTypes/CommandRequest.js";
@@ -77,7 +77,7 @@ export interface CommandArguments {
 };
 
 /** @public */
-export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role | undefined>;
+export type ParsedArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
 
 /** @public */
 export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (
@@ -98,7 +98,7 @@ export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
     [ApplicationCommandOptionType.Number]: number;
     [ApplicationCommandOptionType.Integer]: number;
     [ApplicationCommandOptionType.Boolean]: boolean;
-    [ApplicationCommandOptionType.Channel]: Channel;
+    [ApplicationCommandOptionType.Channel]: GuildTextBasedChannel;
     [ApplicationCommandOptionType.User]: User;
     [ApplicationCommandOptionType.Role]: Role;
 }
