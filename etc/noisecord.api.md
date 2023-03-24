@@ -346,7 +346,7 @@ export class DefaultLocalePathTranslator {
 }
 
 // @public
-export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = false, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
+export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
 
 // @public
 export function defineContextMenuCommand(definition: ContextMenuCommandDefinition): ContextMenuCommandDefinition<ContextMenuCommandInteraction<CacheType>>;
