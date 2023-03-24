@@ -182,7 +182,7 @@ export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs
 // @public (undocumented)
 export type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
     key: string;
-    choices?: {
+    choices?: readonly {
         key: string;
         value: string | number;
     }[];
@@ -218,7 +218,7 @@ export interface CommandFrameworkOptions {
 export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMs extends true ? boolean : true> : CommandRequest<AllowDMs extends true ? boolean : true>, args: Args) => Awaitable<string | void>;
 
 // @public (undocumented)
-export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]> ? ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never) : never;
+export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]> ? T["choices"] extends readonly any[] ? T["choices"][number]["value"] : ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never) : never;
 
 // @public
 export class CommandRegistry {

@@ -9,13 +9,7 @@ export default defineCommand({
     }, {
         key: "arg2",
         type: ApplicationCommandOptionType.String,
-        choices: [{
-            key: "test",
-            value: "test2"
-        }, {
-            key: "test",
-            value: "test3"
-        }]
+        isExtras: true
     }] as const,
     handler: (req, args) => { },
 });
