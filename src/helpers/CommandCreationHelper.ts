@@ -65,11 +65,11 @@ export class CommandCreationHelper extends ErrorCollector {
         if (inheritedOptions) {
             partialCommand.conditions!.push(...inheritedOptions.conditions);
 
-            if (partialCommand.defaultMemberPermissions)
-                this.addError("Non-root cannot define default member permissions.");
+            if (partialCommand.defaultMemberPermissions !== undefined)
+                this.addError("Non-root commands cannot define default member permissions.");
             partialCommand.defaultMemberPermissions = inheritedOptions.defaultMemberPermissions;
 
-            if (partialCommand.allowDMs !== undefined)
+            if (![inheritedOptions.allowDMs, undefined].includes(partialCommand.allowDMs))
                 this.addError("Non-root commands cannot define DM permission.");
             partialCommand.allowDMs = inheritedOptions.allowDMs;
 

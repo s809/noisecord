@@ -55,9 +55,9 @@ describe("CommandCreationHelper", () => {
                     check: /default member permissions/
                 },
                 {
-                    title: "Allowing DM permission in child",
+                    title: "Changing DM permission in child",
                     partialCommand: { allowDMs: true },
-                    inheritedOptions: {},
+                    inheritedOptions: { allowDMs: false },
                     check: /DM permission/
                 },
                 {
