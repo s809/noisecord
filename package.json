@@ -1,6 +1,6 @@
 {
   "name": "@s809/noisecord",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "repository": "github:s809/noisecord",
   "type": "module",
   "main": "./dist/index.js",

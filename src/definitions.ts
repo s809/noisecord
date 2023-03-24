@@ -89,7 +89,9 @@ export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends
 
 /** @public */
 export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]>
-    ? ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never)
+    ? T["choices"] extends readonly any[]
+        ? T["choices"][number]["value"]
+        : ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never)
     : never;
 
 /** @public */
