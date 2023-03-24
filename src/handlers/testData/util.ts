@@ -360,7 +360,6 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             })) ?? [],
             lastArgAsExtras: false
         },
-        alwaysReactOnSuccess: true,
         subcommands: new Map()
     }, overrides));
 

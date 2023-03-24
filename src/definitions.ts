@@ -25,14 +25,11 @@ export interface CommandDefinition<Args extends readonly CommandDefinitionArgume
     defaultMemberPermissions?: PermissionResolvable | null;
     allowDMs?: boolean;
     conditions?: CommandCondition | CommandCondition[];
-    
-    interactionCommand?: boolean;
 
     args?: Args;
     handler?: CommandHandler<{
         [Item in Args[number] as Item["key"]]: CommandHandlerArgument<Item>;
     }>;
-    alwaysReactOnSuccess?: boolean;
 }
 
 /** @public */

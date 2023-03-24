@@ -49,23 +49,13 @@ describe("CommandCreationHelper", () => {
         describe(`#${CommandCreationHelper.prototype.fillInheritableOptions.name}`, () => {
             for (const inputs of [
                 {
-                    title: "Allowing a child to be usable as interaction command",
-                    partialCommand: {
-                        interactionCommand: {
-                            id: null
-                        }
-                    }, 
-                    inheritedOptions: {},
-                    check: /interaction command/
-                },
-                {
                     title: "Defining default member permissions in child",
                     partialCommand: { defaultMemberPermissions: [] },
                     inheritedOptions: {},
                     check: /default member permissions/
                 },
                 {
-                    title: "Allowing DM permissions in child",
+                    title: "Allowing DM permission in child",
                     partialCommand: { allowDMs: true },
                     inheritedOptions: {},
                     check: /DM permission/
@@ -75,15 +65,6 @@ describe("CommandCreationHelper", () => {
                     partialCommand: { ownerOnly: false },
                     inheritedOptions: { ownerOnly: true },
                     check: /not owner-only/
-                },
-                {
-                    title: "Conflicting properties (ownerOnly and interactionCommand)",
-                    partialCommand: {
-                        ownerOnly: true,
-                        interactionCommand: { id: null },
-                    },
-                    inheritedOptions: {},
-                    check: /interaction command/
                 }
             ] as const) {
                 it(inputs.title, () => {

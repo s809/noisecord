@@ -5,6 +5,7 @@ import { ApplicationCommandOptionType, LocaleString, PermissionFlagsBits } from 
 import { TranslatorManager } from "../TranslatorManager.js";
 import { castArray } from "lodash-es";
 import { ErrorCollector } from "./ErrorCollector.js";
+import assert from "assert";
 
 export interface InheritableOptions {
     path: string;
@@ -21,7 +22,6 @@ export function createCommand(definition: CommandDefinition): Partial<Command> {
         key: definition.key,
 
         handler: definition.handler ?? null,
-        alwaysReactOnSuccess: definition.alwaysReactOnSuccess ?? false,
 
         conditions: definition.conditions
             ? castArray(definition.conditions)
@@ -30,7 +30,7 @@ export function createCommand(definition: CommandDefinition): Partial<Command> {
         subcommands: new Map(),
 
         // Inherited
-        interactionCommand: definition.interactionCommand === true
+        interactionCommand: !definition.ownerOnly
             ? {
                 id: null
             }
@@ -65,29 +65,28 @@ export class CommandCreationHelper extends ErrorCollector {
         if (inheritedOptions) {
             partialCommand.conditions!.push(...inheritedOptions.conditions);
 
-            if (partialCommand.interactionCommand && !inheritedOptions.interactionCommand)
-                this.addError("Subcommands cannot be explicitly set as usable as interaction commands.");
-            partialCommand.interactionCommand = inheritedOptions.interactionCommand;
-
             if (partialCommand.defaultMemberPermissions)
-                this.addError("Subcommands cannot define default member permissions.");
+                this.addError("Non-root cannot define default member permissions.");
             partialCommand.defaultMemberPermissions = inheritedOptions.defaultMemberPermissions;
 
             if (partialCommand.allowDMs !== undefined)
-                this.addError("Subcommands cannot define DM permission.");
+                this.addError("Non-root commands cannot define DM permission.");
             partialCommand.allowDMs = inheritedOptions.allowDMs;
 
             if (partialCommand.ownerOnly === false && inheritedOptions.ownerOnly)
                 this.addError("Owner-only categories cannot contain not owner-only commands.");
             partialCommand.ownerOnly = inheritedOptions.ownerOnly;
+
+            if (partialCommand.ownerOnly)
+                partialCommand.interactionCommand = null;
         } else {
             partialCommand.defaultMemberPermissions ??= PermissionFlagsBits.UseApplicationCommands;
             partialCommand.allowDMs ??= true;
             partialCommand.ownerOnly ??= false;
         }
 
-        if (partialCommand.ownerOnly && partialCommand.interactionCommand)
-            this.addError("Owner-only commands cannot be usable as application commands.");
+        assert(!(partialCommand.ownerOnly || partialCommand.interactionCommand) ||
+            (!!partialCommand.ownerOnly !== !!partialCommand.interactionCommand));
     }
 
     checkTreeValidity(command: Command) {
