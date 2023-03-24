@@ -58,7 +58,7 @@ export interface Command {
 /** @public */
 export type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
     key: string;
-    choices?: {
+    choices?: readonly {
         key: string;
         value: string | number;
     }[];
