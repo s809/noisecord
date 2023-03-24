@@ -8,7 +8,7 @@ import { CommandCondition } from "./conditions/index.js";
 import { CommandRequest } from "./messageTypes/CommandRequest.js";
 import { Translator } from "./Translator.js";
 import { IterableElement, Simplify } from "type-fest";
-import { SimpleMerge } from "type-fest/source/merge.js";
+import { MessageCommandRequest } from "./index.js";
 
 /** @public */
 export const textChannels = [
@@ -18,22 +18,22 @@ export const textChannels = [
 ] as const;
 
 /** @public */
-export interface CommandDefinition<Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
+export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
     key: string;
 
-    ownerOnly?: boolean;
+    ownerOnly?: OwnerOnly;
     defaultMemberPermissions?: PermissionResolvable | null;
-    allowDMs?: boolean;
+    allowDMs?: AllowDMs;
     conditions?: CommandCondition | CommandCondition[];
 
     args?: Args;
-    handler?: CommandHandler<{
+    handler?: CommandHandler<OwnerOnly, AllowDMs, {
         [Item in Args[number] as Item["key"]]: CommandHandlerArgument<Item>;
     }>;
 }
 
 /** @public */
-export type Command = SimpleMerge<Required<CommandDefinition>, {
+export interface Command {
     path: string;
     key: string;
     translationPath: string;
@@ -53,7 +53,7 @@ export type Command = SimpleMerge<Required<CommandDefinition>, {
     handler: CommandHandler | null;
 
     subcommands: Map<string, Command>;
-}>
+}
 
 /** @public */
 export type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
@@ -80,8 +80,10 @@ export interface CommandArguments {
 export type ParsedArguments = Record<string, string | string[] | number | boolean | User | Channel | Role | undefined>;
 
 /** @public */
-export type CommandHandler<Args extends ParsedArguments = ParsedArguments> = (
-    req: CommandRequest,
+export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (
+    req: OwnerOnly extends true
+        ? MessageCommandRequest<AllowDMs extends true ? boolean : true>
+        : CommandRequest<AllowDMs extends true ? boolean : true>,
     args: Args
 ) => Awaitable<string | void>;
 
@@ -123,7 +125,7 @@ export interface ContextMenuCommand<T extends ContextMenuCommandInteraction = Co
  * This function is just for convenience/type checking.
  * @public
  */
-export function defineCommand<T extends readonly CommandDefinitionArgument[]>(definition: CommandDefinition<T>) {
+export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = false, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>) {
     return definition;
 }
 

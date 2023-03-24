@@ -10,6 +10,6 @@ export default defineCommand({
         key: "arg2",
         type: ApplicationCommandOptionType.String,
         isExtras: true
-    }],
+    }] as const,
     handler: (req, args) => { },
 });

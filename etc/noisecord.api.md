@@ -40,7 +40,6 @@ import { MessageFlagsBitField } from 'discord.js';
 import { MessageReplyOptions } from 'discord.js';
 import { PermissionResolvable } from 'discord.js';
 import { Role } from 'discord.js';
-import { SimpleMerge } from 'type-fest/source/merge.js';
 import { Simplify } from 'type-fest';
 import { Snowflake } from 'discord.js';
 import { TextBasedChannel } from 'discord.js';
@@ -93,22 +92,36 @@ export function checkConditions(context: CommandContextResolvable, conditions: C
 export function checkConditions(context: CommandContextResolvable, command: Command): string | null;
 
 // @public (undocumented)
-export type Command = SimpleMerge<Required<CommandDefinition>, {
-    path: string;
-    key: string;
-    translationPath: string;
-    nameTranslations: LocalizationMap;
-    descriptionTranslations: LocalizationMap;
-    usageTranslations: LocalizationMap;
-    ownerOnly: boolean;
-    defaultMemberPermissions: PermissionResolvable;
+export interface Command {
+    // (undocumented)
     allowDMs: boolean;
-    conditions: CommandCondition[];
-    interactionCommand: InteractionCommandData | null;
+    // (undocumented)
     args: CommandArguments;
+    // (undocumented)
+    conditions: CommandCondition[];
+    // (undocumented)
+    defaultMemberPermissions: PermissionResolvable;
+    // (undocumented)
+    descriptionTranslations: LocalizationMap;
+    // (undocumented)
     handler: CommandHandler | null;
+    // (undocumented)
+    interactionCommand: InteractionCommandData | null;
+    // (undocumented)
+    key: string;
+    // (undocumented)
+    nameTranslations: LocalizationMap;
+    // (undocumented)
+    ownerOnly: boolean;
+    // (undocumented)
+    path: string;
+    // (undocumented)
     subcommands: Map<string, Command>;
-}>;
+    // (undocumented)
+    translationPath: string;
+    // (undocumented)
+    usageTranslations: LocalizationMap;
+}
 
 // @public (undocumented)
 export interface CommandArguments {
@@ -148,11 +161,9 @@ export interface CommandCondition {
 export type CommandContextResolvable = Message | CommandRequest;
 
 // @public (undocumented)
-export interface CommandDefinition<Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
+export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
     // (undocumented)
-    allowDMs?: boolean;
-    // (undocumented)
-    alwaysReactOnSuccess?: boolean;
+    allowDMs?: AllowDMs;
     // (undocumented)
     args?: Args;
     // (undocumented)
@@ -160,15 +171,13 @@ export interface CommandDefinition<Args extends readonly CommandDefinitionArgume
     // (undocumented)
     defaultMemberPermissions?: PermissionResolvable | null;
     // (undocumented)
-    handler?: CommandHandler<{
+    handler?: CommandHandler<OwnerOnly, AllowDMs, {
         [Item in Args[number] as Item["key"]]: CommandHandlerArgument<Item>;
     }>;
     // (undocumented)
-    interactionCommand?: boolean;
-    // (undocumented)
     key: string;
     // (undocumented)
-    ownerOnly?: boolean;
+    ownerOnly?: OwnerOnly;
 }
 
 // @public (undocumented)
@@ -207,7 +216,7 @@ export interface CommandFrameworkOptions {
 }
 
 // @public (undocumented)
-export type CommandHandler<Args extends ParsedArguments = ParsedArguments> = (req: CommandRequest, args: Args) => Awaitable<string | void>;
+export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMs extends true ? boolean : true> : CommandRequest<AllowDMs extends true ? boolean : true>, args: Args) => Awaitable<string | void>;
 
 // @public (undocumented)
 export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]> ? ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never) : never;
@@ -337,7 +346,7 @@ export class DefaultLocalePathTranslator {
 }
 
 // @public
-export function defineCommand<T extends readonly CommandDefinitionArgument[]>(definition: CommandDefinition<T>): CommandDefinition<T>;
+export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = false, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
 
 // @public
 export function defineContextMenuCommand(definition: ContextMenuCommandDefinition): ContextMenuCommandDefinition<ContextMenuCommandInteraction<CacheType>>;
