@@ -2,7 +2,7 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitable, Channel, ChannelType, ContextMenuCommandInteraction, GuildTextBasedChannel, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, ApplicationCommandType, Awaitable, CacheType, Channel, ChannelType, ContextMenuCommandInteraction, GuildTextBasedChannel, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { DistributiveOmit } from "./util.js";
 import { CommandCondition } from "./conditions/index.js";
 import { CommandRequest } from "./messageTypes/CommandRequest.js";
@@ -111,14 +111,28 @@ export interface InteractionCommandData {
 }
 
 /** @public */
-export interface ContextMenuCommandDefinition<T extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> {
+export type ContextMenuInteractionType = ContextMenuCommandInteraction["commandType"];
+
+/** @public */
+export interface ContextMenuCommandDefinition<InteractionType extends ContextMenuInteractionType = ContextMenuInteractionType, AllowDMs extends boolean = boolean> {
     key: string;
-    type: T["commandType"];
-    handler: (interaction: T, translator: Translator) => void;
+    type: InteractionType;
+    allowDMs?: AllowDMs;
+    handler: (interaction: ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType], translator: Translator) => void;
 }
 
 /** @public */
-export interface ContextMenuCommand<T extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> extends ContextMenuCommandDefinition<T> {
+export interface ContextMenuTypeToInteraction<Cached extends CacheType> {
+    [ApplicationCommandType.User]: UserContextMenuCommandInteraction<Cached>;
+    [ApplicationCommandType.Message]: MessageContextMenuCommandInteraction<Cached>;
+}
+
+/** @public */
+export interface ContextMenuCommand {
+    key: string;
+    type: ContextMenuInteractionType;
+    allowDMs: boolean;
+    handler: (interaction: ContextMenuCommandInteraction, translator: Translator) => void;
     appCommandId: Snowflake | null;
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
 }
@@ -135,6 +149,6 @@ export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extend
  * This function is just for convenience/type checking.
  * @public
  */
-export function defineContextMenuCommand(definition: ContextMenuCommandDefinition) {
+export function defineContextMenuCommand<InteractionType extends ContextMenuInteractionType, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>) {
     return definition;
 }

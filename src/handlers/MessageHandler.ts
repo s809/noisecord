@@ -175,7 +175,6 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
 
         // Interaction command, if registered
         if (command.interactionCommand?.id) {
-            // TODO avoid making/cache requests in handler as this may get rate limited very quickly
             const overwrites = await this.client.application!.commands.permissions.fetch({
                 guild: msg.guild,
                 command: command.interactionCommand.id

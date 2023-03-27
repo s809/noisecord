@@ -53,6 +53,7 @@ describe("CommandRegistry", () => {
                 {
                     key: "cm-message",
                     type: 3,
+                    allowDMs: true,
                     appCommandId: null,
                     appCommandData: {
                         type: 3,
@@ -60,12 +61,13 @@ describe("CommandRegistry", () => {
                         nameLocalizations: {
                             "en-US": "cm-message"
                         },
-                        dmPermission: false
+                        dmPermission: true
                     }
                 },
                 {
                     key: "cm-user",
                     type: 2,
+                    allowDMs: true,
                     appCommandId: null,
                     appCommandData: {
                         type: 2,
@@ -73,7 +75,7 @@ describe("CommandRegistry", () => {
                         nameLocalizations: {
                             "en-US": "cm-user"
                         },
-                        dmPermission: false
+                        dmPermission: true
                     }
                 }
             ]);

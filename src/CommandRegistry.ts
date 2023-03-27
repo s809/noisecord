@@ -146,12 +146,13 @@ export class CommandRegistry {
 
             this.contextMenuCommands.push({
                 ...definition,
+                allowDMs: definition.allowDMs ?? true,
                 appCommandId: null,
                 appCommandData: {
                     type: definition.type,
                     name: nameLocalizations[this.translatorManager.fallbackLocale]!,
                     nameLocalizations,
-                    dmPermission: false // TODO Not supported yet
+                    dmPermission: definition.allowDMs ?? true
                 }
             });
         }
