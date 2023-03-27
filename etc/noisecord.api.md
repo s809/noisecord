@@ -6,6 +6,7 @@
 
 import { ApplicationCommandOptionType } from 'discord.js';
 import { ApplicationCommandSubCommandData } from 'discord.js';
+import { ApplicationCommandType } from 'discord.js';
 import { Awaitable } from 'discord.js';
 import { CacheType } from 'discord.js';
 import { ChannelType } from 'discord.js';
@@ -33,6 +34,7 @@ import { Message } from 'discord.js';
 import { MessageApplicationCommandData } from 'discord.js';
 import { MessageCollectorOptionsParams } from 'discord.js';
 import { MessageComponentType } from 'discord.js';
+import { MessageContextMenuCommandInteraction } from 'discord.js';
 import { MessageCreateOptions } from 'discord.js';
 import { MessageEditOptions } from 'discord.js';
 import { MessageFlagsBitField } from 'discord.js';
@@ -45,6 +47,7 @@ import { TextBasedChannel } from 'discord.js';
 import { UnionToIntersection } from 'type-fest';
 import { User } from 'discord.js';
 import { UserApplicationCommandData } from 'discord.js';
+import { UserContextMenuCommandInteraction } from 'discord.js';
 
 // @public (undocumented)
 export class AllLocalesPathTranslator {
@@ -312,21 +315,42 @@ export class CommandResultError extends Error {
 }
 
 // @public (undocumented)
-export interface ContextMenuCommand<T extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> extends ContextMenuCommandDefinition<T> {
+export interface ContextMenuCommand {
+    // (undocumented)
+    allowDMs: boolean;
     // (undocumented)
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
     // (undocumented)
     appCommandId: Snowflake | null;
-}
-
-// @public (undocumented)
-export interface ContextMenuCommandDefinition<T extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> {
     // (undocumented)
-    handler: (interaction: T, translator: Translator) => void;
+    handler: (interaction: ContextMenuCommandInteraction, translator: Translator) => void;
     // (undocumented)
     key: string;
     // (undocumented)
-    type: T["commandType"];
+    type: ContextMenuInteractionType;
+}
+
+// @public (undocumented)
+export interface ContextMenuCommandDefinition<InteractionType extends ContextMenuInteractionType = ContextMenuInteractionType, AllowDMs extends boolean = boolean> {
+    // (undocumented)
+    allowDMs?: AllowDMs;
+    // (undocumented)
+    handler: (interaction: ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType], translator: Translator) => void;
+    // (undocumented)
+    key: string;
+    // (undocumented)
+    type: InteractionType;
+}
+
+// @public (undocumented)
+export type ContextMenuInteractionType = ContextMenuCommandInteraction["commandType"];
+
+// @public (undocumented)
+export interface ContextMenuTypeToInteraction<Cached extends CacheType> {
+    // (undocumented)
+    [ApplicationCommandType.User]: UserContextMenuCommandInteraction<Cached>;
+    // (undocumented)
+    [ApplicationCommandType.Message]: MessageContextMenuCommandInteraction<Cached>;
 }
 
 // @public (undocumented)
@@ -348,7 +372,7 @@ export class DefaultLocalePathTranslator {
 export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
 
 // @public
-export function defineContextMenuCommand(definition: ContextMenuCommandDefinition): ContextMenuCommandDefinition<ContextMenuCommandInteraction<CacheType>>;
+export function defineContextMenuCommand<InteractionType extends ContextMenuInteractionType, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>): ContextMenuCommandDefinition<InteractionType, AllowDMs>;
 
 // @public (undocumented)
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
