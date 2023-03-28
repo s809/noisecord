@@ -40,6 +40,7 @@ export class TranslatorManager {
         const errorCollector = new ErrorCollector("while initializing translators");
 
         for (let file of await readdir(this.options.translationFileDirectory)) {
+            if (!file.endsWith(".json")) continue;
             errorCollector.setHeader(0, `File: ${file}`);
 
             try {

@@ -26,10 +26,8 @@ export class CommandFramework {
     /**
      * Tree of commands.
      */
-    get commands(): ReadonlyMap<string, Readonly<Command>> {
-        if (!this.commandRegistry)
-            throw new Error(`${this.init.name}() was not called before use of ${this.constructor.name} instance.`);
-        return this.commandRegistry.commands;
+    get commands() {
+        return _getValueOrThrowInitError(this._commandRegistry?.commands, this);
     }
     
     /** @see CommandRegistry */

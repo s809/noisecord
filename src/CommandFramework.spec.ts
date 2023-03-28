@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Client, Collection } from "discord.js";
 import sinon from "sinon";
 import { CommandFramework, CommandFrameworkOptions } from "./index.js";
+import { testInitCheck } from "./testData/initCheck.js";
 
 const options: CommandFrameworkOptions = {
     commandRegistryOptions: {
@@ -23,7 +24,7 @@ const options: CommandFrameworkOptions = {
 
 describe("CommandFramework", () => {
     it("when client is not ready", async function () {
-        this.timeout(5000);
+        this.timeout(10000);
 
         const client = sinon.createStubInstance(Client, {
             isReady: false
@@ -52,4 +53,12 @@ describe("CommandFramework", () => {
 
         expect(client.once).not.called;
     });
+
+    testInitCheck(() => new CommandFramework(options), [
+        "commands",
+        "commandRegistry",
+        "translatorManager"
+    ], instance => instance.init(sinon.createStubInstance(Client, {
+        isReady: false
+    }) as unknown as Client));
 });

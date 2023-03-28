@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { CommandInteraction, Guild, Message, TextChannel, User } from "discord.js";
 import sinon from "sinon";
+import { testInitCheck } from "./testData/initCheck.js";
 import { TranslationContextResolvable, TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
 
 const translationOptions: TranslatorManagerOptions = {
@@ -21,6 +22,10 @@ describe("TranslatorManager", () => {
     before(async () => {
         translatorManager = await new TranslatorManager(translationOptions).init();
     });
+
+    testInitCheck(() => new TranslatorManager(translationOptions), [
+        "fallbackTranslator"
+    ], instance => instance.init());
 
     it("empty translation directory", async () => {
         const promise = new TranslatorManager(translationOptionsEmpty).init();

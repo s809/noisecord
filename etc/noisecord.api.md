@@ -197,7 +197,7 @@ export class CommandFramework {
     constructor(options: CommandFrameworkOptions);
     // (undocumented)
     get commandRegistry(): CommandRegistry;
-    get commands(): ReadonlyMap<string, Readonly<Command>>;
+    get commands(): Map<string, Command>;
     init(client: Client): Promise<this>;
     // (undocumented)
     readonly translationChecker: TranslationChecker;

@@ -31,7 +31,8 @@
     ],
     "reporter": [
       "text",
-      "text-summary"
+      "text-summary",
+      "lcov"
     ]
   },
   "dependencies": {

@@ -1,7 +1,12 @@
 import { LocaleString } from "discord.js";
 import { get } from "lodash-es";
 import format from "string-format";
+import { Simplify } from "type-fest";
 import { ErrorCollector } from "./index.js";
+
+type ExtractStrings<T extends string> = Simplify<T extends `${string}{${infer Name}}${infer Other}`
+    ? { [K in Name]: any } & ExtractStrings<Other>
+    : {}>;
 
 /** @public */
 export type FormatParameters = Parameters<typeof format>[1][];
