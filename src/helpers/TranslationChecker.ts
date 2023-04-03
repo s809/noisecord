@@ -31,7 +31,7 @@ export class DefaultLocalePathTranslator {
     /** @internal */
     constructor(readonly path: string) { }
     
-    getTranslation(args: FormatParameters) {
+    getTranslation(args?: FormatParameters) {
         return this.translatorManager!.fallbackTranslator.translate(this.path, args);
     }
 }
@@ -44,9 +44,9 @@ export class AllLocalesPathTranslator {
     /** @internal */
     constructor(readonly path: string) { }
 
-    getTranslation(context: TranslationContextResolvable, args: FormatParameters): Promise<string>;
-    getTranslation(context: CommandRequest | Translator, args: FormatParameters): string;
-    getTranslation(context: TranslationContextResolvable | CommandRequest | Translator, args: FormatParameters) {
+    getTranslation(context: TranslationContextResolvable, args?: FormatParameters): Promise<string>;
+    getTranslation(context: CommandRequest | Translator, args?: FormatParameters): string;
+    getTranslation(context: TranslationContextResolvable | CommandRequest | Translator, args?: FormatParameters) {
         if (context instanceof CommandRequest)
             return context.translator.translate(this.path, args);
 

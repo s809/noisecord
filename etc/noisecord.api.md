@@ -54,9 +54,9 @@ export class AllLocalesPathTranslator {
     // @internal
     constructor(path: string);
     // (undocumented)
-    getTranslation(context: TranslationContextResolvable, args: FormatParameters): Promise<string>;
+    getTranslation(context: TranslationContextResolvable, args?: FormatParameters): Promise<string>;
     // (undocumented)
-    getTranslation(context: CommandRequest | Translator, args: FormatParameters): string;
+    getTranslation(context: CommandRequest | Translator, args?: FormatParameters): string;
     // (undocumented)
     readonly path: string;
     // @internal (undocumented)
@@ -361,7 +361,7 @@ export class DefaultLocalePathTranslator {
     // @internal
     constructor(path: string);
     // (undocumented)
-    getTranslation(args: FormatParameters): string;
+    getTranslation(args?: FormatParameters): string;
     // (undocumented)
     readonly path: string;
     // @internal (undocumented)

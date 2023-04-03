@@ -84,7 +84,7 @@ export class Translator {
      * @param args - Arguments for string interpolation.
      * @returns String with translation or passed path, if it was not found.
      */
-    translate(path: string, args: FormatParameters = {}): string {
+    translate(path: string, args?: FormatParameters): string {
         const prefixedPath = this.prefix
             ? `${this.prefix}.${path}`
             : path;
