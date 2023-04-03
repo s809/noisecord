@@ -15,7 +15,6 @@ import { CommandInteraction } from 'discord.js';
 import { ConditionalSimplifyDeep } from 'type-fest/source/conditional-simplify.js';
 import { ContextMenuCommandInteraction } from 'discord.js';
 import { Embed } from 'discord.js';
-import format from 'string-format';
 import { Guild } from 'discord.js';
 import { GuildMember } from 'discord.js';
 import { GuildResolvable } from 'discord.js';
@@ -40,6 +39,7 @@ import { MessageEditOptions } from 'discord.js';
 import { MessageFlagsBitField } from 'discord.js';
 import { MessageReplyOptions } from 'discord.js';
 import { PermissionResolvable } from 'discord.js';
+import { Primitive } from 'type-fest';
 import { Role } from 'discord.js';
 import { Simplify } from 'type-fest';
 import { Snowflake } from 'discord.js';
@@ -54,9 +54,9 @@ export class AllLocalesPathTranslator {
     // @internal
     constructor(path: string);
     // (undocumented)
-    getTranslation(context: TranslationContextResolvable, ...args: FormatParameters): Promise<string>;
+    getTranslation(context: TranslationContextResolvable, args: FormatParameters): Promise<string>;
     // (undocumented)
-    getTranslation(context: CommandRequest | Translator, ...args: FormatParameters): string;
+    getTranslation(context: CommandRequest | Translator, args: FormatParameters): string;
     // (undocumented)
     readonly path: string;
     // @internal (undocumented)
@@ -361,7 +361,7 @@ export class DefaultLocalePathTranslator {
     // @internal
     constructor(path: string);
     // (undocumented)
-    getTranslation(...args: FormatParameters): string;
+    getTranslation(args: FormatParameters): string;
     // (undocumented)
     readonly path: string;
     // @internal (undocumented)
@@ -419,7 +419,7 @@ export abstract class _EventHandler<Args extends any[], TConvertedOptions extend
 export const failureEmoji = "\u274C";
 
 // @public (undocumented)
-export type FormatParameters = Parameters<typeof format>[1][];
+export type FormatParameters = Record<string, Exclude<Primitive, symbol>>;
 
 // @internal (undocumented)
 export function _getValueOrThrowInitError<T>(value: T | undefined, instance: {
@@ -598,8 +598,8 @@ export class Translator {
     // @internal (undocumented)
     setFallback(fallback: Translator): void;
     readonly setLocaleRegex: RegExp;
-    translate(path: string, ...args: FormatParameters): string;
-    tryTranslate(path: string, ...args: FormatParameters): string | null;
+    translate(path: string, args?: FormatParameters): string;
+    tryTranslate(path: string, args?: FormatParameters): string | null;
 }
 
 // @public (undocumented)

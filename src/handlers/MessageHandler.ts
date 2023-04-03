@@ -229,12 +229,24 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
 
             if (!check(value))
                 throw ["invalid_numeric", input];
-            if (arga.choices && !arga.choices.some(c => c.value === value))
-                throw ["value_not_allowed", input, arga.choices.map(c => c.value).join(", ")];
-            if (arga.minValue && value < arga.minValue)
-                throw ["value_too_small", input, arga.minValue];
-            if (arga.maxValue && value > arga.maxValue)
-                throw ["value_too_large", input, arga.maxValue];
+            if (arga.choices && !arga.choices.some(c => c.value === value)) {
+
+                throw ["value_not_allowed", input, {
+                    allowedValues: arga.choices.map(c => c.value).join(", ")
+                }];
+            }
+            if (arga.minValue && value < arga.minValue) {
+
+                throw ["value_too_small", input, {
+                    minValue: arga.minValue
+                }];
+            }
+            if (arga.maxValue && value > arga.maxValue) {
+
+                throw ["value_too_large", input, {
+                    maxValue: arga.maxValue
+                }];
+            }
 
             return value;
         }
@@ -269,12 +281,22 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
                             return choice.value;
                     }
 
-                    throw ["value_not_allowed", input, arga.choices.map(choice => `"${(choice.nameLocalizations as any)[translator.localeString] ?? choice.name}"`).join(", ")];
+                    throw ["value_not_allowed", input, {
+                        allowedValues: arga.choices.map(choice => `"${(choice.nameLocalizations as any)[translator.localeString] ?? choice.name}"`).join(", ")
+                    }];
                 } else {
-                    if (arga.minLength && input.length < arga.minLength)
-                        throw ["value_too_short", input, arga.minLength];
-                    if (arga.maxLength && input.length > arga.maxLength)
-                        throw ["value_too_long", input, arga.maxLength];
+                    if (arga.minLength && input.length < arga.minLength) {
+
+                        throw ["value_too_short", input, {
+                            minLength: arga.minLength
+                        }];
+                    }
+                    if (arga.maxLength && input.length > arga.maxLength) {
+
+                        throw ["value_too_long", input, {
+                            maxLength: arga.maxLength
+                        }];
+                    }
                 }
 
                 return input;
@@ -319,7 +341,10 @@ export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerCon
                     const argName = translator.getTranslationFromRecord(arg.nameLocalizations!);
                     const valueWithArgName = `"${e[1]}" (${translator.translate("strings.argument_name", { name: argName })})`;
 
-                    e = new ArgumentParseError(translator.translate(`errors.${e[0]}`, valueWithArgName, ...e.slice(2)));
+                    e = new ArgumentParseError(translator.translate(`errors.${e[0]}`, {
+                        arg: valueWithArgName,
+                        ...e[2]
+                    }));
                 }
                 
                 throw e;

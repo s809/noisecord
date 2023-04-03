@@ -31,8 +31,8 @@ export class DefaultLocalePathTranslator {
     /** @internal */
     constructor(readonly path: string) { }
     
-    getTranslation(...args: FormatParameters) {
-        return this.translatorManager!.fallbackTranslator.translate(this.path, ...args);
+    getTranslation(args: FormatParameters) {
+        return this.translatorManager!.fallbackTranslator.translate(this.path, args);
     }
 }
 
@@ -44,18 +44,18 @@ export class AllLocalesPathTranslator {
     /** @internal */
     constructor(readonly path: string) { }
 
-    getTranslation(context: TranslationContextResolvable, ...args: FormatParameters): Promise<string>;
-    getTranslation(context: CommandRequest | Translator, ...args: FormatParameters): string;
-    getTranslation(context: TranslationContextResolvable | CommandRequest | Translator, ...args: FormatParameters) {
+    getTranslation(context: TranslationContextResolvable, args: FormatParameters): Promise<string>;
+    getTranslation(context: CommandRequest | Translator, args: FormatParameters): string;
+    getTranslation(context: TranslationContextResolvable | CommandRequest | Translator, args: FormatParameters) {
         if (context instanceof CommandRequest)
-            return context.translator.translate(this.path, ...args);
+            return context.translator.translate(this.path, args);
 
         if (context instanceof Translator)
-            return context.translate(this.path, ...args);
+            return context.translate(this.path, args);
 
         return (async () => {
             const translator = await this.translatorManager!.getTranslator(context);
-            return translator.translate(this.path, ...args);
+            return translator.translate(this.path, args);
         })();
     }
 }

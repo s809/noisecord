@@ -1,15 +1,11 @@
 import { LocaleString } from "discord.js";
 import { get } from "lodash-es";
 import format from "string-format";
-import { Simplify } from "type-fest";
+import { Primitive } from "type-fest";
 import { ErrorCollector } from "./index.js";
 
-type ExtractStrings<T extends string> = Simplify<T extends `${string}{${infer Name}}${infer Other}`
-    ? { [K in Name]: any } & ExtractStrings<Other>
-    : {}>;
-
 /** @public */
-export type FormatParameters = Parameters<typeof format>[1][];
+export type FormatParameters = Record<string, Exclude<Primitive, symbol>>;
 
 /** 
  * Provides functions for translating text to a specific locale.
@@ -88,14 +84,14 @@ export class Translator {
      * @param args - Arguments for string interpolation.
      * @returns String with translation or passed path, if it was not found.
      */
-    translate(path: string, ...args: FormatParameters): string {
+    translate(path: string, args: FormatParameters = {}): string {
         const prefixedPath = this.prefix
             ? `${this.prefix}.${path}`
             : path;
 
-        return this.tryTranslate(prefixedPath, ...args)
-            ?? this.fallback?.tryTranslate(prefixedPath, ...args)
-            ?? this.root?.translate(path, ...args)
+        return this.tryTranslate(prefixedPath, args)
+            ?? this.fallback?.tryTranslate(prefixedPath, args)
+            ?? this.root?.translate(path, args)
             ?? path;
     }
 
@@ -106,9 +102,9 @@ export class Translator {
      * @param args - Arguments for string interpolation.
      * @returns String with translation or null, if it was not found.
      */
-    tryTranslate(path: string, ...args: FormatParameters): string | null {
+    tryTranslate(path: string, args: FormatParameters = {}): string | null {
         var source = get(this.data, path);
-        return source ? format(source, ...args) : null;
+        return source ? format(source, args) : null;
     }
 
     /**
