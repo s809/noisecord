@@ -5,7 +5,7 @@
 import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, ApplicationCommandType, Awaitable, CacheType, Channel, ChannelType, ContextMenuCommandInteraction, GuildTextBasedChannel, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { DistributiveOmit } from "./util.js";
 import { CommandCondition } from "./conditions/index.js";
-import { CommandRequest } from "./messageTypes/CommandRequest.js";
+import { CommandRequest } from "./handlerInterfaces/CommandRequest.js";
 import { Translator } from "./Translator.js";
 import { IterableElement, Simplify } from "type-fest";
 import { MessageCommandRequest } from "./index.js";

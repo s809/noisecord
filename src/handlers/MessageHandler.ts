@@ -2,7 +2,7 @@ import { ApplicationCommandChannelOptionData, ApplicationCommandNumericOptionDat
 import { CommandRegistry } from "../CommandRegistry.js";
 import { checkConditions } from "../conditions/index.js";
 import { Command, CommandHandler, ParsedArguments } from "../definitions.js";
-import { MessageCommandRequest } from "../messageTypes/MessageCommandRequest.js";
+import { MessageCommandRequest } from "../handlerInterfaces/MessageCommandRequest.js";
 import { Translator } from "../Translator.js";
 import { parseChannelMention, parseRoleMention, parseUserMention } from "../util.js";
 import { ArgumentParseError, CommandResultError } from "./errors.js";

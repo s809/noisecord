@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
 import { Command } from "../../definitions.js";
-import { CommandRequest } from "../../messageTypes/CommandRequest.js";
+import { CommandRequest } from "../../handlerInterfaces/CommandRequest.js";
 import { setTimeout } from "timers/promises";
 import sinon from "sinon";
 import { merge } from "lodash-es";

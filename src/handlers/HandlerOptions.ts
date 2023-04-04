@@ -1,5 +1,5 @@
 import { Awaitable } from "discord.js";
-import { CommandRequest } from "../messageTypes/CommandRequest.js";
+import { CommandRequest } from "../handlerInterfaces/CommandRequest.js";
 
 /** @public */
 export interface _HandlerOptions<TCommandRequest = CommandRequest> {
