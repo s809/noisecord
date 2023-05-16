@@ -447,7 +447,7 @@ export interface InteractionCommandData {
 // @public (undocumented)
 export class InteractionCommandResponse extends CommandResponse {
     // @internal
-    constructor(interaction: CommandInteraction, message: Message);
+    constructor(interaction: CommandInteraction, messagePromise: Promise<Message>);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
     delete(): Promise<void>;
     edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionReplyOptions): Promise<this>;

@@ -48,17 +48,14 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
             },
             async onSuccess(req: ContainsInteraction) {
                 const interaction = getInteraction(req);
-                if (!interaction.deferred && !interaction.replied) {
-                    await req.reply({
-                        content: "OK",
-                        ephemeral: true
-                    });
-                } else if (interaction.deferred && (await interaction.fetchReply()).flags.has(MessageFlags.Loading)) {
-                    await interaction.followUp({
-                        content: "OK",
-                        ephemeral: true
-                    });
-                }
+
+                await interaction.reply({
+                    content: "OK",
+                    ephemeral: true,
+                }).catch(() => interaction.followUp({
+                    content: "OK",
+                    ephemeral: true
+                })).catch(() => { });
             },
             async onFailure(req: ContainsInteraction, e) {
                 const content = e instanceof CommandResultError
@@ -66,15 +63,17 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
                     : String(e.stack);
 
                 const interaction = getInteraction(req);
-                if (!interaction.replied || !(await interaction.fetchReply()).flags.has(MessageFlags.Loading)) {
-                    await req.reply({
-                        content,
-                        ephemeral: true,
-                        fetchReply: true
-                    });
-                } else {
-                    await req.channel?.send(content);
-                }
+                await interaction.reply({
+                    content,
+                    ephemeral: true,
+                    fetchReply: true
+                }).catch(() => interaction.followUp({
+                    content,
+                    ephemeral: true,
+                    fetchReply: true
+                })).catch(() => interaction.user.send({
+                    content
+                }));
             },
         });
     }

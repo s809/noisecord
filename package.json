@@ -1,6 +1,6 @@
 {
   "name": "@s809/noisecord",
-  "version": "0.1.47",
+  "version": "0.1.48",
   "repository": "github:s809/noisecord",
   "type": "module",
   "main": "./dist/index.js",
@@ -36,9 +36,11 @@
     ]
   },
   "dependencies": {
+    "@types/semaphore": "^1.1.1",
     "discord.js": "^14.8.0",
     "lodash-es": "^4.17.21",
     "rimraf": "^4.4.0",
+    "semaphore": "^1.1.0",
     "sinon-chai": "^3.7.0",
     "string-format": "^2.0.0",
     "type-fest": "github:sindresorhus/type-fest",

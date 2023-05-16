@@ -152,6 +152,16 @@ describe(InteractionCommandRequest.name, () => {
                 fetchReply: true
             });
         });
+
+        it("Does not defer after reply", async () => {
+            const { interaction } = getCommandInteraction();
+
+            const commandRequest = new InteractionCommandRequest({} as Command, {} as Translator, interaction);
+            await commandRequest.reply("test");
+            await commandRequest.deferReply(false);
+
+            expect(interaction.deferReply).not.called;
+        });
     });
 
     // describe(`#${InteractionCommandRequest.prototype.reply.name}`, () => {
@@ -211,11 +221,11 @@ describe(InteractionCommandRequest.name, () => {
 
     //         });
 
-    //         it("reply + reply", () => {
+    //         it("reply + defer", () => {
 
     //         });
 
-    //         it("reply + defer", () => {
+    //         it("reply + reply", () => {
 
     //         });
     //     });

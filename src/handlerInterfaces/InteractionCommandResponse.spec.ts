@@ -19,23 +19,23 @@ describe(InteractionCommandResponse.name, () => {
             });
 
             it("Loading", async () => {
-                const message = {
+                const message = Promise.resolve({
                     flags: new BitField([MessageFlags.Loading])
-                };
+                } as Message);
 
-                const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction, message as Message);
-                commandResponse.edit("test");
+                const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction, message);
+                await commandResponse.edit("test");
                 expect(interaction.followUp).calledOnce;
                 expect(interaction.editReply).not.called;
             });
             
             it("Not loading", async () => {
-                const message = {
+                const message = Promise.resolve({
                     flags: new BitField()
-                };
+                } as Message);
 
-                const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction, message as Message);
-                commandResponse.edit("test");
+                const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction, message);
+                await commandResponse.edit("test");
                 expect(interaction.followUp).not.called;
                 expect(interaction.editReply).calledOnce;
             });

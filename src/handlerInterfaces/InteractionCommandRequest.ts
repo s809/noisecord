@@ -27,7 +27,7 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
     async deferReply(ephemeral = true) {
         return this._response ??= new InteractionCommandResponse(
             this.interaction,
-            await this.interaction.deferReply({
+            this.interaction.deferReply({
                 ephemeral,
                 fetchReply: true,
             })
@@ -40,11 +40,11 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
             ? await this.response.edit(options)
             : new InteractionCommandResponse(
                 this.interaction,
-                await this.interaction.reply({
+                this.interaction.reply({
                     ephemeral: true,
                     ...typeof options === "string" ? { content: options } : options,
                     fetchReply: true
-                } as InteractionReplyOptions) as unknown as Message
+                } as const)
             );
     }
 

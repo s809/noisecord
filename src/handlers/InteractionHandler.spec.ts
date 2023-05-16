@@ -196,16 +196,24 @@ describe(_InteractionHandler.name, () => {
                     get replied() {
                         return replied;
                     },
-                    reply: sinon.stub()
-                        .onFirstCall().callsFake(() => replied = true).resolves({
+                    reply: sinon.stub().callsFake(() => new Promise((resolve, reject) => {
+                        if (replied || deferred)
+                            reject();
+                        
+                        replied = true;
+                        resolve({
                             flags: new MessageFlagsBitField()
-                        })
-                        .onSecondCall().rejects(),
-                    deferReply: sinon.stub()
-                        .onFirstCall().callsFake(() => deferred = true).resolves({
+                        });
+                    })),
+                    deferReply: sinon.stub().callsFake(() => new Promise((resolve, reject) => {
+                        if (replied || deferred)
+                            reject();
+
+                        replied = true;
+                        resolve({
                             flags: new MessageFlagsBitField(MessageFlags.Loading)
-                        })
-                        .onSecondCall().rejects(),
+                        });
+                    })),
                     fetchReply: () => ({
                         flags: {
                             has: (flag: MessageFlags) => flag === MessageFlags.Loading && deferred
@@ -273,8 +281,7 @@ describe(_InteractionHandler.name, () => {
                     const interaction = await handleChatInteraction("normal");
                     expect(interaction.reply).calledOnceWithExactly({
                         content: "OK",
-                        ephemeral: true,
-                        fetchReply: true
+                        ephemeral: true
                     });
                 });
 
@@ -294,10 +301,14 @@ describe(_InteractionHandler.name, () => {
 
                 it("Manually replied", async () => {
                     const interaction = await handleChatInteraction("auto/manually-replied");
-                    expect(interaction.reply).calledOnceWithExactly({
+                    expect(interaction.reply.getCall(0)).calledWithExactly({
                         content: "YAAY",
                         ephemeral: false,
                         fetchReply: true
+                    });
+                    expect(interaction.reply.getCall(1)).calledWithExactly({
+                        content: "OK",
+                        ephemeral: true
                     });
                 });
 
@@ -336,21 +347,24 @@ describe(_InteractionHandler.name, () => {
                     get replied() {
                         return replied;
                     },
-                    reply: sinon.stub()
-                        .onFirstCall().callsFake(() => replied = true).resolves({
+                    reply: sinon.stub().callsFake(() => new Promise((resolve, reject) => {
+                        if (replied || deferred)
+                            reject();
+
+                        replied = true;
+                        resolve({
                             flags: new MessageFlagsBitField()
-                        })
-                        .onSecondCall().rejects(),
-                    deferReply: sinon.stub()
-                        .onFirstCall().callsFake(() => deferred = true).resolves({
+                        });
+                    })),
+                    deferReply: sinon.stub().callsFake(() => new Promise((resolve, reject) => {
+                        if (replied || deferred)
+                            reject();
+
+                        replied = true;
+                        resolve({
                             flags: new MessageFlagsBitField(MessageFlags.Loading)
-                        })
-                        .onSecondCall().rejects(),
-                    fetchReply: () => ({
-                        flags: {
-                            has: (flag: MessageFlags) => flag === MessageFlags.Loading && deferred
-                        }
-                    }),
+                        });
+                    })),
                     followUp: sinon.stub()
                         .onFirstCall().resolves({
                             flags: new MessageFlagsBitField()
@@ -398,9 +412,13 @@ describe(_InteractionHandler.name, () => {
 
                 it("Manually replied", async () => {
                     const interaction = await handleContextMenuInteraction("cm-manually-replied");
-                    expect(interaction.reply).calledOnceWithExactly({
+                    expect(interaction.reply.getCall(0)).calledWithExactly({
                         content: "YAAY",
                         ephemeral: false
+                    });
+                    expect(interaction.reply.getCall(1)).calledWithExactly({
+                        content: "OK",
+                        ephemeral: true
                     });
                 });
 
