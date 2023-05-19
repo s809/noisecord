@@ -433,6 +433,27 @@ export interface InteractionCommandData {
     id: Snowflake | null;
 }
 
+// @public
+export class InteractionCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, InteractionCommandResponse> {
+    // @internal
+    constructor(command: Command, translator: Translator, interaction: CommandInteraction);
+    // (undocumented)
+    get author(): User;
+    // (undocumented)
+    get channel(): CommandRequest<InGuild>["channel"];
+    completeSilently(): Promise<void>;
+    deferReply(ephemeral?: boolean): Promise<InteractionCommandResponse>;
+    // (undocumented)
+    get guild(): CommandRequest<InGuild>["guild"];
+    // (undocumented)
+    inGuild(): this is InteractionCommandRequest<true>;
+    // (undocumented)
+    readonly interaction: CommandInteraction;
+    // (undocumented)
+    get member(): CommandRequest<InGuild>["member"];
+    reply(options: string | InteractionReplyOptions): Promise<InteractionCommandResponse>;
+}
+
 // @public (undocumented)
 export class InteractionCommandResponse extends CommandResponse {
     // @internal

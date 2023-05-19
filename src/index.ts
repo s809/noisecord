@@ -12,6 +12,7 @@ export * from "./helpers/TranslationChecker.js";
 
 export * from "./handlerInterfaces/CommandRequest.js";
 export * from "./handlerInterfaces/CommandResponse.js";
+export * from "./handlerInterfaces/InteractionCommandRequest.js";
 export * from "./handlerInterfaces/InteractionCommandResponse.js";
 export * from "./handlerInterfaces/MessageCommandRequest.js";
 export * from "./handlerInterfaces/MessageCommandResponse.js";
