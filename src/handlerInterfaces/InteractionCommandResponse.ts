@@ -1,20 +1,37 @@
-import { CommandInteraction, InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, MessageFlags, InteractionEditReplyOptions } from 'discord.js';
+import { CommandInteraction, InteractionReplyOptions, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, MessageFlags, InteractionEditReplyOptions } from 'discord.js';
 import { CommandResponse } from "./CommandResponse.js";
 
 /** @public */
 export class InteractionCommandResponse extends CommandResponse {
+    private sent = false;
+
     /** @internal */
-    constructor(readonly interaction: CommandInteraction, private messagePromise: Promise<Message>) {
+    constructor(readonly interaction: CommandInteraction) {
         super();
-        messagePromise.then(message => this.message = message);
     }
 
-    /** Edits the message, if possible. */
-    async edit(options: string | MessageCreateOptions | MessageEditOptions  | InteractionReplyOptions) {
-        await this.messagePromise;
-        this.message = this.message!.flags.has(MessageFlags.Loading)
-            ? await this.interaction.followUp(options as InteractionReplyOptions)
-            : await this.interaction.editReply(options as InteractionEditReplyOptions);
+    async deferReply(ephemeral?: boolean) {
+        this.sent = true;
+        await this.interaction.deferReply({ ephemeral });
+        return this;
+    }
+
+    /** Replies to interaction or edits it. */
+    async replyOrEdit(options: string | InteractionReplyOptions | InteractionEditReplyOptions) {
+        const fixedOptions = {
+            ephemeral: true,
+            ...typeof options === "string" ? { content: options } : options as InteractionReplyOptions,
+            fetchReply: true
+        } as const;
+        
+        if (!this.sent) {
+            this.sent = true;
+            this._message = await this.interaction.reply(fixedOptions);
+            return this;
+        }
+
+        this._message = await this.interaction.editReply(fixedOptions)
+            .catch(() => this.interaction.followUp(fixedOptions));
         return this;
     }
 
@@ -27,6 +44,8 @@ export class InteractionCommandResponse extends CommandResponse {
     createMessageComponentCollector<T extends MessageComponentType>(
         options?: MessageCollectorOptionsParams<T>
     ) {
-        return this.message!.createMessageComponentCollector(options);
+        if (!this._message)
+            throw new Error("Response should be awaited before using this method.");
+        return this._message.createMessageComponentCollector(options);
     }
 }

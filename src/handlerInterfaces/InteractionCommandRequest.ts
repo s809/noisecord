@@ -2,17 +2,16 @@ import { CommandInteraction, InteractionReplyOptions, Message, MessageReplyOptio
 import { Translator } from "../Translator.js";
 import { Command } from "../definitions.js";
 import { CommandRequest } from "./CommandRequest.js";
-import { MessageCommandResponse } from "./MessageCommandResponse.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 
 /** 
  * Command request data from an interaction.
  * @public 
  */
-export class InteractionCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
+export class InteractionCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, InteractionCommandResponse> {
     /** @internal */
     constructor(command: Command, translator: Translator, readonly interaction: CommandInteraction) {
-        super(command, translator);
+        super(command, translator, new InteractionCommandResponse(interaction));
         this.interaction = interaction;
     }
 
@@ -25,36 +24,12 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
 
     /** Defers the reply, if possible. */
     async deferReply(ephemeral = true) {
-        return this._response ??= new InteractionCommandResponse(
-            this.interaction,
-            this.interaction.deferReply({
-                ephemeral,
-                fetchReply: true,
-            })
-        );
+        return this.response.deferReply(ephemeral).catch(() => this.response);
     }
 
     /** Replies to the command. */
     async reply(options: string | InteractionReplyOptions) {
-        return this._response = this.response
-            ? await this.response.edit(options)
-            : new InteractionCommandResponse(
-                this.interaction,
-                this.interaction.reply({
-                    ephemeral: true,
-                    ...typeof options === "string" ? { content: options } : options,
-                    fetchReply: true
-                } as const)
-            );
-    }
-
-    /** Sends a new message. */
-    async sendSeparate(options: string | MessageReplyOptions) {
-        return new MessageCommandResponse(await this.interaction.channel!.send(options));
-    }
-
-    get content() {
-        return null;
+        return this.response?.replyOrEdit(options);
     }
 
     inGuild(): this is InteractionCommandRequest<true> {

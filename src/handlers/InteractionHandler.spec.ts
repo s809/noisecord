@@ -290,8 +290,7 @@ describe(_InteractionHandler.name, () => {
 
                     const interaction = await handleChatInteraction("slow");
                     expect(interaction.deferReply).calledOnceWithExactly({
-                        ephemeral: true,
-                        fetchReply: true
+                        ephemeral: true
                     });
                     expect(interaction.followUp).calledOnceWithExactly({
                         content: "OK",

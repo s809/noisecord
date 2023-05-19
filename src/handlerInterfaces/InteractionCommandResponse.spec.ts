@@ -1,43 +1,31 @@
 import { expect } from "chai";
-import { BitField, CommandInteraction, Message, MessageFlags } from "discord.js";
-import sinon from "sinon";
+import { BitField, CommandInteraction } from "discord.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
+import { getCommandInteraction } from "./testData/index.js";
 
 describe(InteractionCommandResponse.name, () => {
-    describe(`#${InteractionCommandResponse.prototype.edit.name}`, () => {
+    describe(`#${InteractionCommandResponse.prototype.replyOrEdit.name}`, () => {
         describe("Respect loading state of message", async () => {
-            let interaction: {
-                followUp: sinon.SinonStub;
-                editReply: sinon.SinonStub;
-            };
+            let interaction: CommandInteraction;
 
             beforeEach(() => {
-                interaction = {
-                    followUp: sinon.stub(),
-                    editReply: sinon.stub()
-                };
+                interaction = getCommandInteraction().interaction;
             });
 
-            it("Loading", async () => {
-                const message = Promise.resolve({
-                    flags: new BitField([MessageFlags.Loading])
-                } as Message);
-
-                const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction, message);
-                await commandResponse.edit("test");
-                expect(interaction.followUp).calledOnce;
-                expect(interaction.editReply).not.called;
+            it("Reply and edit", async () => {
+                const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction);
+                await commandResponse.replyOrEdit("test");
+                await commandResponse.replyOrEdit("test");
+                expect(interaction.reply).calledOnce;
+                expect(interaction.editReply).calledOnce;
             });
             
-            it("Not loading", async () => {
-                const message = Promise.resolve({
-                    flags: new BitField()
-                } as Message);
-
-                const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction, message);
-                await commandResponse.edit("test");
-                expect(interaction.followUp).not.called;
-                expect(interaction.editReply).calledOnce;
+            it("Defer and reply", async () => {
+                const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction);
+                await commandResponse.deferReply();
+                await commandResponse.replyOrEdit("test");
+                expect(interaction.deferReply).calledOnce;
+                expect(interaction.followUp).calledOnce;
             });
         });
     });

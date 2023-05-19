@@ -3,39 +3,36 @@ import { CommandResponse } from "./CommandResponse.js";
 
 /** @public */
 export class MessageCommandResponse extends CommandResponse {
-    private channel?: TextBasedChannel;
+    private messagePromise?: Promise<Message>;
 
     /** @internal */
-    constructor(message: Message);
-    /** @internal */
-    constructor(deferChannel: TextBasedChannel);
-    /** @internal */
-    constructor(messageOrDeferChannel: Message | TextBasedChannel) {
-        if (messageOrDeferChannel instanceof Message) {
-            super(messageOrDeferChannel);
-        } else {
-            super();
-            this.channel = messageOrDeferChannel;
-        }
+    constructor(private channel: TextBasedChannel) {
+        super();
     }
 
     /** Edits the message, if possible. */
-    async edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions) {
-        this.message = this.message
-            ? await this.message.edit(options as MessageEditOptions)
-            : await this.channel!.send(options as MessageCreateOptions);
+    async replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions) {
+        options = structuredClone(options);
+        
+        if (!this.messagePromise) {
+            await (this.messagePromise = this.channel.send(options as MessageCreateOptions));
+            return this;
+        }
+        
+        await this.messagePromise;
+        this._message = await this._message!.edit(options as MessageEditOptions);
         return this;
     }
 
     /** Deletes the message, if possible.*/
     async delete() {
-        await this.message?.delete().catch(() => { });
+        await this._message?.delete().catch(() => { });
     }
 
     /** Creates collector of message components. */
     createMessageComponentCollector<T extends MessageComponentType>(
         options?: MessageCollectorOptionsParams<T>
     ) {
-        return this.message!.createMessageComponentCollector(options);
+        return this._message!.createMessageComponentCollector(options);
     }
 }

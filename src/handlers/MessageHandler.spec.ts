@@ -673,7 +673,8 @@ command_processor: strings.command_usage {"usage":"<usage:args-channel-types>"}`
         it("Manually replied", async () => {
             const message = await handleCommand("!auto manually-replied");
             expect(message.channel.send).calledOnceWithExactly({
-                content: "YAAY"
+                content: "YAAY",
+                ephemeral: false
             });
         });
 

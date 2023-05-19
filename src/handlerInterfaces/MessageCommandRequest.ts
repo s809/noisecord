@@ -8,33 +8,15 @@ import { MessageCommandResponse } from "./MessageCommandResponse.js";
  * Command request data from a message.
  * @public 
  */
-export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
-    readonly message: Message;
-
+export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, MessageCommandResponse> {
     /** @internal */
-    constructor(command: Command, translator: Translator, message: Message) {
-        super(command, translator);
-
-        this.message = message;
-    }
-
-    /** Defers the reply, if possible. */
-    async deferReply() {
-        return this._response = new MessageCommandResponse(this.message.channel);
+    constructor(command: Command, translator: Translator, readonly message: Message) {
+        super(command, translator, new MessageCommandResponse(message.channel));
     }
 
     /** Replies to the command. */
     async reply(options: string | MessageReplyOptions) {
-        return this.sendSeparate(options);
-    }
-
-    /** Sends a new message. */
-    async sendSeparate(options: string | MessageReplyOptions) {
-        if (typeof options === "object") {
-            options = { ...options };
-            delete (options as MessageReplyOptions & { ephemeral?: boolean }).ephemeral;
-        }
-        return new MessageCommandResponse(await this.message.channel.send(options));
+        return this.response.replyOrEdit(options);
     }
 
     get content() {

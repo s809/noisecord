@@ -35,16 +35,8 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
             registerApplicationCommands: options.registerApplicationCommands !== false
         }, {
             async onSlowCommand(req: ContainsInteraction) {
-                if (req instanceof InteractionCommandRequest) {
-                    if (!req.response)
-                        await req.deferReply();
-                } else {
-                    if (!req.deferred && !req.replied) {
-                        await req.deferReply({
-                            ephemeral: true
-                        });
-                    }
-                }
+                const interaction = getInteraction(req);
+                await interaction.deferReply({ ephemeral: true }).catch(() => { });
             },
             async onSuccess(req: ContainsInteraction) {
                 const interaction = getInteraction(req);

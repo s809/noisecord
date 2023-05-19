@@ -1,46 +1,31 @@
-import { Guild, GuildMember, If, InteractionReplyOptions, TextBasedChannel, GuildTextBasedChannel, MessageReplyOptions, User, Snowflake, InteractionCollector, CollectedInteraction, MappedInteractionTypes } from 'discord.js';
+import { Guild, GuildMember, If, InteractionReplyOptions, TextBasedChannel, GuildTextBasedChannel, MessageReplyOptions, User, Snowflake, InteractionCollector, CollectedInteraction, MappedInteractionTypes, Message } from 'discord.js';
 import { Translator } from "../Translator.js";
 import { Command } from "../definitions.js";
 import { CommandResponse } from "./CommandResponse.js";
+import { MessageCommandResponse } from './MessageCommandResponse.js';
 
 /** 
  * Abstract instance of command related data.
  * @public 
  */
-export abstract class CommandRequest<InGuild extends boolean = boolean> {
-    /** Response, if a command request was replied. */
-    get response() {
-        return this._response;
-    }
-    _response: CommandResponse | null = null;
-
+export abstract class CommandRequest<InGuild extends boolean = boolean, Response extends CommandResponse = CommandResponse> {
     /** @internal */
-    constructor(readonly command: Command, readonly translator: Translator) { }
+    constructor(
+        readonly command: Command,
+        readonly translator: Translator,
+        /** Response object, which is filled when a command request is replied. */
+        readonly response: Response
+    ) { }
 
     /** Completes with minimal side effects (or with none, if possible). */
     async completeSilently() { };
 
-    /** Defers the reply, if possible. */
-    abstract deferReply(ephemeral?: boolean): Promise<CommandResponse>;
-
     /** Replies to the command request. */
-    abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<CommandResponse>;
+    abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
 
-    /** Replies to the command request or sends a new message if it cannot reply. */
-    async replyOrSendSeparate(options: InteractionReplyOptions | MessageReplyOptions) {
-        return this.reply(options).catch(() => this.sendSeparate(options as MessageReplyOptions));
-    }
+    abstract inGuild(): this is CommandRequest<true, Response>;
 
-    /** Sends a new message. */
-    abstract sendSeparate(options: string | MessageReplyOptions): Promise<CommandResponse>;
-
-    abstract get content(): string | null;
-
-    abstract inGuild(): this is CommandRequest<true>;
-
-    // { send: never } is to avoid breaking interaction-ish flow
-    // Use sendSeparate() instead
-    abstract get channel(): If<InGuild, GuildTextBasedChannel, TextBasedChannel> & { send: never };
+    abstract get channel(): If<InGuild, GuildTextBasedChannel, TextBasedChannel>;
 
     get channelId() {
         return this.channel.id;
