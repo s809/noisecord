@@ -16,7 +16,7 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
     }
 
     /** Completes with minimal side effects (or with none, if possible). */
-    override async completeSilently() {
+    async completeSilently() {
         if (!this.interaction.deferred && !this.interaction.replied)
             await this.interaction.deferReply({ ephemeral: true });
         await this.interaction.deleteReply().catch(() => { });
@@ -24,7 +24,7 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
 
     /** Defers the reply, if possible. */
     async deferReply(ephemeral = true) {
-        return this.response.deferReply(ephemeral).catch(() => this.response);
+        return this.response.deferReply(ephemeral);
     }
 
     /** Replies to the command. */

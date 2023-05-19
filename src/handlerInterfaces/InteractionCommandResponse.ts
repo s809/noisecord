@@ -12,7 +12,7 @@ export class InteractionCommandResponse extends CommandResponse {
 
     async deferReply(ephemeral?: boolean) {
         this.sent = true;
-        await this.interaction.deferReply({ ephemeral });
+        await this.interaction.deferReply({ ephemeral }).catch(() => { });
         return this;
     }
 
@@ -26,7 +26,8 @@ export class InteractionCommandResponse extends CommandResponse {
         
         if (!this.sent) {
             this.sent = true;
-            this._message = await this.interaction.reply(fixedOptions);
+            this._message = await this.interaction.reply(fixedOptions)
+                .catch(() => this.interaction.followUp(fixedOptions));
             return this;
         }
 

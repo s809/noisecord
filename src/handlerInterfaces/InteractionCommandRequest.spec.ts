@@ -6,7 +6,7 @@ import { getCommandInteraction } from "./testData/index.js";
 
 describe(InteractionCommandRequest.name, () => {
     describe(`#${InteractionCommandRequest.prototype.completeSilently.name}`, () => {
-        it("Defer only if possible", async () => {
+        describe("Defer only if possible", async () => {
             it("Deferred", async () => {
                 const { interaction } = getCommandInteraction();
                 await interaction.deferReply();
@@ -14,7 +14,7 @@ describe(InteractionCommandRequest.name, () => {
                 const commandRequest = new InteractionCommandRequest({} as Command, {} as Translator, interaction);
                 await commandRequest.completeSilently();
 
-                expect(interaction.deferReply).not.called;
+                expect(interaction.deferReply).calledOnce;
                 expect(interaction.deleteReply).calledOnce;
             });
 

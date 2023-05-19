@@ -271,7 +271,6 @@ export abstract class CommandRequest<InGuild extends boolean = boolean, Response
     get channelId(): string;
     // (undocumented)
     readonly command: Command;
-    completeSilently(): Promise<void>;
     // (undocumented)
     abstract get guild(): If<InGuild, Guild>;
     // (undocumented)

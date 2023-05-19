@@ -17,9 +17,6 @@ export abstract class CommandRequest<InGuild extends boolean = boolean, Response
         readonly response: Response
     ) { }
 
-    /** Completes with minimal side effects (or with none, if possible). */
-    async completeSilently() { };
-
     /** Replies to the command request. */
     abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
 
