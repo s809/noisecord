@@ -10,15 +10,17 @@ export * from "./Translator.js";
 export * from "./TranslatorManager.js";
 export * from "./helpers/TranslationChecker.js";
 
-export * from "./handlerInterfaces/CommandRequest.js";
-export * from "./handlerInterfaces/CommandResponse.js";
-export * from "./handlerInterfaces/InteractionCommandRequest.js";
-export * from "./handlerInterfaces/InteractionCommandResponse.js";
-export * from "./handlerInterfaces/MessageCommandRequest.js";
-export * from "./handlerInterfaces/MessageCommandResponse.js";
-
 export * from "./handlers/errors.js";
 export * from "./handlers/EventHandler.js"
 export * from "./handlers/HandlerOptions.js"
-export * from "./handlers/InteractionHandler.js";
-export * from "./handlers/MessageHandler.js";
+export * from "./handlers/CommandRequest.js";
+export * from "./handlers/CommandResponse.js";
+
+export * from "./handlers/Interaction/InteractionHandler.js";
+export * from "./handlers/Interaction/InteractionCommandRequest.js";
+export * from "./handlers/Interaction/InteractionCommandResponse.js";
+
+export * from "./handlers/Message/MessageHandler.js";
+export * from "./handlers/Message/MessageCommandRequest.js";
+export * from "./handlers/Message/MessageCommandResponse.js";
+

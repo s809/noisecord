@@ -1,8 +1,7 @@
 import { Awaitable } from "discord.js";
-import { CommandRequest } from "../handlerInterfaces/CommandRequest.js";
 
 /** @public */
-export interface _HandlerOptions<TCommandRequest = CommandRequest> {
+export interface _HandlerOptions<TCommandRequest = any> {
     slowCommandDelayMs?: number;
     /**
      * Called if the command did not complete before a specified delay (default is 1000ms).

@@ -11,6 +11,8 @@ import { Awaitable } from 'discord.js';
 import { CacheType } from 'discord.js';
 import { ChannelType } from 'discord.js';
 import { Client } from 'discord.js';
+import { ClientEvents } from 'discord.js';
+import { Command as Command_2 } from './definitions.js';
 import { CommandInteraction } from 'discord.js';
 import { ConditionalSimplifyDeep } from 'type-fest/source/conditional-simplify.js';
 import { ContextMenuCommandInteraction } from 'discord.js';
@@ -197,7 +199,7 @@ export class CommandFramework {
     constructor(options: CommandFrameworkOptions);
     // (undocumented)
     get commandRegistry(): CommandRegistry;
-    get commands(): Map<string, Command>;
+    get commands(): Map<string, Command_2>;
     init(client: Client): Promise<this>;
     // (undocumented)
     readonly translationChecker: TranslationChecker;
@@ -304,6 +306,9 @@ export class CommandResultError extends Error {
 }
 
 // @public (undocumented)
+export type ContainsInteraction = InteractionCommandRequest | ContextMenuCommandInteraction;
+
+// @public (undocumented)
 export interface ContextMenuCommand {
     // (undocumented)
     allowDMs: boolean;
@@ -380,7 +385,7 @@ export class ErrorCollector {
 }
 
 // @internal (undocumented)
-export abstract class _EventHandler<Args extends any[], TConvertedOptions extends Required<_HandlerOptions>> {
+export abstract class _EventHandler<TConvertedOptions extends Required<_HandlerOptions>, EventName extends keyof ClientEvents> {
     protected constructor(client: Client, commandRegistry: CommandRegistry, options: Omit<TConvertedOptions, keyof Required<_HandlerOptions>> & _TypedHandlerOptions<TConvertedOptions>, defaultStatusHandlers: Omit<Required<_TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">);
     // (undocumented)
     protected readonly client: Client;
@@ -389,11 +394,11 @@ export abstract class _EventHandler<Args extends any[], TConvertedOptions extend
     // (undocumented)
     readonly defaultStatusHandlers: Omit<Required<_TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">;
     // (undocumented)
-    protected abstract readonly eventName: string;
+    protected abstract readonly eventName: EventName;
     // (undocumented)
     protected executeCommand(CommandRequest: _HandlerOptionsType<TConvertedOptions>, execute: () => Awaitable<string | void>, translator: Translator): Promise<void>;
     // (undocumented)
-    protected abstract handle(...args: Args): Promise<void>;
+    protected abstract handle(...args: ClientEvents[EventName]): Promise<void>;
     // (undocumented)
     init(): Promise<this>;
     // (undocumented)
@@ -416,7 +421,7 @@ export function _getValueOrThrowInitError<T>(value: T | undefined, instance: {
 }): T & ({} | null);
 
 // @public (undocumented)
-export interface _HandlerOptions<TCommandRequest = CommandRequest> {
+export interface _HandlerOptions<TCommandRequest = any> {
     onFailure?: (req: TCommandRequest, error: Error) => Awaitable<void>;
     onSlowCommand?: (req: TCommandRequest) => Awaitable<void>;
     onSuccess?: (req: TCommandRequest) => Awaitable<void>;
@@ -468,7 +473,7 @@ export class InteractionCommandResponse extends CommandResponse {
 }
 
 // @internal (undocumented)
-export class _InteractionHandler extends _EventHandler<[Interaction], Required<InteractionHandlerOptions>> {
+export class _InteractionHandler extends _EventHandler<Required<InteractionHandlerOptions>, "interactionCreate"> {
     constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions);
     // (undocumented)
     protected readonly eventName = "interactionCreate";
@@ -479,7 +484,7 @@ export class _InteractionHandler extends _EventHandler<[Interaction], Required<I
 }
 
 // @public
-export interface InteractionHandlerOptions extends _HandlerOptions<CommandRequest | ContextMenuCommandInteraction> {
+export interface InteractionHandlerOptions extends _HandlerOptions<ContainsInteraction> {
     // (undocumented)
     registerApplicationCommands?: boolean;
 }
@@ -524,7 +529,7 @@ export class MessageCommandResponse extends CommandResponse {
 }
 
 // @internal (undocumented)
-export class _MessageHandler extends _EventHandler<[Message], _MessageHandlerConvertedOptions> {
+export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptions, "messageCreate"> {
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions);
     // (undocumented)
     protected readonly eventName = "messageCreate";

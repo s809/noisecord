@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { CommandRequest } from "../handlerInterfaces/CommandRequest.js";
+import { CommandRequest } from "../handlers/CommandRequest.js";
 import { Command } from "../definitions.js";
 
 /** @public */

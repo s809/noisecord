@@ -1,9 +1,8 @@
-import { Command } from "./definitions.js";
 import { CommandRegistry, CommandRegistryOptions } from "./CommandRegistry.js";
 import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
 import { Client } from "discord.js";
-import { _InteractionHandler, InteractionHandlerOptions } from "./handlers/InteractionHandler.js";
-import { _MessageHandler, MessageHandlerOptions } from "./handlers/MessageHandler.js";
+import { _InteractionHandler, InteractionHandlerOptions } from "./handlers/Interaction/InteractionHandler.js";
+import { _MessageHandler, MessageHandlerOptions } from "./handlers/Message/MessageHandler.js";
 import { _getValueOrThrowInitError } from "./util.js";
 import { TranslationChecker } from "./helpers/TranslationChecker.js";
 

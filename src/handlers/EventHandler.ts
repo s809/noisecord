@@ -1,4 +1,4 @@
-import { Awaitable, Client } from "discord.js";
+import { Awaitable, Client, ClientEvents } from "discord.js";
 import { CommandRegistry } from "../CommandRegistry.js";
 import { TranslatorManager } from "../TranslatorManager.js";
 import { CommandResultError } from "./errors.js";
@@ -14,8 +14,8 @@ export type _HandlerOptionsType<T> = T extends _HandlerOptions<infer T> ? T : ne
 export type _TypedHandlerOptions<T> = _HandlerOptions<_HandlerOptionsType<T>>;
 
 /** @internal */
-export abstract class _EventHandler<Args extends any[], TConvertedOptions extends Required<_HandlerOptions>> {
-    protected abstract readonly eventName: string;
+export abstract class _EventHandler<TConvertedOptions extends Required<_HandlerOptions>, EventName extends keyof ClientEvents> {
+    protected abstract readonly eventName: EventName;
 
     protected readonly translatorManager: TranslatorManager;
     protected readonly options: TConvertedOptions;
@@ -24,7 +24,8 @@ export abstract class _EventHandler<Args extends any[], TConvertedOptions extend
         protected readonly client: Client,
         protected readonly commandRegistry: CommandRegistry,
         options: Omit<TConvertedOptions, keyof Required<_HandlerOptions>> & _TypedHandlerOptions<TConvertedOptions>,
-        readonly defaultStatusHandlers: Omit<Required<_TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">) {
+        readonly defaultStatusHandlers: Omit<Required<_TypedHandlerOptions<TConvertedOptions>>, "slowCommandDelayMs">
+    ) {
         this.translatorManager = commandRegistry.translatorManager;
         this.options = {
             slowCommandDelayMs: 1000,
@@ -37,7 +38,7 @@ export abstract class _EventHandler<Args extends any[], TConvertedOptions extend
         return this;
     }
 
-    protected abstract handle(...args: Args): Promise<void>;
+    protected abstract handle(...args: ClientEvents[EventName]): Promise<void>;
 
     protected splitByWhitespace(str: string) {
         return str.match(/[^"\s]+|"(?:\\"|[^"])+"/g)?.map(part => {
