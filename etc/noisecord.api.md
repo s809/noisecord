@@ -259,53 +259,43 @@ export interface CommandRegistryOptions {
 }
 
 // @public
-export abstract class CommandRequest<InGuild extends boolean = boolean> {
+export abstract class CommandRequest<InGuild extends boolean = boolean, Response extends CommandResponse = CommandResponse> {
     // @internal
-    constructor(command: Command, translator: Translator);
+    constructor(command: Command, translator: Translator,
+    response: Response);
     // (undocumented)
     abstract get author(): User;
     // (undocumented)
-    abstract get channel(): If<InGuild, GuildTextBasedChannel, TextBasedChannel> & {
-        send: never;
-    };
+    abstract get channel(): If<InGuild, GuildTextBasedChannel, TextBasedChannel>;
     // (undocumented)
     get channelId(): string;
     // (undocumented)
     readonly command: Command;
     completeSilently(): Promise<void>;
     // (undocumented)
-    abstract get content(): string | null;
-    abstract deferReply(ephemeral?: boolean): Promise<CommandResponse>;
-    // (undocumented)
     abstract get guild(): If<InGuild, Guild>;
     // (undocumented)
     get guildId(): If<InGuild, Snowflake>;
     // (undocumented)
-    abstract inGuild(): this is CommandRequest<true>;
+    abstract inGuild(): this is CommandRequest<true, Response>;
     // (undocumented)
     abstract get member(): If<InGuild, GuildMember>;
-    abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<CommandResponse>;
-    replyOrSendSeparate(options: InteractionReplyOptions | MessageReplyOptions): Promise<CommandResponse>;
-    get response(): CommandResponse | null;
-    // (undocumented)
-    _response: CommandResponse | null;
-    abstract sendSeparate(options: string | MessageReplyOptions): Promise<CommandResponse>;
+    abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
+    readonly response: Response;
     // (undocumented)
     readonly translator: Translator;
 }
 
 // @public
 export abstract class CommandResponse {
-    // @internal
-    constructor(message?: Message<boolean> | undefined);
-    get content(): string | undefined;
+    get content(): string | null;
     abstract createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes[T]>;
     abstract delete(): Promise<void>;
-    abstract edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
-    get embeds(): Embed[] | undefined;
-    get flags(): Readonly<MessageFlagsBitField> | undefined;
+    get embeds(): Embed[] | null;
+    get flags(): Readonly<MessageFlagsBitField> | null;
     // (undocumented)
-    protected message?: Message<boolean> | undefined;
+    protected _message?: Message;
+    abstract replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
 }
 
 // @public (undocumented)
@@ -447,12 +437,14 @@ export interface InteractionCommandData {
 // @public (undocumented)
 export class InteractionCommandResponse extends CommandResponse {
     // @internal
-    constructor(interaction: CommandInteraction, messagePromise: Promise<Message>);
+    constructor(interaction: CommandInteraction);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
+    // (undocumented)
+    deferReply(ephemeral?: boolean): Promise<this>;
     delete(): Promise<void>;
-    edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionReplyOptions): Promise<this>;
     // (undocumented)
     readonly interaction: CommandInteraction;
+    replyOrEdit(options: string | InteractionReplyOptions | InteractionEditReplyOptions): Promise<this>;
 }
 
 // @internal (undocumented)
@@ -482,7 +474,7 @@ export const InVoiceWithBot: CommandCondition;
 export const loadingEmoji = "\uD83D\uDD04";
 
 // @public
-export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild> {
+export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, MessageCommandResponse> {
     // @internal
     constructor(command: Command, translator: Translator, message: Message);
     // (undocumented)
@@ -491,7 +483,6 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     get channel(): CommandRequest<InGuild>["channel"];
     // (undocumented)
     get content(): string;
-    deferReply(): Promise<MessageCommandResponse>;
     // (undocumented)
     get guild(): CommandRequest<InGuild>["guild"];
     // (undocumented)
@@ -501,18 +492,15 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     // (undocumented)
     readonly message: Message;
     reply(options: string | MessageReplyOptions): Promise<MessageCommandResponse>;
-    sendSeparate(options: string | MessageReplyOptions): Promise<MessageCommandResponse>;
 }
 
 // @public (undocumented)
 export class MessageCommandResponse extends CommandResponse {
     // @internal
-    constructor(message: Message);
-    // @internal
-    constructor(deferChannel: TextBasedChannel);
+    constructor(channel: TextBasedChannel);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
     delete(): Promise<void>;
-    edit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
+    replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
 }
 
 // @internal (undocumented)
