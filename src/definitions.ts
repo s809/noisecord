@@ -118,7 +118,7 @@ export interface ContextMenuCommandDefinition<InteractionType extends ContextMen
     key: string;
     type: InteractionType;
     allowDMs?: AllowDMs;
-    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType]>, AllowDMs extends true ? boolean : true>, translator: Translator) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType]>, AllowDMs extends true ? boolean : true>) => void;
 }
 
 /** @public */
@@ -132,7 +132,7 @@ export interface ContextMenuCommand<InteractionType extends ContextMenuCommandIn
     key: string;
     type: ContextMenuInteractionType;
     allowDMs: boolean;
-    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<InteractionType>>, translator: Translator) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<InteractionType>>) => void;
     appCommandId: Snowflake | null;
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
 }

@@ -115,7 +115,7 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
 
         const commandTranslator = await this.translatorManager.getTranslator(interaction, this.commandRegistry.getCommandTranslationPath(command.key, true));
         const commandRequest = new InteractionCommandRequest(command, commandTranslator, interaction);
-        await this.executeCommand(commandRequest, () => command.handler(commandRequest, commandTranslator), commandTranslator);
+        await this.executeCommand(commandRequest, () => command.handler(commandRequest), commandTranslator);
     }
 
     private async parseArguments(interactionOptions: ChatInputCommandInteraction["options"], command: Command, translator: Translator): Promise<ParsedArguments> {
