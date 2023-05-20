@@ -324,7 +324,7 @@ export interface ContextMenuCommandDefinition<InteractionType extends ContextMen
     // (undocumented)
     allowDMs?: AllowDMs;
     // (undocumented)
-    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType]>>, translator: Translator) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType]>, AllowDMs extends true ? boolean : true>, translator: Translator) => void;
     // (undocumented)
     key: string;
     // (undocumented)
