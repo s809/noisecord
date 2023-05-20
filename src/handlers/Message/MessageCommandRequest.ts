@@ -10,12 +10,12 @@ import { MessageCommandResponse } from "./MessageCommandResponse.js";
  */
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, MessageCommandResponse> {
     /** @internal */
-    constructor(command: Command, translator: Translator, readonly message: Message) {
-        super(command, translator, new MessageCommandResponse(message.channel));
+    constructor(readonly command: Command, translator: Translator, readonly message: Message) {
+        super(translator, new MessageCommandResponse(message.channel));
     }
 
     /** Replies to the command. */
-    async reply(options: string | MessageReplyOptions) {
+    async replyOrEdit(options: string | MessageReplyOptions) {
         return this.response.replyOrEdit(options);
     }
 

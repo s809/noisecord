@@ -1,11 +1,12 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction, Interaction } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
-import { Command } from "../../definitions.js";
+import { Command, ContextMenuCommand } from "../../definitions.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { setTimeout } from "timers/promises";
 import sinon from "sinon";
 import { merge } from "lodash-es";
 import { CommandContextResolvable } from "../../conditions/index.js";
+import { InteractionCommandRequest } from "../Interaction/InteractionCommandRequest.js";
 
 enum _IdConstants {
     GuildNone,
@@ -239,7 +240,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
         }],
         ["auto/manually-replied", {
             handler: async (req: CommandRequest) => {
-                await req.reply({
+                await req.replyOrEdit({
                     content: "YAAY",
                     ephemeral: false
                 });
@@ -510,8 +511,8 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             }, {
                 key: "cm-manually-replied",
                 type: ApplicationCommandType.Message,
-                handler: async (req: ContextMenuCommandInteraction) => {
-                    await req.reply({
+                handler: async (req: InteractionCommandRequest<ContextMenuCommand>) => {
+                    await req.replyOrEdit({
                         content: "YAAY",
                         ephemeral: false
                     });

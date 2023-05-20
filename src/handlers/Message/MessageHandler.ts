@@ -108,7 +108,7 @@ export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptio
                 await Promise.allSettled([
                     req.message.reactions.resolve(loadingEmoji)?.users.remove(),
                     req.message.react(failureEmoji),
-                    req.reply(e instanceof CommandResultError
+                    req.replyOrEdit(e instanceof CommandResultError
                         ? e.message
                         : String(e.stack))
                 ]);

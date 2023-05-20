@@ -1,6 +1,6 @@
-import { CommandInteraction, InteractionReplyOptions, Message, MessageReplyOptions } from 'discord.js';
+import { CommandInteraction, InteractionReplyOptions, Message } from 'discord.js';
 import { Translator } from "../../Translator.js";
-import { Command } from "../../definitions.js";
+import { Command, ContextMenuCommand } from "../../definitions.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 
@@ -8,10 +8,10 @@ import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
  * Command request data from an interaction.
  * @public 
  */
-export class InteractionCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, InteractionCommandResponse> {
+export class InteractionCommandRequest<CommandType extends Command | ContextMenuCommand, InGuild extends boolean = boolean> extends CommandRequest<InGuild, InteractionCommandResponse> {
     /** @internal */
-    constructor(command: Command, translator: Translator, readonly interaction: CommandInteraction) {
-        super(command, translator, new InteractionCommandResponse(interaction));
+    constructor(readonly command: CommandType, translator: Translator, readonly interaction: CommandInteraction) {
+        super(translator, new InteractionCommandResponse(interaction));
         this.interaction = interaction;
     }
 
@@ -28,11 +28,19 @@ export class InteractionCommandRequest<InGuild extends boolean = boolean> extend
     }
 
     /** Replies to the command. */
-    async reply(options: string | InteractionReplyOptions) {
+    async replyOrEdit(options: string | InteractionReplyOptions) {
         return this.response?.replyOrEdit(options);
     }
 
-    inGuild(): this is InteractionCommandRequest<true> {
+    /** 
+     * Sends a follow up message.
+     * If interaction is not replied to fully, throws an error.
+     */
+    async followUpForce(options: string | InteractionReplyOptions) {
+        return await this.response.followUpForce(options) as Message<InGuild>;
+    }
+
+    inGuild(): this is InteractionCommandRequest<CommandType, true> {
         return this.interaction.inGuild();
     }
 

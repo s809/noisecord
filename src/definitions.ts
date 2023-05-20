@@ -8,7 +8,7 @@ import { CommandCondition } from "./conditions/index.js";
 import { CommandRequest } from "./handlers/CommandRequest.js";
 import { Translator } from "./Translator.js";
 import { IterableElement, Simplify } from "type-fest";
-import { MessageCommandRequest } from "./index.js";
+import { InteractionCommandRequest, MessageCommandRequest } from "./index.js";
 
 /** @public */
 export const textChannels = [
@@ -118,7 +118,7 @@ export interface ContextMenuCommandDefinition<InteractionType extends ContextMen
     key: string;
     type: InteractionType;
     allowDMs?: AllowDMs;
-    handler: (interaction: ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType], translator: Translator) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType]>>, translator: Translator) => void;
 }
 
 /** @public */
@@ -128,11 +128,11 @@ export interface ContextMenuTypeToInteraction<Cached extends CacheType> {
 }
 
 /** @public */
-export interface ContextMenuCommand {
+export interface ContextMenuCommand<InteractionType extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> {
     key: string;
     type: ContextMenuInteractionType;
     allowDMs: boolean;
-    handler: (interaction: ContextMenuCommandInteraction, translator: Translator) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<InteractionType>>, translator: Translator) => void;
     appCommandId: Snowflake | null;
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
 }

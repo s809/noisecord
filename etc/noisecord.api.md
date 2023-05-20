@@ -263,7 +263,7 @@ export interface CommandRegistryOptions {
 // @public
 export abstract class CommandRequest<InGuild extends boolean = boolean, Response extends CommandResponse = CommandResponse> {
     // @internal
-    constructor(command: Command, translator: Translator,
+    constructor(translator: Translator,
     response: Response);
     // (undocumented)
     abstract get author(): User;
@@ -272,8 +272,6 @@ export abstract class CommandRequest<InGuild extends boolean = boolean, Response
     // (undocumented)
     get channelId(): string;
     // (undocumented)
-    readonly command: Command;
-    // (undocumented)
     abstract get guild(): If<InGuild, Guild>;
     // (undocumented)
     get guildId(): If<InGuild, Snowflake>;
@@ -281,7 +279,7 @@ export abstract class CommandRequest<InGuild extends boolean = boolean, Response
     abstract inGuild(): this is CommandRequest<true, Response>;
     // (undocumented)
     abstract get member(): If<InGuild, GuildMember>;
-    abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
+    abstract replyOrEdit(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
     readonly response: Response;
     // (undocumented)
     readonly translator: Translator;
@@ -306,10 +304,7 @@ export class CommandResultError extends Error {
 }
 
 // @public (undocumented)
-export type ContainsInteraction = InteractionCommandRequest | ContextMenuCommandInteraction;
-
-// @public (undocumented)
-export interface ContextMenuCommand {
+export interface ContextMenuCommand<InteractionType extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> {
     // (undocumented)
     allowDMs: boolean;
     // (undocumented)
@@ -317,7 +312,7 @@ export interface ContextMenuCommand {
     // (undocumented)
     appCommandId: Snowflake | null;
     // (undocumented)
-    handler: (interaction: ContextMenuCommandInteraction, translator: Translator) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<InteractionType>>, translator: Translator) => void;
     // (undocumented)
     key: string;
     // (undocumented)
@@ -329,7 +324,7 @@ export interface ContextMenuCommandDefinition<InteractionType extends ContextMen
     // (undocumented)
     allowDMs?: AllowDMs;
     // (undocumented)
-    handler: (interaction: ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType], translator: Translator) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType]>>, translator: Translator) => void;
     // (undocumented)
     key: string;
     // (undocumented)
@@ -439,24 +434,27 @@ export interface InteractionCommandData {
 }
 
 // @public
-export class InteractionCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, InteractionCommandResponse> {
+export class InteractionCommandRequest<CommandType extends Command | ContextMenuCommand, InGuild extends boolean = boolean> extends CommandRequest<InGuild, InteractionCommandResponse> {
     // @internal
-    constructor(command: Command, translator: Translator, interaction: CommandInteraction);
+    constructor(command: CommandType, translator: Translator, interaction: CommandInteraction);
     // (undocumented)
     get author(): User;
     // (undocumented)
     get channel(): CommandRequest<InGuild>["channel"];
+    // (undocumented)
+    readonly command: CommandType;
     completeSilently(): Promise<void>;
     deferReply(ephemeral?: boolean): Promise<InteractionCommandResponse>;
+    followUpForce(options: string | InteractionReplyOptions): Promise<Message<InGuild>>;
     // (undocumented)
     get guild(): CommandRequest<InGuild>["guild"];
     // (undocumented)
-    inGuild(): this is InteractionCommandRequest<true>;
+    inGuild(): this is InteractionCommandRequest<CommandType, true>;
     // (undocumented)
     readonly interaction: CommandInteraction;
     // (undocumented)
     get member(): CommandRequest<InGuild>["member"];
-    reply(options: string | InteractionReplyOptions): Promise<InteractionCommandResponse>;
+    replyOrEdit(options: string | InteractionReplyOptions): Promise<InteractionCommandResponse>;
 }
 
 // @public (undocumented)
@@ -465,10 +463,15 @@ export class InteractionCommandResponse extends CommandResponse {
     constructor(interaction: CommandInteraction);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
     // (undocumented)
+    get deferredOrReplied(): boolean;
+    // (undocumented)
     deferReply(ephemeral?: boolean): Promise<this>;
     delete(): Promise<void>;
+    followUpForce(options: string | InteractionReplyOptions): Promise<Message<boolean>>;
     // (undocumented)
     readonly interaction: CommandInteraction;
+    // (undocumented)
+    get repliedFully(): boolean;
     replyOrEdit(options: string | InteractionReplyOptions | InteractionEditReplyOptions): Promise<this>;
 }
 
@@ -484,7 +487,7 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
 }
 
 // @public
-export interface InteractionHandlerOptions extends _HandlerOptions<ContainsInteraction> {
+export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCommandRequest<any>> {
     // (undocumented)
     registerApplicationCommands?: boolean;
 }
@@ -507,6 +510,8 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     // (undocumented)
     get channel(): CommandRequest<InGuild>["channel"];
     // (undocumented)
+    readonly command: Command;
+    // (undocumented)
     get content(): string;
     // (undocumented)
     get guild(): CommandRequest<InGuild>["guild"];
@@ -516,7 +521,7 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     get member(): CommandRequest<InGuild>["member"];
     // (undocumented)
     readonly message: Message;
-    reply(options: string | MessageReplyOptions): Promise<MessageCommandResponse>;
+    replyOrEdit(options: string | MessageReplyOptions): Promise<MessageCommandResponse>;
 }
 
 // @public (undocumented)

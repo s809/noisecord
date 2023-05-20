@@ -281,7 +281,8 @@ describe(_InteractionHandler.name, () => {
                     const interaction = await handleChatInteraction("normal");
                     expect(interaction.reply).calledOnceWithExactly({
                         content: "OK",
-                        ephemeral: true
+                        ephemeral: true,
+                        fetchReply: true
                     });
                 });
 
@@ -300,14 +301,10 @@ describe(_InteractionHandler.name, () => {
 
                 it("Manually replied", async () => {
                     const interaction = await handleChatInteraction("auto/manually-replied");
-                    expect(interaction.reply.getCall(0)).calledWithExactly({
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: "YAAY",
                         ephemeral: false,
                         fetchReply: true
-                    });
-                    expect(interaction.reply.getCall(1)).calledWithExactly({
-                        content: "OK",
-                        ephemeral: true
                     });
                 });
 
@@ -392,7 +389,8 @@ describe(_InteractionHandler.name, () => {
                     const interaction = await handleContextMenuInteraction("cm-normal");
                     expect(interaction.reply).calledOnceWithExactly({
                         content: "OK",
-                        ephemeral: true
+                        ephemeral: true,
+                        fetchReply: true
                     });
                 });
 
@@ -411,13 +409,10 @@ describe(_InteractionHandler.name, () => {
 
                 it("Manually replied", async () => {
                     const interaction = await handleContextMenuInteraction("cm-manually-replied");
-                    expect(interaction.reply.getCall(0)).calledWithExactly({
+                    expect(interaction.reply).calledOnceWithExactly({
                         content: "YAAY",
-                        ephemeral: false
-                    });
-                    expect(interaction.reply.getCall(1)).calledWithExactly({
-                        content: "OK",
-                        ephemeral: true
+                        ephemeral: false,
+                        fetchReply: true
                     });
                 });
 

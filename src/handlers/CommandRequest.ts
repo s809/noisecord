@@ -1,6 +1,6 @@
 import { Guild, GuildMember, If, InteractionReplyOptions, TextBasedChannel, GuildTextBasedChannel, MessageReplyOptions, User, Snowflake, InteractionCollector, CollectedInteraction, MappedInteractionTypes, Message } from 'discord.js';
 import { Translator } from "../Translator.js";
-import { Command } from "../definitions.js";
+import { Command, ContextMenuCommand } from "../definitions.js";
 import { CommandResponse } from "./CommandResponse.js";
 
 /** 
@@ -10,14 +10,13 @@ import { CommandResponse } from "./CommandResponse.js";
 export abstract class CommandRequest<InGuild extends boolean = boolean, Response extends CommandResponse = CommandResponse> {
     /** @internal */
     constructor(
-        readonly command: Command,
         readonly translator: Translator,
         /** Response object, which is filled when a command request is replied. */
         readonly response: Response
     ) { }
 
     /** Replies to the command request. */
-    abstract reply(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
+    abstract replyOrEdit(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
 
     abstract inGuild(): this is CommandRequest<true, Response>;
 

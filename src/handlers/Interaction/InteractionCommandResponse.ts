@@ -3,15 +3,28 @@ import { CommandResponse } from "../CommandResponse.js";
 
 /** @public */
 export class InteractionCommandResponse extends CommandResponse {
-    private sent = false;
+    private ephemeral = true;
+
+    private _deferredOrReplied = false;
+    get deferredOrReplied() {
+        return this._deferredOrReplied;
+    }
+
+    private _repliedFully = false;
+    get repliedFully() {
+        return this._repliedFully;
+    }
 
     /** @internal */
     constructor(readonly interaction: CommandInteraction) {
         super();
     }
 
-    async deferReply(ephemeral?: boolean) {
-        this.sent = true;
+    async deferReply(ephemeral = true) {
+        if (this._deferredOrReplied) return this;
+
+        this._deferredOrReplied = true;
+        this.ephemeral = ephemeral;
         await this.interaction.deferReply({ ephemeral }).catch(() => { });
         return this;
     }
@@ -19,25 +32,51 @@ export class InteractionCommandResponse extends CommandResponse {
     /** Replies to interaction or edits it. */
     async replyOrEdit(options: string | InteractionReplyOptions | InteractionEditReplyOptions) {
         const fixedOptions = {
-            ephemeral: true,
-            ...typeof options === "string" ? { content: options } : options as InteractionReplyOptions,
-            fetchReply: true
+            // if this is a first message, [ephemeral] will be set to what value it was deferred with
+            // for second and further, it is true by default
+            ephemeral: this.ephemeral || this._repliedFully,
+            ...typeof options === "string" ? { content: options } : options as InteractionReplyOptions
         } as const;
         
-        if (!this.sent) {
-            this.sent = true;
-            this._message = await this.interaction.reply(fixedOptions)
-                .catch(() => this.interaction.followUp(fixedOptions));
+        if (!this._deferredOrReplied) {
+            this._deferredOrReplied = true;
+            this._repliedFully = true;
+            this._message = await this.interaction.reply({
+                ...fixedOptions,
+                fetchReply: true
+            });
             return this;
         }
 
-        this._message = await this.interaction.editReply(fixedOptions)
-            .catch(() => this.interaction.followUp(fixedOptions));
+        if (!this._repliedFully)
+            this._message = await this.interaction.followUp(fixedOptions);
+        else
+            this._message = await this.interaction.editReply(fixedOptions);
+
         return this;
+    }
+
+    /** 
+     * Sends a follow up message.
+     * If interaction is not replied to fully, throws an error.
+     */
+    async followUpForce(options: string | InteractionReplyOptions) {
+        if (!this._repliedFully)
+            throw new Error("Request must receive a full response before sending follow ups.")
+        
+        const fixedOptions = {
+            ephemeral: true,
+            ...typeof options === "string" ? { content: options } : options as InteractionReplyOptions
+        } as const;
+
+        return this.interaction.followUp(fixedOptions);
     }
 
     /** Deletes the message, if possible.*/
     async delete() {
+        if (!this._message) return;
+
+        this._message = undefined;
         await this.interaction.deleteReply();
     }
 

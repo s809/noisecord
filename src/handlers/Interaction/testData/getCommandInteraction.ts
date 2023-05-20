@@ -53,9 +53,7 @@ export function getCommandInteraction(manualResolve: ("deferReply" | "reply" | "
                 if (!replied) throw new Error("Not replied");
                 return replyMessage;
             }),
-            followUp: sinon.stub().callsFake(async ({ fetchReply }) => {
-                if (!fetchReply) throw new Error("No fetchReply");
-
+            followUp: sinon.stub().callsFake(async () => {
                 if (!deferred) throw new Error("Not deferred");
                 if (replied) throw new Error("Already replied");
                 if (!replyMessage.flags.has(MessageFlags.Loading)) throw new Error("Already followed up");

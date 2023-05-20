@@ -8,14 +8,11 @@ import { _EventHandler } from "../EventHandler.js";
 import { Translator } from "../../Translator.js";
 import assert from "assert";
 
-/** @public */
-export type ContainsInteraction = InteractionCommandRequest | ContextMenuCommandInteraction;
-
 /** 
  * Options for setting up an interaction handler.
  * @public 
  */
-export interface InteractionHandlerOptions extends _HandlerOptions<ContainsInteraction> {
+export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCommandRequest<any>> {
     registerApplicationCommands?: boolean;
 }
 
@@ -24,48 +21,29 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
     protected readonly eventName = "interactionCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {
-        const getInteraction = (req: ContainsInteraction) => {
-            if (req instanceof InteractionCommandRequest)
-                return req.interaction;
-            else
-                return req;
-        }
-        
         super(client, commandRegistry, {
             registerApplicationCommands: options.registerApplicationCommands !== false
         }, {
-            async onSlowCommand(req: ContainsInteraction) {
-                const interaction = getInteraction(req);
-                await interaction.deferReply({ ephemeral: true }).catch(() => { });
+            async onSlowCommand(req: InteractionCommandRequest<any>) {
+                await req.deferReply();
             },
-            async onSuccess(req: ContainsInteraction) {
-                const interaction = getInteraction(req);
+            async onSuccess(req: InteractionCommandRequest<any>) {
+                if (req.response.repliedFully) return;
 
-                await interaction.reply({
+                await req.replyOrEdit({
                     content: "OK",
                     ephemeral: true,
-                }).catch(() => interaction.followUp({
-                    content: "OK",
-                    ephemeral: true
-                })).catch(() => { });
+                }).catch(() => { });
             },
-            async onFailure(req: ContainsInteraction, e) {
+            async onFailure(req: InteractionCommandRequest<any>, e) {
                 const content = e instanceof CommandResultError
                     ? e.message
                     : String(e.stack);
 
-                const interaction = getInteraction(req);
-                await interaction.reply({
-                    content,
-                    ephemeral: true,
-                    fetchReply: true
-                }).catch(() => interaction.followUp({
-                    content,
-                    ephemeral: true,
-                    fetchReply: true
-                })).catch(() => interaction.user.send({
-                    content
-                }));
+                if (!req.response.repliedFully)
+                    await req.replyOrEdit({ content }).catch(() => { });
+                else
+                    await req.followUpForce({ content }).catch(() => { });
             },
         });
     }
@@ -136,7 +114,8 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
             return this.replyUnknownCommand(interaction, translator);
 
         const commandTranslator = await this.translatorManager.getTranslator(interaction, this.commandRegistry.getCommandTranslationPath(command.key, true));
-        await this.executeCommand(interaction, () => command.handler(interaction as any, commandTranslator), commandTranslator);
+        const commandRequest = new InteractionCommandRequest(command, commandTranslator, interaction);
+        await this.executeCommand(commandRequest, () => command.handler(commandRequest, commandTranslator), commandTranslator);
     }
 
     private async parseArguments(interactionOptions: ChatInputCommandInteraction["options"], command: Command, translator: Translator): Promise<ParsedArguments> {
