@@ -33,12 +33,13 @@ jobs:
           node-version: 18
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
-      - uses: EndBug/version-check@v2
-        id: check
-        with:
-          diff-search: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - id: latest-repo-version
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+      - id: latest-package-version
+        run: echo "version=$(npm view @s809/noisecord version)" >> "$GITHUB_OUTPUT"
+        
       - run: npm publish
-        if: steps.check.outputs.changed == 'true'
+        if: steps.latest-repo-version.outputs.current-version != steps.latest-package-version.outputs.version
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
