@@ -66,6 +66,9 @@ export class AllLocalesPathTranslator {
 }
 
 // @public (undocumented)
+export type AllowDMsCacheType<AllowDMs extends boolean> = InGuildCacheType<AllowDMs extends true ? false : true>;
+
+// @public (undocumented)
 export class ArgumentParseError extends Error {
     // @internal
     constructor(message: string);
@@ -304,19 +307,11 @@ export class CommandResultError extends Error {
 }
 
 // @public (undocumented)
-export interface ContextMenuCommand<InteractionType extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> {
-    // (undocumented)
-    allowDMs: boolean;
+export interface ContextMenuCommand extends Required<ContextMenuCommandDefinition> {
     // (undocumented)
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
     // (undocumented)
     appCommandId: Snowflake | null;
-    // (undocumented)
-    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<InteractionType>>) => void;
-    // (undocumented)
-    key: string;
-    // (undocumented)
-    type: ContextMenuInteractionType;
 }
 
 // @public (undocumented)
@@ -324,7 +319,7 @@ export interface ContextMenuCommandDefinition<InteractionType extends ContextMen
     // (undocumented)
     allowDMs?: AllowDMs;
     // (undocumented)
-    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType]>, AllowDMs extends true ? boolean : true>) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand, ContextMenuTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]>) => void;
     // (undocumented)
     key: string;
     // (undocumented)
@@ -428,32 +423,34 @@ export interface _HandlerOptions<TCommandRequest = any> {
 export type _HandlerOptionsType<T> = T extends _HandlerOptions<infer T> ? T : never;
 
 // @public (undocumented)
+export type InGuildCacheType<InGuild extends boolean = true> = InGuild extends true ? Exclude<CacheType, undefined> : CacheType;
+
+// @public (undocumented)
 export interface InteractionCommandData {
     // (undocumented)
     id: Snowflake | null;
 }
 
 // @public
-export class InteractionCommandRequest<CommandType extends Command | ContextMenuCommand, InGuild extends boolean = boolean> extends CommandRequest<InGuild, InteractionCommandResponse> {
+export class InteractionCommandRequest<CommandType extends Command | ContextMenuCommand, InteractionType extends CommandInteraction> extends CommandRequest<InteractionType extends CommandInteraction<InGuildCacheType> ? true : false, InteractionCommandResponse> {
     // @internal
-    constructor(command: CommandType, translator: Translator, interaction: CommandInteraction);
+    constructor(command: CommandType, translator: Translator, interaction: InteractionType);
     // (undocumented)
     get author(): User;
     // (undocumented)
-    get channel(): CommandRequest<InGuild>["channel"];
+    get channel(): CommandRequest<InteractionInGuild<InteractionType>>["channel"];
     // (undocumented)
     readonly command: CommandType;
-    completeSilently(): Promise<void>;
     deferReply(ephemeral?: boolean): Promise<InteractionCommandResponse>;
-    followUpForce(options: string | InteractionReplyOptions): Promise<Message<InGuild>>;
+    followUpForce(options: string | InteractionReplyOptions): Promise<Message<InteractionInGuild<InteractionType>>>;
     // (undocumented)
-    get guild(): CommandRequest<InGuild>["guild"];
+    get guild(): CommandRequest<InteractionInGuild<InteractionType>>["guild"];
     // (undocumented)
-    inGuild(): this is InteractionCommandRequest<CommandType, true>;
+    inGuild(): this is InteractionCommandRequest<CommandType, CommandInteraction<InGuildCacheType>>;
     // (undocumented)
-    readonly interaction: CommandInteraction;
+    readonly interaction: InteractionType;
     // (undocumented)
-    get member(): CommandRequest<InGuild>["member"];
+    get member(): CommandRequest<InteractionInGuild<InteractionType>>["member"];
     replyOrEdit(options: string | InteractionReplyOptions): Promise<InteractionCommandResponse>;
 }
 
@@ -463,9 +460,9 @@ export class InteractionCommandResponse extends CommandResponse {
     constructor(interaction: CommandInteraction);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
     // (undocumented)
-    get deferredOrReplied(): boolean;
+    defer(ephemeral?: boolean): Promise<this>;
     // (undocumented)
-    deferReply(ephemeral?: boolean): Promise<this>;
+    get deferredOrReplied(): boolean;
     delete(): Promise<void>;
     followUpForce(options: string | InteractionReplyOptions): Promise<Message<boolean>>;
     // (undocumented)
@@ -487,10 +484,13 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
 }
 
 // @public
-export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCommandRequest<any>> {
+export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCommandRequest<any, any>> {
     // (undocumented)
     registerApplicationCommands?: boolean;
 }
+
+// @public (undocumented)
+export type InteractionInGuild<T extends CommandInteraction> = T extends CommandInteraction<InGuildCacheType> ? true : false;
 
 // @public (undocumented)
 export const InVoiceChannel: CommandCondition;
