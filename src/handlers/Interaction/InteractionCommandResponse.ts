@@ -53,10 +53,12 @@ export class InteractionCommandResponse extends CommandResponse {
             return this;
         }
 
-        if (!this._repliedFully)
+        if (!this._repliedFully) {
+            this._repliedFully = true;
             this._message = await this.interaction.followUp(fixedOptions);
-        else
+        } else {
             this._message = await this.interaction.editReply(fixedOptions);
+        }
 
         return this;
     }
@@ -79,12 +81,13 @@ export class InteractionCommandResponse extends CommandResponse {
 
     /** Deletes the message, if possible.*/
     async delete() {
-        if (this._deferredOrReplied) return;
+        if (!this._deferredOrReplied)
+            await this.defer();
         
-        await this.defer();
-        await this.interaction.deleteReply();
-
+        if (!this._message) return;
         this._message = undefined;
+
+        await this.interaction.deleteReply();
     }
 
     /** Creates collector of message components. */
