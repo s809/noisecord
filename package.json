@@ -16,7 +16,7 @@
     "prepack": "npm run build && api-extractor run",
     "test": "mocha",
     "test:cov": "c8 npm test",
-    "api": "npm run build && api-extractor run --local"
+    "api": "npm run build && api-extractor run --local && api-documenter markdown -i ./temp -o ./docs"
   },
   "c8": {
     "all": true,
@@ -36,17 +36,15 @@
     ]
   },
   "dependencies": {
-    "@types/semaphore": "^1.1.1",
     "discord.js": "^14.11.0",
     "lodash-es": "^4.17.21",
     "rimraf": "^5.0.1",
-    "semaphore": "^1.1.0",
-    "sinon-chai": "^3.7.0",
     "string-format": "^2.0.0",
     "type-fest": "github:sindresorhus/type-fest",
     "typescript": "^5.0.4"
   },
   "devDependencies": {
+    "@microsoft/api-documenter": "^7.22.5",
     "@microsoft/api-extractor": "^7.34.9",
     "@types/chai": "^4.3.5",
     "@types/chai-as-promised": "^7.1.5",
@@ -64,6 +62,7 @@
     "chai-subset": "^1.6.0",
     "mocha": "^10.2.0",
     "sinon": "^15.1.0",
+    "sinon-chai": "^3.7.0",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.9.1"
   },
