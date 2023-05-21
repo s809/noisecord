@@ -13,7 +13,8 @@ export class MessageCommandResponse extends CommandResponse {
     /** Edits the message, if possible. */
     async replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions) {
         if (!this.messagePromise) {
-            await (this.messagePromise = this.channel.send(options as MessageCreateOptions));
+            this.messagePromise = this.channel.send(options as MessageCreateOptions);
+            this._message = await this.messagePromise;
             return this;
         }
         
