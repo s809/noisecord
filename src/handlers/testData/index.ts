@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction, Interaction } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction, Interaction, MessageContextMenuCommandInteraction } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
 import { Command, ContextMenuCommand } from "../../definitions.js";
 import { CommandRequest } from "../CommandRequest.js";
@@ -511,7 +511,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
             }, {
                 key: "cm-manually-replied",
                 type: ApplicationCommandType.Message,
-                handler: async (req: InteractionCommandRequest<ContextMenuCommand>) => {
+                handler: async (req: InteractionCommandRequest<ContextMenuCommand, MessageContextMenuCommandInteraction>) => {
                     await req.replyOrEdit({
                         content: "YAAY",
                         ephemeral: false

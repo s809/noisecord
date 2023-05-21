@@ -12,7 +12,7 @@ import assert from "assert";
  * Options for setting up an interaction handler.
  * @public 
  */
-export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCommandRequest<any>> {
+export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCommandRequest<any, any>> {
     registerApplicationCommands?: boolean;
 }
 
@@ -24,10 +24,10 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
         super(client, commandRegistry, {
             registerApplicationCommands: options.registerApplicationCommands !== false
         }, {
-            async onSlowCommand(req: InteractionCommandRequest<any>) {
+            async onSlowCommand(req: InteractionCommandRequest<any, any>) {
                 await req.deferReply();
             },
-            async onSuccess(req: InteractionCommandRequest<any>) {
+            async onSuccess(req: InteractionCommandRequest<any, any>) {
                 if (req.response.repliedFully) return;
 
                 await req.replyOrEdit({
@@ -35,7 +35,7 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
                     ephemeral: true,
                 }).catch(() => { });
             },
-            async onFailure(req: InteractionCommandRequest<any>, e) {
+            async onFailure(req: InteractionCommandRequest<any, any>, e) {
                 const content = e instanceof CommandResultError
                     ? e.message
                     : String(e.stack);
@@ -115,7 +115,7 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
 
         const commandTranslator = await this.translatorManager.getTranslator(interaction, this.commandRegistry.getCommandTranslationPath(command.key, true));
         const commandRequest = new InteractionCommandRequest(command, commandTranslator, interaction);
-        await this.executeCommand(commandRequest, () => command.handler(commandRequest), commandTranslator);
+        await this.executeCommand(commandRequest, () => command.handler(commandRequest as any), commandTranslator);
     }
 
     private async parseArguments(interactionOptions: ChatInputCommandInteraction["options"], command: Command, translator: Translator): Promise<ParsedArguments> {

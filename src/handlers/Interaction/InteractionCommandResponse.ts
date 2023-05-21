@@ -20,12 +20,15 @@ export class InteractionCommandResponse extends CommandResponse {
         super();
     }
 
-    async deferReply(ephemeral = true) {
+    async defer(ephemeral = true) {
         if (this._deferredOrReplied) return this;
-
         this._deferredOrReplied = true;
         this.ephemeral = ephemeral;
-        await this.interaction.deferReply({ ephemeral }).catch(() => { });
+
+        this._message = await this.interaction.deferReply({
+            ephemeral,
+            fetchReply: true
+        }).catch(() => this._message);
         return this;
     }
 
@@ -41,6 +44,8 @@ export class InteractionCommandResponse extends CommandResponse {
         if (!this._deferredOrReplied) {
             this._deferredOrReplied = true;
             this._repliedFully = true;
+            this.ephemeral = fixedOptions.ephemeral;
+
             this._message = await this.interaction.reply({
                 ...fixedOptions,
                 fetchReply: true
@@ -74,10 +79,12 @@ export class InteractionCommandResponse extends CommandResponse {
 
     /** Deletes the message, if possible.*/
     async delete() {
-        if (!this._message) return;
+        if (this._deferredOrReplied) return;
+        
+        await this.defer();
+        await this.interaction.deleteReply();
 
         this._message = undefined;
-        await this.interaction.deleteReply();
     }
 
     /** Creates collector of message components. */

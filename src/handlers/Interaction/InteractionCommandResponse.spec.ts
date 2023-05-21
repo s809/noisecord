@@ -22,7 +22,7 @@ describe(InteractionCommandResponse.name, () => {
             
             it("Defer and reply", async () => {
                 const commandResponse = new InteractionCommandResponse(interaction as unknown as CommandInteraction);
-                await commandResponse.deferReply();
+                await commandResponse.defer();
                 await commandResponse.replyOrEdit("test");
                 expect(interaction.deferReply).calledOnce;
                 expect(interaction.followUp).calledOnce;

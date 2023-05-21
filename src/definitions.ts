@@ -2,11 +2,10 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, ApplicationCommandType, Awaitable, CacheType, Channel, ChannelType, ContextMenuCommandInteraction, GuildTextBasedChannel, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, ApplicationCommandType, Awaitable, CacheType, Channel, ChannelType, CommandInteraction, ContextMenuCommandInteraction, GuildTextBasedChannel, LocalizationMap, MessageApplicationCommandData, MessageContextMenuCommandInteraction, PermissionResolvable, Role, Snowflake, User, UserApplicationCommandData, UserContextMenuCommandInteraction } from "discord.js";
 import { DistributiveOmit } from "./util.js";
 import { CommandCondition } from "./conditions/index.js";
 import { CommandRequest } from "./handlers/CommandRequest.js";
-import { Translator } from "./Translator.js";
 import { IterableElement, Simplify } from "type-fest";
 import { InteractionCommandRequest, MessageCommandRequest } from "./index.js";
 
@@ -118,8 +117,15 @@ export interface ContextMenuCommandDefinition<InteractionType extends ContextMen
     key: string;
     type: InteractionType;
     allowDMs?: AllowDMs;
-    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<ContextMenuTypeToInteraction<AllowDMs extends false ? Exclude<CacheType, undefined> : CacheType>[InteractionType]>, AllowDMs extends true ? boolean : true>) => void;
+    handler: (interaction: InteractionCommandRequest<
+        ContextMenuCommand,
+        ContextMenuTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]
+    >) => void;
 }
+
+export type AllowDMsCacheType<AllowDMs extends boolean> = InGuildCacheType<AllowDMs extends true ? false : true>;
+export type InGuildCacheType<InGuild extends boolean = true> = InGuild extends true ? Exclude<CacheType, undefined> : CacheType;
+export type InteractionInGuild<T extends CommandInteraction> = T extends CommandInteraction<InGuildCacheType> ? true : false;
 
 /** @public */
 export interface ContextMenuTypeToInteraction<Cached extends CacheType> {
@@ -128,11 +134,7 @@ export interface ContextMenuTypeToInteraction<Cached extends CacheType> {
 }
 
 /** @public */
-export interface ContextMenuCommand<InteractionType extends ContextMenuCommandInteraction = ContextMenuCommandInteraction> {
-    key: string;
-    type: ContextMenuInteractionType;
-    allowDMs: boolean;
-    handler: (interaction: InteractionCommandRequest<ContextMenuCommand<InteractionType>>) => void;
+export interface ContextMenuCommand extends Required<ContextMenuCommandDefinition> {
     appCommandId: Snowflake | null;
     appCommandData: UserApplicationCommandData | MessageApplicationCommandData;
 }
