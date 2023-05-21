@@ -34,12 +34,16 @@ jobs:
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
       
-      - id: latest-repo-version
+      - name: Get repo version
+        id: repo-version
         uses: martinbeentjes/npm-get-version-action@v1.3.1
-      - id: latest-package-version
+      - name: Get latest package version
+        id: latest-package-version
         run: echo "version=$(npm view @s809/noisecord version)" >> "$GITHUB_OUTPUT"
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
         
       - run: npm publish
-        if: steps.latest-repo-version.outputs.current-version != steps.latest-package-version.outputs.version
+        if: steps.repo-version.outputs.current-version != steps.latest-package-version.outputs.version
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
