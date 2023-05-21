@@ -12,8 +12,6 @@ export class MessageCommandResponse extends CommandResponse {
 
     /** Edits the message, if possible. */
     async replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions) {
-        options = structuredClone(options);
-        
         if (!this.messagePromise) {
             await (this.messagePromise = this.channel.send(options as MessageCreateOptions));
             return this;
