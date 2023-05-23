@@ -9,10 +9,9 @@ import { ApplicationCommandSubCommandData } from 'discord.js';
 import { ApplicationCommandType } from 'discord.js';
 import { Awaitable } from 'discord.js';
 import { CacheType } from 'discord.js';
-import { ChannelType } from 'discord.js';
 import { Client } from 'discord.js';
 import { ClientEvents } from 'discord.js';
-import { Command as Command_2 } from './definitions.js';
+import { Command as Command_2 } from './index.js';
 import { CommandInteraction } from 'discord.js';
 import { ConditionalSimplifyDeep } from 'type-fest/source/conditional-simplify.js';
 import { ContextMenuCommandInteraction } from 'discord.js';
@@ -64,9 +63,6 @@ export class AllLocalesPathTranslator {
     // @internal (undocumented)
     translatorManager?: TranslatorManager;
 }
-
-// @public (undocumented)
-export type AllowDMsCacheType<AllowDMs extends boolean> = InGuildCacheType<AllowDMs extends true ? false : true>;
 
 // @public (undocumented)
 export class ArgumentParseError extends Error {
@@ -146,18 +142,14 @@ export interface CommandArguments {
     stringTranslations: LocalizationMap;
 }
 
-// @public (undocumented)
+// @public
 export interface CommandCondition {
     // (undocumented)
     check: (context: CommandContextResolvable) => boolean;
     // (undocumented)
-    failureMessage: string;
-    // (undocumented)
-    hideCommand?: boolean | ((context: CommandContextResolvable) => boolean);
-    // (undocumented)
     hideInDescription?: boolean;
     // (undocumented)
-    name: string;
+    key: string;
     // (undocumented)
     requires?: CommandCondition | CommandCondition[];
     // (undocumented)
@@ -165,9 +157,15 @@ export interface CommandCondition {
 }
 
 // @public (undocumented)
-export type CommandContextResolvable = Message | CommandRequest;
+export const CommandCondition: {
+    InVoiceChannel: CommandCondition;
+    InVoiceWithBot: CommandCondition;
+};
 
 // @public (undocumented)
+export type CommandContextResolvable = Message | CommandRequest;
+
+// @public
 export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
     // (undocumented)
     allowDMs?: AllowDMs;
@@ -199,11 +197,12 @@ export type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableEleme
 
 // @public
 export class CommandFramework {
-    constructor(options: CommandFrameworkOptions);
+    constructor(client: Client, options: CommandFrameworkOptions);
     // (undocumented)
     get commandRegistry(): CommandRegistry;
     get commands(): Map<string, Command_2>;
-    init(client: Client): Promise<this>;
+    static create(client: Client, options: CommandFrameworkOptions): Promise<CommandFramework>;
+    init(): Promise<this>;
     // (undocumented)
     readonly translationChecker: TranslationChecker;
     // (undocumented)
@@ -222,8 +221,10 @@ export interface CommandFrameworkOptions {
     translationOptions: TranslatorManagerOptions;
 }
 
+// Warning: (ae-forgotten-export) The symbol "AllowDMsInGuild" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
-export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMs extends true ? boolean : true> : CommandRequest<AllowDMs extends true ? boolean : true>, args: Args) => Awaitable<string | void>;
+export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>> : CommandRequest<AllowDMsInGuild<AllowDMs>>, args: Args) => Awaitable<string | void>;
 
 // @public (undocumented)
 export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]> ? T["choices"] extends readonly any[] ? T["choices"][number]["value"] : ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never) : never;
@@ -318,6 +319,8 @@ export interface ContextMenuCommand extends Required<ContextMenuCommandDefinitio
 export interface ContextMenuCommandDefinition<InteractionType extends ContextMenuInteractionType = ContextMenuInteractionType, AllowDMs extends boolean = boolean> {
     // (undocumented)
     allowDMs?: AllowDMs;
+    // Warning: (ae-forgotten-export) The symbol "AllowDMsCacheType" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     handler: (interaction: InteractionCommandRequest<ContextMenuCommand, ContextMenuTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]>) => void;
     // (undocumented)
@@ -423,14 +426,13 @@ export interface _HandlerOptions<TCommandRequest = any> {
 export type _HandlerOptionsType<T> = T extends _HandlerOptions<infer T> ? T : never;
 
 // @public (undocumented)
-export type InGuildCacheType<InGuild extends boolean = true> = InGuild extends true ? Exclude<CacheType, undefined> : CacheType;
-
-// @public (undocumented)
 export interface InteractionCommandData {
     // (undocumented)
     id: Snowflake | null;
 }
 
+// Warning: (ae-forgotten-export) The symbol "InGuildCacheType" needs to be exported by the entry point index.d.ts
+//
 // @public
 export class InteractionCommandRequest<CommandType extends Command | ContextMenuCommand, InteractionType extends CommandInteraction> extends CommandRequest<InteractionType extends CommandInteraction<InGuildCacheType> ? true : false, InteractionCommandResponse> {
     // @internal
@@ -442,6 +444,7 @@ export class InteractionCommandRequest<CommandType extends Command | ContextMenu
     // (undocumented)
     readonly command: CommandType;
     deferReply(ephemeral?: boolean): Promise<InteractionCommandResponse>;
+    // Warning: (ae-forgotten-export) The symbol "InteractionInGuild" needs to be exported by the entry point index.d.ts
     followUpForce(options: string | InteractionReplyOptions): Promise<Message<InteractionInGuild<InteractionType>>>;
     // (undocumented)
     get guild(): CommandRequest<InteractionInGuild<InteractionType>>["guild"];
@@ -488,15 +491,6 @@ export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCo
     // (undocumented)
     registerApplicationCommands?: boolean;
 }
-
-// @public (undocumented)
-export type InteractionInGuild<T extends CommandInteraction> = T extends CommandInteraction<InGuildCacheType> ? true : false;
-
-// @public (undocumented)
-export const InVoiceChannel: CommandCondition;
-
-// @public (undocumented)
-export const InVoiceWithBot: CommandCondition;
 
 // @public
 export const loadingEmoji = "\uD83D\uDD04";
@@ -588,9 +582,6 @@ export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTr
 export const successEmoji = "\u2705";
 
 // @public (undocumented)
-export const textChannels: readonly [ChannelType.GuildAnnouncement, ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread, ChannelType.GuildText];
-
-// @public (undocumented)
 export class TranslationChecker extends ErrorCollector {
     // @internal
     constructor();
@@ -663,7 +654,5 @@ export type _TypedHandlerOptions<T> = _HandlerOptions<_HandlerOptionsType<T>>;
 export type UnionToIntersectionRecursive<T> = {
     [K in keyof T]: T[K] extends {} ? UnionToIntersection<T[K]> : UnionToIntersectionRecursive<T[K]>;
 };
-
-// (No @packageDocumentation comment for this package)
 
 ```

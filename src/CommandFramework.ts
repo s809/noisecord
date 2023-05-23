@@ -42,27 +42,35 @@ export class CommandFramework {
     private _translatorManager?: TranslatorManager;
     readonly translationChecker = new TranslationChecker();
 
-    private client?: Client;
-
     private messageHandler: _MessageHandler | null = null;
     private interactionHandler: _InteractionHandler | null = null;
 
-    constructor(private options: CommandFrameworkOptions) {}
+    constructor(private client: Client, private options: CommandFrameworkOptions) {}
 
-    /** 
-     * Initializes everything related to the framework.
+    /**
+     * Creates a new instance of the {@link CommandFramework} class.
+     * This is a shortcut for constructing and initializing an instance if your instance will reside in the main file.
+     * 
+     * @remarks
+     * Translation checking is not possible using the returned instance, as it uses a window between construction and initialization of an instance.
+     * See constructor and {@link CommandFramework.init | init()} 
+     * for the case when construction and initialization need to be split.
      */
-    async init(client: Client) {
+    static async create(client: Client, options: CommandFrameworkOptions) {
+        return await new CommandFramework(client, options).init();
+    }
+
+    /**  Initializes everything related to the framework. */
+    async init() {
         this._translatorManager = await new TranslatorManager(this.options.translationOptions).init();
         this._commandRegistry = new CommandRegistry(this.options.commandRegistryOptions, this._translatorManager);
         await this._commandRegistry.createCommands();
         this.translationChecker.runChecks(this._translatorManager);
 
-        this.client = client;
-        if (client.isReady())
+        if (this.client.isReady())
             await this.afterClientLogin();
         else
-            (client as Client<false>).once("ready", () => this.afterClientLogin());
+            (this.client as Client<false>).once("ready", () => this.afterClientLogin());
 
         return this;
     }

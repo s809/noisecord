@@ -4,7 +4,7 @@
 
 ## defineContextMenuCommand() function
 
-This function is just for convenience/type checking.
+Allows to type check a context menu command definition.
 
 **Signature:**
 
@@ -21,4 +21,20 @@ export declare function defineContextMenuCommand<InteractionType extends Context
 **Returns:**
 
 [ContextMenuCommandDefinition](./noisecord.contextmenucommanddefinition.md)<!-- -->&lt;InteractionType, AllowDMs&gt;
+
+## Example
+
+
+```
+export default defineContextMenuCommand({
+   key: "mycommand",
+
+   type: ApplicationCommandType.Message,
+   allowDMs: false,
+
+   handler: async req => {
+       // implementation of mycommand goes here
+   }
+});
+```
 

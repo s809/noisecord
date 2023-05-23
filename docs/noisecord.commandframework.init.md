@@ -9,15 +9,8 @@ Initializes everything related to the framework.
 **Signature:**
 
 ```typescript
-init(client: Client): Promise<this>;
+init(): Promise<this>;
 ```
-
-## Parameters
-
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  client | Client |  |
-
 **Returns:**
 
 Promise&lt;this&gt;

@@ -1,14 +1,17 @@
 import { Message } from "discord.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
-import { Command } from "../definitions.js";
+import { Command } from "../definitions/Command.js";
+import { InVoiceChannel } from "./InVoiceChannel.js";
+import { InVoiceWithBot } from "./InVoiceWithBot.js";
 
-/** @public */
+/**
+ * Interface for adding a condition to a command.
+ * @public 
+ */
 export interface CommandCondition {
-    name: string;
+    key: string;
     check: (context: CommandContextResolvable) => boolean;
-    failureMessage: string;
     hideInDescription?: boolean;
-    hideCommand?: boolean | ((context: CommandContextResolvable) => boolean);
     satisfiedBy?: CommandCondition | CommandCondition[];
     requires?: CommandCondition | CommandCondition[];
 }
@@ -50,7 +53,7 @@ function checkCondition(
             return null;
     }
 
-    return condition.failureMessage;
+    return condition.key;
 }
 
 /**
@@ -87,5 +90,8 @@ export function checkConditions(
         .filter(result => result)[0] ?? null;
 }
 
-export { InVoiceChannel } from "./InVoiceChannel.js";
-export { InVoiceWithBot } from "./InVoiceWithBot.js";
+/** @public */
+export const CommandCondition = {
+    InVoiceChannel,
+    InVoiceWithBot
+}

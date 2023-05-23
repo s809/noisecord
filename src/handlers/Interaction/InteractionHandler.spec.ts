@@ -3,9 +3,9 @@ import { ApplicationCommandDataResolvable, ApplicationCommandType, Client, Inter
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { CommandRegistry } from "../../CommandRegistry.js";
-import { ContextMenuCommand } from "../../definitions.js";
 import {  _InteractionHandler } from "./InteractionHandler.js";
 import { makeFakeCommand, createHandler, IdConstants } from "../testData/index.js";
+import { ContextMenuCommand } from "../../definitions/ContextMenuCommand.js";
 
 describe(_InteractionHandler.name, () => {
     describe("Registration of interaction commands", () => {

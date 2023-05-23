@@ -1,12 +1,13 @@
 import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
-import { Command, CommandHandler, ContextMenuCommand, ParsedArguments } from "../../definitions.js";
+import { Command, CommandHandler, ParsedArguments } from "../../definitions/Command.js";
 import { InteractionCommandRequest } from "./InteractionCommandRequest.js";
 import { ArgumentParseError, CommandResultError } from "../errors.js";
 import { _HandlerOptions } from "../HandlerOptions.js";
 import { _EventHandler } from "../EventHandler.js";
 import { Translator } from "../../Translator.js";
 import assert from "assert";
+import { ContextMenuCommand } from "../../definitions/ContextMenuCommand.js";
 
 /** 
  * Options for setting up an interaction handler.

@@ -4,6 +4,7 @@
 
 ## CommandDefinition interface
 
+Definition for a command.
 
 **Signature:**
 

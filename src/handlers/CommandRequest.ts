@@ -1,6 +1,5 @@
-import { Guild, GuildMember, If, InteractionReplyOptions, TextBasedChannel, GuildTextBasedChannel, MessageReplyOptions, User, Snowflake, InteractionCollector, CollectedInteraction, MappedInteractionTypes, Message } from 'discord.js';
+import { Guild, GuildMember, If, InteractionReplyOptions, TextBasedChannel, GuildTextBasedChannel, MessageReplyOptions, User, Snowflake } from 'discord.js';
 import { Translator } from "../Translator.js";
-import { Command, ContextMenuCommand } from "../definitions.js";
 import { CommandResponse } from "./CommandResponse.js";
 
 /** 

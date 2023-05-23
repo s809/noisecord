@@ -16,14 +16,14 @@ export declare class CommandFramework
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(options)](./noisecord.commandframework._constructor_.md) |  | Constructs a new instance of the <code>CommandFramework</code> class |
+|  [(constructor)(client, options)](./noisecord.commandframework._constructor_.md) |  | Constructs a new instance of the <code>CommandFramework</code> class |
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [commandRegistry](./noisecord.commandframework.commandregistry.md) | <code>readonly</code> | [CommandRegistry](./noisecord.commandregistry.md) |  |
-|  [commands](./noisecord.commandframework.commands.md) | <code>readonly</code> | Map&lt;string, import("./definitions.js").[Command](./noisecord.command.md)<!-- -->&gt; | Tree of commands. |
+|  [commands](./noisecord.commandframework.commands.md) | <code>readonly</code> | Map&lt;string, import("./index.js").[Command](./noisecord.command.md)<!-- -->&gt; | Tree of commands. |
 |  [translationChecker](./noisecord.commandframework.translationchecker.md) | <code>readonly</code> | [TranslationChecker](./noisecord.translationchecker.md) |  |
 |  [translatorManager](./noisecord.commandframework.translatormanager.md) | <code>readonly</code> | [TranslatorManager](./noisecord.translatormanager.md) |  |
 
@@ -31,5 +31,6 @@ export declare class CommandFramework
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [init(client)](./noisecord.commandframework.init.md) |  | Initializes everything related to the framework. |
+|  [create(client, options)](./noisecord.commandframework.create.md) | <code>static</code> | Creates a new instance of the [CommandFramework](./noisecord.commandframework.md) class. This is a shortcut for constructing and initializing an instance if your instance will reside in the main file. |
+|  [init()](./noisecord.commandframework.init.md) |  | Initializes everything related to the framework. |
 

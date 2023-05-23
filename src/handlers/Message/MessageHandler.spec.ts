@@ -484,7 +484,7 @@ describe(_MessageHandler.name, () => {
             guild: {
                 id: IdConstants.Guild2
             }
-        }, "Test condition error"));
+        }, "Test condition"));
     });
 
     describe("Argument parsing", () => {

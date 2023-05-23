@@ -1,6 +1,6 @@
 import { PermissionResolvable } from "discord.js";
 import { CommandCondition } from "../conditions/index.js";
-import { Command, CommandDefinition } from "../definitions.js";
+import { Command, CommandDefinition } from "../definitions/Command.js";
 import { ApplicationCommandOptionType, LocaleString, PermissionFlagsBits } from "discord.js";
 import { TranslatorManager } from "../TranslatorManager.js";
 import { castArray } from "lodash-es";

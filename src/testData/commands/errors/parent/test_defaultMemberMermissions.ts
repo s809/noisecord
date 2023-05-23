@@ -1,4 +1,4 @@
-import { defineCommand } from "../../../../definitions.js";
+import { defineCommand } from "../../../../index.js";
 
 export default defineCommand({
     key: "test_defaultMemberPermissions",

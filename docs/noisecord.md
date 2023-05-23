@@ -4,6 +4,38 @@
 
 ## noisecord package
 
+Command framework.
+
+## Example
+
+
+```
+const commandFramework = CommandFramework.create(client, {
+    commandRegistryOptions: {
+        // If you're using TypeScript, properties below should point to a directory with build output;
+        // Otherwise you'll want to remove "build/" parts.
+        commandModuleDirectory: "./build/commands",
+        contextMenuModuleDirectory: "./build/contextMenuCommands"
+    },
+
+    translationOptions: {
+        translationFileDirectory: "./translations",
+        defaultLocale: "en-US",
+        getUserLocale: () => "en-US",
+        getGuildLocale:  () => "en-US",
+    },
+
+    // If you don't need interaction/message commands, simply remove the matching property.
+    interactionCommands: {
+        // It has no required properties, but is required for interaction commands (slash/right click) to work.
+    },
+    messageCommands: {
+        prefix: "!"
+    }
+});
+await client.login(token);
+```
+
 ## Classes
 
 |  Class | Description |
@@ -36,8 +68,8 @@
 |  --- | --- |
 |  [checkConditions(context, conditions)](./noisecord.checkconditions.md) | <p>Checks the provided list of conditions against a message.</p><p><code>allowed</code> is true if all conditions are satisfied.</p><p><code>message</code> is the message of the first failed condition if all failed conditions have messages, otherwise undefined.</p> |
 |  [checkConditions(context, command)](./noisecord.checkconditions_1.md) | <p>Checks the command's list of conditions against a message.</p><p><code>allowed</code> is true if all conditions are satisfied.</p><p><code>message</code> is the message of the first failed condition if all failed conditions have messages, otherwise undefined.</p> |
-|  [defineCommand(definition)](./noisecord.definecommand.md) | This function is just for convenience/type checking. |
-|  [defineContextMenuCommand(definition)](./noisecord.definecontextmenucommand.md) | This function is just for convenience/type checking. |
+|  [defineCommand(definition)](./noisecord.definecommand.md) | Allows to type check a command definition. |
+|  [defineContextMenuCommand(definition)](./noisecord.definecontextmenucommand.md) | Allows to type check a context menu command definition. |
 |  [parseChannelMention(text)](./noisecord.parsechannelmention.md) | Extracts channel ID from mention. |
 |  [parseMention(text, prefix)](./noisecord.parsemention.md) | Extracts ID from mention. |
 |  [parseRoleMention(text)](./noisecord.parserolemention.md) | Extracts role ID from mention. |
@@ -51,8 +83,8 @@
 |  [ArgumentToTypeMap](./noisecord.argumenttotypemap.md) |  |
 |  [Command](./noisecord.command.md) |  |
 |  [CommandArguments](./noisecord.commandarguments.md) |  |
-|  [CommandCondition](./noisecord.commandcondition.md) |  |
-|  [CommandDefinition](./noisecord.commanddefinition.md) |  |
+|  [CommandCondition](./noisecord.commandcondition.md) | Interface for adding a condition to a command. |
+|  [CommandDefinition](./noisecord.commanddefinition.md) | Definition for a command. |
 |  [CommandFrameworkOptions](./noisecord.commandframeworkoptions.md) | Options used to initialize [CommandFramework](./noisecord.commandframework.md)<!-- -->. |
 |  [CommandRegistryOptions](./noisecord.commandregistryoptions.md) | Options used to initialize [CommandRegistry](./noisecord.commandregistry.md) |
 |  [ContextMenuCommand](./noisecord.contextmenucommand.md) |  |
@@ -67,18 +99,15 @@
 
 |  Variable | Description |
 |  --- | --- |
+|  [CommandCondition](./noisecord.commandcondition.md) |  |
 |  [failureEmoji](./noisecord.failureemoji.md) | Default emote for failure state on a message command. |
-|  [InVoiceChannel](./noisecord.invoicechannel.md) |  |
-|  [InVoiceWithBot](./noisecord.invoicewithbot.md) |  |
 |  [loadingEmoji](./noisecord.loadingemoji.md) | Default emote for loading state on a message command. |
 |  [successEmoji](./noisecord.successemoji.md) | Default emote for success state on a message command. |
-|  [textChannels](./noisecord.textchannels.md) |  |
 
 ## Type Aliases
 
 |  Type Alias | Description |
 |  --- | --- |
-|  [AllowDMsCacheType](./noisecord.allowdmscachetype.md) |  |
 |  [CommandContextResolvable](./noisecord.commandcontextresolvable.md) |  |
 |  [CommandDefinitionArgument](./noisecord.commanddefinitionargument.md) |  |
 |  [CommandHandler](./noisecord.commandhandler.md) |  |
@@ -87,8 +116,6 @@
 |  [DeeplyNestedMap](./noisecord.deeplynestedmap.md) |  |
 |  [DistributiveOmit](./noisecord.distributiveomit.md) |  |
 |  [FormatParameters](./noisecord.formatparameters.md) |  |
-|  [InGuildCacheType](./noisecord.inguildcachetype.md) |  |
-|  [InteractionInGuild](./noisecord.interactioninguild.md) |  |
 |  [ParsedArguments](./noisecord.parsedarguments.md) |  |
 |  [PathTranslators](./noisecord.pathtranslators.md) |  |
 |  [PathTranslatorTypes](./noisecord.pathtranslatortypes.md) |  |

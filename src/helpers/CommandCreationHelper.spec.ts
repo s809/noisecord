@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
 import { createCommand, CommandCreationHelper } from "./CommandCreationHelper.js";
-import { CommandDefinition } from "../definitions.js";
 import { TranslatorManager } from "../TranslatorManager.js";
+import { CommandDefinition } from "../definitions/Command.js";
 
 describe("CommandCreationHelper", () => {
     let commandCreationHelper: CommandCreationHelper;

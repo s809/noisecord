@@ -1,12 +1,13 @@
 import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction, Interaction, MessageContextMenuCommandInteraction } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
-import { Command, ContextMenuCommand } from "../../definitions.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { setTimeout } from "timers/promises";
 import sinon from "sinon";
 import { merge } from "lodash-es";
 import { CommandContextResolvable } from "../../conditions/index.js";
 import { InteractionCommandRequest } from "../Interaction/InteractionCommandRequest.js";
+import { Command } from "../../definitions/Command.js";
+import { ContextMenuCommand } from "../../definitions/ContextMenuCommand.js";
 
 enum _IdConstants {
     GuildNone,
@@ -314,9 +315,8 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
         }],
         ["conditions", {
             conditions: [{
-                name: "Test condition",
-                check: (context: CommandContextResolvable) => context.guildId === IdConstants.Guild1,
-                failureMessage: "Test condition error"
+                key: "Test condition",
+                check: (context: CommandContextResolvable) => context.guildId === IdConstants.Guild1
             }]
         }],
         ["arguments-count", {

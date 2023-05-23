@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from "discord.js";
-import { defineCommand } from "../../../../definitions.js";
+import { defineCommand } from "../../../../index.js";
 
 export default defineCommand({
     key: "test",

@@ -11,5 +11,5 @@ inGuild(): this is InteractionCommandRequest<CommandType, CommandInteraction<InG
 ```
 **Returns:**
 
-this is [InteractionCommandRequest](./noisecord.interactioncommandrequest.md)<!-- -->&lt;CommandType, CommandInteraction&lt;[InGuildCacheType](./noisecord.inguildcachetype.md)<!-- -->&gt;&gt;
+this is [InteractionCommandRequest](./noisecord.interactioncommandrequest.md)<!-- -->&lt;CommandType, CommandInteraction&lt;InGuildCacheType&gt;&gt;
 

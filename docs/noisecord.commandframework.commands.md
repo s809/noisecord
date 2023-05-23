@@ -9,5 +9,5 @@ Tree of commands.
 **Signature:**
 
 ```typescript
-get commands(): Map<string, import("./definitions.js").Command>;
+get commands(): Map<string, import("./index.js").Command>;
 ```

@@ -1,7 +1,7 @@
 import { ApplicationCommandChannelOptionData, ApplicationCommandNumericOptionData, ApplicationCommandOptionType, ApplicationCommandPermissions, ApplicationCommandPermissionType, ApplicationCommandStringOptionData, Awaitable, CachedManager, Client, Guild, GuildChannel, Message, PermissionFlagsBits, PermissionsBitField, Snowflake } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
 import { checkConditions } from "../../conditions/index.js";
-import { Command, CommandHandler, ParsedArguments } from "../../definitions.js";
+import { Command, CommandHandler, ParsedArguments } from "../../definitions/Command.js";
 import { MessageCommandRequest } from "./MessageCommandRequest.js";
 import { Translator } from "../../Translator.js";
 import { parseChannelMention, parseRoleMention, parseUserMention } from "../../util.js";

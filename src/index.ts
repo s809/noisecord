@@ -1,7 +1,43 @@
+/**
+ * Command framework.
+ * 
+ * @example
+ * ```
+ * const commandFramework = CommandFramework.create(client, {
+ *     commandRegistryOptions: {
+ *         // If you're using TypeScript, properties below should point to a directory with build output;
+ *         // Otherwise you'll want to remove "build/" parts.
+ *         commandModuleDirectory: "./build/commands",
+ *         contextMenuModuleDirectory: "./build/contextMenuCommands"
+ *     },
+ * 
+ *     translationOptions: {
+ *         translationFileDirectory: "./translations",
+ *         defaultLocale: "en-US",
+ *         getUserLocale: () => "en-US",
+ *         getGuildLocale:  () => "en-US",
+ *     },
+ * 
+ *     // If you don't need interaction/message commands, simply remove the matching property.
+ *     interactionCommands: {
+ *         // It has no required properties, but is required for interaction commands (slash/right click) to work.
+ *     },
+ *     messageCommands: {
+ *         prefix: "!"
+ *     }
+ * });
+ * await client.login(token);
+ * ```
+ *
+ * @packageDocumentation
+ */
+
 export * from "./CommandFramework.js";
 export * from "./CommandRegistry.js";
-export * from "./definitions.js";
 export * from "./conditions/index.js";
+
+export * from "./definitions/Command.js";
+export * from "./definitions/ContextMenuCommand.js";
 
 export * from "./util.js";
 export * from "./helpers/ErrorCollector.js";

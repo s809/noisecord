@@ -20,5 +20,5 @@ followUpForce(options: string | InteractionReplyOptions): Promise<Message<Intera
 
 **Returns:**
 
-Promise&lt;Message&lt;[InteractionInGuild](./noisecord.interactioninguild.md)<!-- -->&lt;InteractionType&gt;&gt;&gt;
+Promise&lt;Message&lt;InteractionInGuild&lt;InteractionType&gt;&gt;&gt;
 

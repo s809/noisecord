@@ -8,5 +8,5 @@
 
 |  Package | Description |
 |  --- | --- |
-|  [@s809/noisecord](./noisecord.md) |  |
+|  [@s809/noisecord](./noisecord.md) | Command framework. |
 

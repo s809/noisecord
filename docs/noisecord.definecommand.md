@@ -4,7 +4,7 @@
 
 ## defineCommand() function
 
-This function is just for convenience/type checking.
+Allows to type check a command definition.
 
 **Signature:**
 
@@ -21,4 +21,30 @@ export declare function defineCommand<OwnerOnly extends boolean = false, AllowDM
 **Returns:**
 
 [CommandDefinition](./noisecord.commanddefinition.md)<!-- -->&lt;OwnerOnly, AllowDMs, Args&gt;
+
+## Example
+
+
+```
+export default defineCommand({
+   key: "mycommand",
+
+   ownerOnly: true,
+   defaultMemberPermissions: PermissionFlagsBits.Administrator,
+   conditions: InVoiceChannel,
+
+   args: [{
+       key: "num",
+       type: ApplicationCommandOptionType.Number,
+   }, {
+       key: "extras",
+       type: ApplicationCommandOptionType.String,
+       isExtras: true,
+   }],
+
+   handler: async (req, { num, extras }) => {
+       // implementation of mycommand goes here
+   },
+});
+```
 

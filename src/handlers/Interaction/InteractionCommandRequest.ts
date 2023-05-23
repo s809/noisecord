@@ -1,8 +1,10 @@
 import { CommandInteraction, InteractionReplyOptions, Message } from 'discord.js';
 import { Translator } from "../../Translator.js";
-import { Command, ContextMenuCommand, InGuildCacheType, InteractionInGuild } from "../../definitions.js";
+import { Command } from "../../definitions/Command.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
+import { ContextMenuCommand } from '../../definitions/ContextMenuCommand.js';
+import { InGuildCacheType, InteractionInGuild } from '../../definitions/common.js';
 
 /** 
  * Command request data from an interaction.

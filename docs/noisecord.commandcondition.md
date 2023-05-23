@@ -2,24 +2,14 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [CommandCondition](./noisecord.commandcondition.md)
 
-## CommandCondition interface
+## CommandCondition variable
 
 
 **Signature:**
 
 ```typescript
-export interface CommandCondition 
+CommandCondition: {
+    InVoiceChannel: CommandCondition;
+    InVoiceWithBot: CommandCondition;
+}
 ```
-
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [check](./noisecord.commandcondition.check.md) |  | (context: [CommandContextResolvable](./noisecord.commandcontextresolvable.md)<!-- -->) =&gt; boolean |  |
-|  [failureMessage](./noisecord.commandcondition.failuremessage.md) |  | string |  |
-|  [hideCommand?](./noisecord.commandcondition.hidecommand.md) |  | boolean \| ((context: [CommandContextResolvable](./noisecord.commandcontextresolvable.md)<!-- -->) =&gt; boolean) | _(Optional)_ |
-|  [hideInDescription?](./noisecord.commandcondition.hideindescription.md) |  | boolean | _(Optional)_ |
-|  [name](./noisecord.commandcondition.name.md) |  | string |  |
-|  [requires?](./noisecord.commandcondition.requires.md) |  | [CommandCondition](./noisecord.commandcondition.md) \| [CommandCondition](./noisecord.commandcondition.md)<!-- -->\[\] | _(Optional)_ |
-|  [satisfiedBy?](./noisecord.commandcondition.satisfiedby.md) |  | [CommandCondition](./noisecord.commandcondition.md) \| [CommandCondition](./noisecord.commandcondition.md)<!-- -->\[\] | _(Optional)_ |
-

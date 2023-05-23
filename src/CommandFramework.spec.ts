@@ -30,8 +30,7 @@ describe("CommandFramework", () => {
             isReady: false
         });
 
-        const commandFramework = new CommandFramework(options);
-        await commandFramework.init(client as unknown as Client);
+        await CommandFramework.create(client as unknown as Client, options);
 
         expect(client.once).calledOnce;
     });
@@ -48,17 +47,16 @@ describe("CommandFramework", () => {
             }
         }
 
-        const commandFramework = new CommandFramework(options);
-        await commandFramework.init(client as unknown as Client);
+        await CommandFramework.create(client as unknown as Client, options);
 
         expect(client.once).not.called;
     });
 
-    testInitCheck(() => new CommandFramework(options), [
+    testInitCheck(() => new CommandFramework(sinon.createStubInstance(Client, {
+        isReady: false
+    }) as unknown as Client, options), [
         "commands",
         "commandRegistry",
         "translatorManager"
-    ], instance => instance.init(sinon.createStubInstance(Client, {
-        isReady: false
-    }) as unknown as Client));
+    ], instance => instance.init());
 });

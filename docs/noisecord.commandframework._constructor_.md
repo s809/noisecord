@@ -9,12 +9,13 @@ Constructs a new instance of the `CommandFramework` class
 **Signature:**
 
 ```typescript
-constructor(options: CommandFrameworkOptions);
+constructor(client: Client, options: CommandFrameworkOptions);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
+|  client | Client |  |
 |  options | [CommandFrameworkOptions](./noisecord.commandframeworkoptions.md) |  |
 

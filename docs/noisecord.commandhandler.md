@@ -8,7 +8,7 @@
 **Signature:**
 
 ```typescript
-export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMs extends true ? boolean : true> : CommandRequest<AllowDMs extends true ? boolean : true>, args: Args) => Awaitable<string | void>;
+export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>> : CommandRequest<AllowDMsInGuild<AllowDMs>>, args: Args) => Awaitable<string | void>;
 ```
 **References:** [ParsedArguments](./noisecord.parsedarguments.md)<!-- -->, [MessageCommandRequest](./noisecord.messagecommandrequest.md)<!-- -->, [CommandRequest](./noisecord.commandrequest.md)
 
