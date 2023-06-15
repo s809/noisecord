@@ -2,21 +2,24 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [ContextMenuCommandDefinition](./noisecord.contextmenucommanddefinition.md)
 
-## ContextMenuCommandDefinition interface
+## ContextMenuCommandDefinition namespace
 
 
 **Signature:**
 
 ```typescript
-export interface ContextMenuCommandDefinition<InteractionType extends ContextMenuInteractionType = ContextMenuInteractionType, AllowDMs extends boolean = boolean> 
+export declare namespace ContextMenuCommandDefinition 
 ```
 
-## Properties
+## Interfaces
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [allowDMs?](./noisecord.contextmenucommanddefinition.allowdms.md) |  | AllowDMs | _(Optional)_ |
-|  [handler](./noisecord.contextmenucommanddefinition.handler.md) |  | (interaction: [InteractionCommandRequest](./noisecord.interactioncommandrequest.md)<!-- -->&lt;[ContextMenuCommand](./noisecord.contextmenucommand.md)<!-- -->, [ContextMenuTypeToInteraction](./noisecord.contextmenutypetointeraction.md)<!-- -->&lt;[AllowDMsCacheType](./noisecord.allowdmscachetype.md)<!-- -->&lt;AllowDMs&gt;&gt;\[InteractionType\]&gt;) =&gt; void |  |
-|  [key](./noisecord.contextmenucommanddefinition.key.md) |  | string |  |
-|  [type](./noisecord.contextmenucommanddefinition.type.md) |  | InteractionType |  |
+|  Interface | Description |
+|  --- | --- |
+|  [CommandTypeToInteraction](./noisecord.contextmenucommanddefinition.commandtypetointeraction.md) |  |
+
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [InteractionTypes](./noisecord.contextmenucommanddefinition.interactiontypes.md) |  |
 

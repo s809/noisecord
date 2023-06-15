@@ -395,11 +395,11 @@ export interface ContextMenuCommand extends Required<ContextMenuCommandDefinitio
 }
 
 // @public (undocumented)
-export interface ContextMenuCommandDefinition<InteractionType extends ContextMenuInteractionType = ContextMenuInteractionType, AllowDMs extends boolean = boolean> {
+export interface ContextMenuCommandDefinition<InteractionType extends ContextMenuCommandDefinition.InteractionTypes = ContextMenuCommandDefinition.InteractionTypes, AllowDMs extends boolean = boolean> {
     // (undocumented)
     allowDMs?: AllowDMs;
     // (undocumented)
-    handler: (interaction: InteractionCommandRequest<ContextMenuCommand, ContextMenuTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]>) => void;
+    handler: (interaction: InteractionCommandRequest<ContextMenuCommand, ContextMenuCommandDefinition.CommandTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]>) => void;
     // (undocumented)
     key: string;
     // (undocumented)
@@ -407,14 +407,16 @@ export interface ContextMenuCommandDefinition<InteractionType extends ContextMen
 }
 
 // @public (undocumented)
-export type ContextMenuInteractionType = ContextMenuCommandInteraction["commandType"];
-
-// @public (undocumented)
-export interface ContextMenuTypeToInteraction<Cached extends CacheType> {
+export namespace ContextMenuCommandDefinition {
     // (undocumented)
-    [ApplicationCommandType.User]: UserContextMenuCommandInteraction<Cached>;
+    export interface CommandTypeToInteraction<Cached extends CacheType> {
+        // (undocumented)
+        [ApplicationCommandType.User]: UserContextMenuCommandInteraction<Cached>;
+        // (undocumented)
+        [ApplicationCommandType.Message]: MessageContextMenuCommandInteraction<Cached>;
+    }
     // (undocumented)
-    [ApplicationCommandType.Message]: MessageContextMenuCommandInteraction<Cached>;
+    export type InteractionTypes = ContextMenuCommandInteraction["commandType"];
 }
 
 // @public (undocumented)
@@ -436,7 +438,7 @@ export class DefaultLocalePathTranslator {
 export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
 
 // @public
-export function defineContextMenuCommand<InteractionType extends ContextMenuInteractionType, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>): ContextMenuCommandDefinition<InteractionType, AllowDMs>;
+export function defineContextMenuCommand<InteractionType extends ContextMenuCommandDefinition.InteractionTypes, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>): ContextMenuCommandDefinition<InteractionType, AllowDMs>;
 
 // @public (undocumented)
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;

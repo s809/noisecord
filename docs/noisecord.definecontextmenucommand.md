@@ -9,7 +9,7 @@ Allows to type check a context menu command definition.
 **Signature:**
 
 ```typescript
-export declare function defineContextMenuCommand<InteractionType extends ContextMenuInteractionType, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>): ContextMenuCommandDefinition<InteractionType, AllowDMs>;
+export declare function defineContextMenuCommand<InteractionType extends ContextMenuCommandDefinition.InteractionTypes, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>): ContextMenuCommandDefinition<InteractionType, AllowDMs>;
 ```
 
 ## Parameters

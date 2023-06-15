@@ -100,7 +100,6 @@ export default defineCommand({
 |  [CommandRegistryOptions](./noisecord.commandregistryoptions.md) | Options used to initialize [CommandRegistry](./noisecord.commandregistry.md) |
 |  [ContextMenuCommand](./noisecord.contextmenucommand.md) |  |
 |  [ContextMenuCommandDefinition](./noisecord.contextmenucommanddefinition.md) |  |
-|  [ContextMenuTypeToInteraction](./noisecord.contextmenutypetointeraction.md) |  |
 |  [EventHandlerOptions](./noisecord.eventhandleroptions.md) |  |
 |  [InteractionHandlerOptions](./noisecord.interactionhandleroptions.md) | Options for setting up an interaction handler. |
 |  [MessageHandlerOptions](./noisecord.messagehandleroptions.md) | Options for setting up a message handler. |
@@ -114,6 +113,7 @@ export default defineCommand({
 |  [Command](./noisecord.command.md) |  |
 |  [CommandCondition](./noisecord.commandcondition.md) |  |
 |  [CommandDefinition](./noisecord.commanddefinition.md) |  |
+|  [ContextMenuCommandDefinition](./noisecord.contextmenucommanddefinition.md) |  |
 |  [EventHandler](./noisecord.eventhandler.md) |  |
 |  [TranslationChecker](./noisecord.translationchecker.md) |  |
 |  [Translator](./noisecord.translator.md) |  |
@@ -134,7 +134,6 @@ export default defineCommand({
 |  --- | --- |
 |  [AllowDMsCacheType](./noisecord.allowdmscachetype.md) |  |
 |  [AllowDMsInGuild](./noisecord.allowdmsinguild.md) |  |
-|  [ContextMenuInteractionType](./noisecord.contextmenuinteractiontype.md) |  |
 |  [DeeplyNestedMap](./noisecord.deeplynestedmap.md) |  |
 |  [DistributiveOmit](./noisecord.distributiveomit.md) |  |
 |  [InGuildCacheType](./noisecord.inguildcachetype.md) |  |

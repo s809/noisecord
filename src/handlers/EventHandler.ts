@@ -6,7 +6,7 @@ import { EventHandlerOptions } from "./EventHandlerOptions.js";
 import { setTimeout } from "timers/promises";
 import { Translator } from "../Translator.js";
 import { Merge } from "type-fest";
-import { Command } from "../index.js";
+import { Command } from "../interfaces/Command.js";
 import { CommandRequest } from "./CommandRequest.js";
 
 /** @public */

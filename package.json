@@ -16,8 +16,8 @@
     "prepack": "npm run build && api-extractor run",
     "test": "mocha",
     "test:cov": "c8 npm test",
-    "api": "npm run build && api-extractor run --local && api-documenter markdown -i ./temp -o ./docs && grep -w Warning ./etc/noisecord.api.md",
-    "test-api": "clear && npm test && npm run api"
+    "api": "npm run build && api-extractor run --local && api-documenter markdown -i ./temp -o ./docs && grep -w Warning ./etc/noisecord.api.md || true",
+    "checkall": "clear && npm test && npm run api && madge --circular ./src/index.ts"
   },
   "c8": {
     "all": true,
@@ -61,6 +61,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-exclude": "^2.1.0",
     "chai-subset": "^1.6.0",
+    "madge": "^6.1.0",
     "mocha": "^10.2.0",
     "sinon": "^15.1.2",
     "sinon-chai": "^3.7.0",

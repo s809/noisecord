@@ -3,23 +3,26 @@ import { InteractionCommandRequest } from "../handlers/Interaction/InteractionCo
 import { AllowDMsCacheType } from "./common.js";
 
 /** @public */
-export type ContextMenuInteractionType = ContextMenuCommandInteraction["commandType"];
-
-/** @public */
-export interface ContextMenuCommandDefinition<InteractionType extends ContextMenuInteractionType = ContextMenuInteractionType, AllowDMs extends boolean = boolean> {
+export interface ContextMenuCommandDefinition<InteractionType extends ContextMenuCommandDefinition.InteractionTypes = ContextMenuCommandDefinition.InteractionTypes, AllowDMs extends boolean = boolean> {
     key: string;
     type: InteractionType;
     allowDMs?: AllowDMs;
     handler: (interaction: InteractionCommandRequest<
         ContextMenuCommand,
-        ContextMenuTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]
+        ContextMenuCommandDefinition.CommandTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]
     >) => void;
 }
 
 /** @public */
-export interface ContextMenuTypeToInteraction<Cached extends CacheType> {
-    [ApplicationCommandType.User]: UserContextMenuCommandInteraction<Cached>;
-    [ApplicationCommandType.Message]: MessageContextMenuCommandInteraction<Cached>;
+export namespace ContextMenuCommandDefinition {
+    /** @public */
+    export type InteractionTypes = ContextMenuCommandInteraction["commandType"];
+
+    /** @public */
+    export interface CommandTypeToInteraction<Cached extends CacheType> {
+        [ApplicationCommandType.User]: UserContextMenuCommandInteraction<Cached>;
+        [ApplicationCommandType.Message]: MessageContextMenuCommandInteraction<Cached>;
+    }
 }
 
 /** @public */
@@ -45,6 +48,6 @@ export interface ContextMenuCommand extends Required<ContextMenuCommandDefinitio
  * });
  * ```
  */
-export function defineContextMenuCommand<InteractionType extends ContextMenuInteractionType, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>) {
+export function defineContextMenuCommand<InteractionType extends ContextMenuCommandDefinition.InteractionTypes, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>) {
     return definition;
 }

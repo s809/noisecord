@@ -7,5 +7,5 @@
 **Signature:**
 
 ```typescript
-handler: (interaction: InteractionCommandRequest<ContextMenuCommand, ContextMenuTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]>) => void;
+handler: (interaction: InteractionCommandRequest<ContextMenuCommand, ContextMenuCommandDefinition.CommandTypeToInteraction<AllowDMsCacheType<AllowDMs>>[InteractionType]>) => void;
 ```

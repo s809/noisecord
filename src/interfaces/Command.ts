@@ -2,12 +2,12 @@
  * @file Contains definitions for commands.
  */
 
-import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitable, ChannelType, GuildTextBasedChannel, LocalizationMap, PermissionResolvable, Role, Snowflake, User } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitable, GuildTextBasedChannel, LocalizationMap, PermissionResolvable, Role, Snowflake, User } from "discord.js";
 import { DistributiveOmit } from "../util.js";
 import { CommandCondition } from "../conditions/index.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
 import { IterableElement, Simplify } from "type-fest";
-import { MessageCommandRequest } from "../index.js";
+import { MessageCommandRequest } from "../handlers/Message/MessageCommandRequest.js";
 import { AllowDMsInGuild } from "./common.js";
 
 /** 

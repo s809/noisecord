@@ -1,6 +1,9 @@
 import { Awaitable } from "discord.js";
 import { ArgumentParseError } from "./errors/ArgumentParseError.js";
-import { Command, CommandRequest, Translator, EventHandler } from "../index.js";
+import { CommandRequest } from "./CommandRequest.js";
+import { EventHandler } from "./EventHandler.js";
+import { Command } from "../interfaces/Command.js";
+import { Translator } from "../Translator.js";
 
 /** @public */
 export interface EventHandlerOptions<TCommandRequest = CommandRequest> {

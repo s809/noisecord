@@ -1,10 +1,10 @@
 import { IsLiteral } from "type-fest";
 import { ConditionalSimplifyDeep } from "type-fest/source/conditional-simplify.js";
-import { CommandRequest } from "../index.js";
 import { Translator } from "../Translator.js";
 import { TranslatorManager } from "../TranslatorManager.js";
 import { UnionToIntersectionRecursive } from "../util.js";
 import { ErrorCollector } from "./ErrorCollector.js";
+import { CommandRequest } from "../handlers/CommandRequest.js";
 
 /** @public */
 export class DefaultLocalePathTranslator {
