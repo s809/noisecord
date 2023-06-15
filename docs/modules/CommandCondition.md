@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/conditions/index.ts:22](https://github.com/s809/noisecord/blob/9cb1c4e/src/conditions/index.ts#L22)
+[src/conditions/index.ts:22](https://github.com/s809/noisecord/blob/50a8c6b/src/conditions/index.ts#L22)
 
 ## Variables
 
@@ -37,4 +37,4 @@
 
 #### Defined in
 
-[src/conditions/index.ts:25](https://github.com/s809/noisecord/blob/9cb1c4e/src/conditions/index.ts#L25)
+[src/conditions/index.ts:25](https://github.com/s809/noisecord/blob/50a8c6b/src/conditions/index.ts#L25)

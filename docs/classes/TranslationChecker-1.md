@@ -37,7 +37,7 @@ ErrorCollector.groupChainLength
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:33](https://github.com/s809/noisecord/blob/9cb1c4e/src/helpers/ErrorCollector.ts#L33)
+[src/helpers/ErrorCollector.ts:33](https://github.com/s809/noisecord/blob/50a8c6b/src/helpers/ErrorCollector.ts#L33)
 
 ## Methods
 
@@ -61,7 +61,7 @@ ErrorCollector.groupChainLength
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:58](https://github.com/s809/noisecord/blob/9cb1c4e/src/helpers/ErrorCollector.ts#L58)
+[src/helpers/ErrorCollector.ts:58](https://github.com/s809/noisecord/blob/50a8c6b/src/helpers/ErrorCollector.ts#L58)
 
 ___
 
@@ -92,7 +92,7 @@ Converted object.
 
 #### Defined in
 
-[src/helpers/TranslationChecker.ts:83](https://github.com/s809/noisecord/blob/9cb1c4e/src/helpers/TranslationChecker.ts#L83)
+[src/helpers/TranslationChecker.ts:83](https://github.com/s809/noisecord/blob/50a8c6b/src/helpers/TranslationChecker.ts#L83)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:47](https://github.com/s809/noisecord/blob/9cb1c4e/src/helpers/ErrorCollector.ts#L47)
+[src/helpers/ErrorCollector.ts:47](https://github.com/s809/noisecord/blob/50a8c6b/src/helpers/ErrorCollector.ts#L47)
 
 ___
 
@@ -135,4 +135,4 @@ ___
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:37](https://github.com/s809/noisecord/blob/9cb1c4e/src/helpers/ErrorCollector.ts#L37)
+[src/helpers/ErrorCollector.ts:37](https://github.com/s809/noisecord/blob/50a8c6b/src/helpers/ErrorCollector.ts#L37)

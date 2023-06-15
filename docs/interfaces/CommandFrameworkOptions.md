@@ -22,7 +22,7 @@ Options used to initialize [CommandFramework](../classes/CommandFramework.md).
 
 #### Defined in
 
-[src/CommandFramework.ts:16](https://github.com/s809/noisecord/blob/9cb1c4e/src/CommandFramework.ts#L16)
+[src/CommandFramework.ts:16](https://github.com/s809/noisecord/blob/50a8c6b/src/CommandFramework.ts#L16)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[src/CommandFramework.ts:20](https://github.com/s809/noisecord/blob/9cb1c4e/src/CommandFramework.ts#L20)
+[src/CommandFramework.ts:20](https://github.com/s809/noisecord/blob/50a8c6b/src/CommandFramework.ts#L20)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/CommandFramework.ts:18](https://github.com/s809/noisecord/blob/9cb1c4e/src/CommandFramework.ts#L18)
+[src/CommandFramework.ts:18](https://github.com/s809/noisecord/blob/50a8c6b/src/CommandFramework.ts#L18)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/CommandFramework.ts:19](https://github.com/s809/noisecord/blob/9cb1c4e/src/CommandFramework.ts#L19)
+[src/CommandFramework.ts:19](https://github.com/s809/noisecord/blob/50a8c6b/src/CommandFramework.ts#L19)
 
 ___
 
@@ -69,4 +69,4 @@ ___
 
 #### Defined in
 
-[src/CommandFramework.ts:17](https://github.com/s809/noisecord/blob/9cb1c4e/src/CommandFramework.ts#L17)
+[src/CommandFramework.ts:17](https://github.com/s809/noisecord/blob/50a8c6b/src/CommandFramework.ts#L17)
