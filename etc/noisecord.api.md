@@ -59,9 +59,9 @@ export class AllLocalesPathTranslator {
     // @internal
     constructor(path: string);
     // (undocumented)
-    getTranslation(context: TranslationContextResolvable, args?: FormatParameters): Promise<string>;
+    getTranslation(context: TranslatorManager.ContextResolvable, args?: Translator.FormatParameters): Promise<string>;
     // (undocumented)
-    getTranslation(context: CommandRequest | Translator, args?: FormatParameters): string;
+    getTranslation(context: CommandRequest | Translator, args?: Translator.FormatParameters): string;
     // (undocumented)
     readonly path: string;
     // @internal (undocumented)
@@ -144,24 +144,6 @@ export namespace ArgumentParseError {
     }
 }
 
-// @public (undocumented)
-export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
-    // (undocumented)
-    [ApplicationCommandOptionType.Number]: number;
-    // (undocumented)
-    [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
-    // (undocumented)
-    [ApplicationCommandOptionType.Integer]: number;
-    // (undocumented)
-    [ApplicationCommandOptionType.Boolean]: boolean;
-    // (undocumented)
-    [ApplicationCommandOptionType.User]: User;
-    // (undocumented)
-    [ApplicationCommandOptionType.Channel]: GuildTextBasedChannel;
-    // (undocumented)
-    [ApplicationCommandOptionType.Role]: Role;
-}
-
 // @internal
 export function _checkConditions(context: CommandCondition.ContextResolvable, source: Command | CommandCondition[]): string | null;
 
@@ -170,7 +152,7 @@ export interface Command {
     // (undocumented)
     allowDMs: boolean;
     // (undocumented)
-    args: CommandArguments;
+    args: Command.ArgumentData;
     // (undocumented)
     conditions: CommandCondition[];
     // (undocumented)
@@ -178,9 +160,9 @@ export interface Command {
     // (undocumented)
     descriptionTranslations: LocalizationMap;
     // (undocumented)
-    handler: CommandHandler | null;
+    handler: Command.Handler | null;
     // (undocumented)
-    interactionCommand: InteractionCommandData | null;
+    interactionCommand: Command.InteractionCommandData | null;
     // (undocumented)
     key: string;
     // (undocumented)
@@ -198,19 +180,31 @@ export interface Command {
 }
 
 // @public (undocumented)
-export interface CommandArguments {
+export namespace Command {
     // (undocumented)
-    lastArgAsExtras: boolean;
+    export interface ArgumentData {
+        // (undocumented)
+        lastArgAsExtras: boolean;
+        // (undocumented)
+        list: Simplify<(IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
+            key: string;
+        })>[];
+        // (undocumented)
+        max: number;
+        // (undocumented)
+        min: number;
+        // (undocumented)
+        stringTranslations: LocalizationMap;
+    }
     // (undocumented)
-    list: Simplify<(IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
-        key: string;
-    })>[];
+    export type Handler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends HandlerArguments = HandlerArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>> : CommandRequest<AllowDMsInGuild<AllowDMs>>, args: Args) => Awaitable<string | void>;
     // (undocumented)
-    max: number;
+    export type HandlerArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
     // (undocumented)
-    min: number;
-    // (undocumented)
-    stringTranslations: LocalizationMap;
+    export interface InteractionCommandData {
+        // (undocumented)
+        id: Snowflake | null;
+    }
 }
 
 // @public
@@ -239,7 +233,7 @@ export namespace CommandCondition {
 }
 
 // @public
-export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
+export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]> {
     // (undocumented)
     allowDMs?: AllowDMs;
     // (undocumented)
@@ -249,9 +243,7 @@ export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs
     // (undocumented)
     defaultMemberPermissions?: PermissionResolvable | null;
     // (undocumented)
-    handler?: CommandHandler<OwnerOnly, AllowDMs, {
-        [Item in Args[number] as Item["key"]]: CommandHandlerArgument<Item>;
-    }>;
+    handler?: Command.Handler<OwnerOnly, AllowDMs, CommandDefinition.HandlerArguments<Args>>;
     // (undocumented)
     key: string;
     // (undocumented)
@@ -259,14 +251,38 @@ export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs
 }
 
 // @public (undocumented)
-export type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
-    key: string;
-    choices?: readonly {
+export namespace CommandDefinition {
+    // (undocumented)
+    export type Argument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
         key: string;
-        value: string | number;
-    }[];
-    isExtras?: boolean;
-})>;
+        choices?: readonly {
+            key: string;
+            value: string | number;
+        }[];
+        isExtras?: boolean;
+    })>;
+    // (undocumented)
+    export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
+        // (undocumented)
+        [ApplicationCommandOptionType.Number]: number;
+        // (undocumented)
+        [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
+        // (undocumented)
+        [ApplicationCommandOptionType.Integer]: number;
+        // (undocumented)
+        [ApplicationCommandOptionType.Boolean]: boolean;
+        // (undocumented)
+        [ApplicationCommandOptionType.User]: User;
+        // (undocumented)
+        [ApplicationCommandOptionType.Channel]: GuildTextBasedChannel;
+        // (undocumented)
+        [ApplicationCommandOptionType.Role]: Role;
+    }
+    // (undocumented)
+    export type HandlerArguments<Args extends readonly Argument[]> = {
+        [Item in Args[number] as Item["key"]]: Item["type"] extends keyof ArgumentToTypeMap<Item["isExtras"]> ? Item["choices"] extends readonly any[] ? Item["choices"][number]["value"] : ArgumentToTypeMap<Item["isExtras"]>[Item["type"]] | (Item["required"] extends false ? undefined : never) : never;
+    };
+}
 
 // @public
 export class CommandFramework {
@@ -295,12 +311,6 @@ export interface CommandFrameworkOptions {
     // (undocumented)
     translationOptions: TranslatorManagerOptions;
 }
-
-// @public (undocumented)
-export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>> : CommandRequest<AllowDMsInGuild<AllowDMs>>, args: Args) => Awaitable<string | void>;
-
-// @public (undocumented)
-export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]> ? T["choices"] extends readonly any[] ? T["choices"][number]["value"] : ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never) : never;
 
 // @public
 export class CommandRegistry {
@@ -415,7 +425,7 @@ export class DefaultLocalePathTranslator {
     // @internal
     constructor(path: string);
     // (undocumented)
-    getTranslation(args?: FormatParameters): string;
+    getTranslation(args?: Translator.FormatParameters): string;
     // (undocumented)
     readonly path: string;
     // @internal (undocumented)
@@ -423,7 +433,7 @@ export class DefaultLocalePathTranslator {
 }
 
 // @public
-export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
+export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
 
 // @public
 export function defineContextMenuCommand<InteractionType extends ContextMenuInteractionType, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>): ContextMenuCommandDefinition<InteractionType, AllowDMs>;
@@ -496,9 +506,6 @@ export interface EventHandlerOptions<TCommandRequest = CommandRequest> {
 // @public
 export const failureEmoji = "\u274C";
 
-// @public (undocumented)
-export type FormatParameters = Record<string, Exclude<Primitive, symbol>>;
-
 // @internal (undocumented)
 export function _getValueOrThrowInitError<T>(value: T | undefined, instance: {
     init: Function;
@@ -506,12 +513,6 @@ export function _getValueOrThrowInitError<T>(value: T | undefined, instance: {
 
 // @public (undocumented)
 export type InGuildCacheType<InGuild extends boolean = true> = InGuild extends true ? Exclude<CacheType, undefined> : CacheType;
-
-// @public (undocumented)
-export interface InteractionCommandData {
-    // (undocumented)
-    id: Snowflake | null;
-}
 
 // @public
 export class InteractionCommandRequest<CommandType extends Command | ContextMenuCommand, InteractionType extends CommandInteraction> extends CommandRequest<InteractionType extends CommandInteraction<InGuildCacheType> ? true : false, InteractionCommandResponse> {
@@ -638,9 +639,6 @@ export interface MessageHandlerOptions extends Partial<EventHandlerOptions> {
 // @public
 export function parseChannelMention(text: string): string | null;
 
-// @public (undocumented)
-export type ParsedArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
-
 // @public
 export function parseMention(text: string, prefix: string): string | null;
 
@@ -650,16 +648,6 @@ export function parseRoleMention(text: string): string | null;
 // @public
 export function parseUserMention(text: string): string | null;
 
-// @public (undocumented)
-export type PathTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
-    [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]: K extends `${string}.${infer Rest}` ? PathTranslators<{
-        [K2 in Rest]: Input[K];
-    }> : K extends string ? IsLiteral<Input[K]> extends true ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : never : never;
-}>, PathTranslatorTypes>;
-
-// @public (undocumented)
-export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTranslator;
-
 // @public
 export const successEmoji = "\u2705";
 
@@ -667,16 +655,31 @@ export const successEmoji = "\u2705";
 export const textChannels: (ChannelType.GuildText | ChannelType.GuildAnnouncement | ChannelType.AnnouncementThread | ChannelType.PublicThread | ChannelType.PrivateThread)[];
 
 // @public (undocumented)
+export namespace TranslationChecker {
+    // (undocumented)
+    export type PathTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
+        [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]: K extends `${string}.${infer Rest}` ? PathTranslators<{
+            [K2 in Rest]: Input[K];
+        }> : K extends string ? IsLiteral<Input[K]> extends true ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : never : never;
+    }>, PathTranslatorTypes>;
+    // (undocumented)
+    export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTranslator;
+}
+
+// @public (undocumented)
 export class TranslationChecker extends ErrorCollector {
     // @internal
     constructor();
-    checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): PathTranslators<Paths>;
+    checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): TranslationChecker.PathTranslators<Paths>;
     // @internal (undocumented)
     runChecks(translatorManager: TranslatorManager): void;
 }
 
 // @public (undocumented)
-export type TranslationContextResolvable = string | Message | CommandInteraction | GuildResolvable | User;
+export namespace Translator {
+    // (undocumented)
+    export type FormatParameters = Record<string, Exclude<Primitive, symbol>>;
+}
 
 // @public
 export class Translator {
@@ -692,23 +695,31 @@ export class Translator {
     // @internal (undocumented)
     setFallback(fallback: Translator): void;
     readonly setLocaleRegex: RegExp;
-    translate(path: string, args?: FormatParameters): string;
-    tryTranslate(path: string, args?: FormatParameters): string | null;
+    translate(path: string, args?: Translator.FormatParameters): string;
+    tryTranslate(path: string, args?: Translator.FormatParameters): string | null;
+}
+
+// @public (undocumented)
+export namespace TranslatorManager {
+    // (undocumented)
+    export type ContextResolvable = string | Message | CommandInteraction | GuildResolvable | User;
 }
 
 // @public (undocumented)
 export class TranslatorManager {
     constructor(options: TranslatorManagerOptions);
     // (undocumented)
+    static readonly defaultDiscordLocale: LocaleString;
+    // (undocumented)
     get fallbackLocale(): "id" | "en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi";
     // (undocumented)
     get fallbackTranslator(): Translator;
     // (undocumented)
-    getLocale(nameOrContext: TranslationContextResolvable): Promise<string | null>;
+    getLocale(nameOrContext: TranslatorManager.ContextResolvable): Promise<string | null>;
     // (undocumented)
     getLocalizations(translationPath: string): Partial<Record<"id" | "en-US" | "en-GB" | "bg" | "zh-CN" | "zh-TW" | "hr" | "cs" | "da" | "nl" | "fi" | "fr" | "de" | "el" | "hi" | "hu" | "it" | "ja" | "ko" | "lt" | "no" | "pl" | "pt-BR" | "ro" | "ru" | "es-ES" | "sv-SE" | "th" | "tr" | "uk" | "vi", string>>;
     // (undocumented)
-    getTranslator(nameOrContext: TranslationContextResolvable, prefix?: string): Promise<Translator>;
+    getTranslator(nameOrContext: TranslatorManager.ContextResolvable, prefix?: string): Promise<Translator>;
     // @internal (undocumented)
     init(): Promise<this>;
     // (undocumented)

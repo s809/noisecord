@@ -2,22 +2,19 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [TranslationChecker](./noisecord.translationchecker.md)
 
-## TranslationChecker class
+## TranslationChecker namespace
+
 
 **Signature:**
 
 ```typescript
-export declare class TranslationChecker extends ErrorCollector 
+export declare namespace TranslationChecker 
 ```
-**Extends:** [ErrorCollector](./noisecord.errorcollector.md)
 
-## Remarks
+## Type Aliases
 
-The constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `TranslationChecker` class.
-
-## Methods
-
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [checkTranslations(data, prefix)](./noisecord.translationchecker.checktranslations.md) |  | Converts provided object key paths into an easier to use object, and schedules them to be checked in later part of the initialization. |
+|  Type Alias | Description |
+|  --- | --- |
+|  [PathTranslators](./noisecord.translationchecker.pathtranslators.md) |  |
+|  [PathTranslatorTypes](./noisecord.translationchecker.pathtranslatortypes.md) |  |
 

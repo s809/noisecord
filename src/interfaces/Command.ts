@@ -14,7 +14,7 @@ import { AllowDMsInGuild } from "./common.js";
  * Definition for a command.
  * @public
  */
-export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> {
+export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]> {
     key: string;
 
     ownerOnly?: OwnerOnly;
@@ -23,9 +23,40 @@ export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs
     conditions?: CommandCondition | CommandCondition[];
 
     args?: Args;
-    handler?: CommandHandler<OwnerOnly, AllowDMs, {
-        [Item in Args[number] as Item["key"]]: CommandHandlerArgument<Item>;
-    }>;
+    handler?: Command.Handler<OwnerOnly, AllowDMs, CommandDefinition.HandlerArguments<Args>>;
+}
+
+/** @public */
+export namespace CommandDefinition {
+    /** @public */
+    export type Argument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
+        key: string;
+        choices?: readonly {
+            key: string;
+            value: string | number;
+        }[];
+        isExtras?: boolean;
+    })>;
+
+    /** @public */
+    export type HandlerArguments<Args extends readonly Argument[]> = {
+        [Item in Args[number] as Item["key"]]: Item["type"] extends keyof ArgumentToTypeMap<Item["isExtras"]>
+            ? Item["choices"] extends readonly any[]
+                ? Item["choices"][number]["value"]
+                : ArgumentToTypeMap<Item["isExtras"]>[Item["type"]] | (Item["required"] extends false ? undefined : never)
+            : never;
+    };
+
+    /** @public */
+    export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
+        [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
+        [ApplicationCommandOptionType.Number]: number;
+        [ApplicationCommandOptionType.Integer]: number;
+        [ApplicationCommandOptionType.Boolean]: boolean;
+        [ApplicationCommandOptionType.Channel]: GuildTextBasedChannel;
+        [ApplicationCommandOptionType.User]: User;
+        [ApplicationCommandOptionType.Role]: Role;
+    }
 }
 
 /** @public */
@@ -43,67 +74,42 @@ export interface Command {
     allowDMs: boolean;
     conditions: CommandCondition[];
 
-    interactionCommand: InteractionCommandData | null;
+    interactionCommand: Command.InteractionCommandData | null;
 
-    args: CommandArguments;
-    handler: CommandHandler | null;
+    args: Command.ArgumentData;
+    handler: Command.Handler | null;
 
     subcommands: Map<string, Command>;
 }
 
 /** @public */
-export type CommandDefinitionArgument = Simplify<(DistributiveOmit<IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>>, "name" | "nameLocalizations" | "description" | "descriptionLocalizations" | "choices"> & {
-    key: string;
-    choices?: readonly {
-        key: string;
-        value: string | number;
-    }[];
-    isExtras?: boolean;
-})>;
+export namespace Command {
+    /** @public */
+    export interface ArgumentData {
+        min: number;
+        max: number;
+        stringTranslations: LocalizationMap;
+        list: Simplify<(IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
+            key: string;
+        })>[];
+        lastArgAsExtras: boolean;
+    };
+    
+    /** @public */
+    export type HandlerArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
 
-/** @public */
-export interface CommandArguments {
-    min: number;
-    max: number;
-    stringTranslations: LocalizationMap;
-    list: Simplify<(IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
-        key: string;
-    })>[];
-    lastArgAsExtras: boolean;
-};
+    /** @public */
+    export type Handler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends HandlerArguments = HandlerArguments> = (
+        req: OwnerOnly extends true
+            ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>>
+            : CommandRequest<AllowDMsInGuild<AllowDMs>>,
+        args: Args
+    ) => Awaitable<string | void>;
 
-/** @public */
-export type ParsedArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
-
-/** @public */
-export type CommandHandler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends ParsedArguments = ParsedArguments> = (
-    req: OwnerOnly extends true
-        ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>>
-        : CommandRequest<AllowDMsInGuild<AllowDMs>>,
-    args: Args
-) => Awaitable<string | void>;
-
-/** @public */
-export type CommandHandlerArgument<T extends CommandDefinitionArgument> = T["type"] extends keyof ArgumentToTypeMap<T["isExtras"]>
-    ? T["choices"] extends readonly any[]
-        ? T["choices"][number]["value"]
-        : ArgumentToTypeMap<T["isExtras"]>[T["type"]] | (T["required"] extends false ? undefined : never)
-    : never;
-
-/** @public */
-export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
-    [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
-    [ApplicationCommandOptionType.Number]: number;
-    [ApplicationCommandOptionType.Integer]: number;
-    [ApplicationCommandOptionType.Boolean]: boolean;
-    [ApplicationCommandOptionType.Channel]: GuildTextBasedChannel;
-    [ApplicationCommandOptionType.User]: User;
-    [ApplicationCommandOptionType.Role]: Role;
-}
-
-/** @public */
-export interface InteractionCommandData {
-    id: Snowflake | null;
+    /** @public */
+    export interface InteractionCommandData {
+        id: Snowflake | null;
+    }
 }
 
 /**
@@ -133,6 +139,6 @@ export interface InteractionCommandData {
  * });
  * ```
  */
-export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>) {
+export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>) {
     return definition;
 }

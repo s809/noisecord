@@ -1,13 +1,13 @@
 import { ApplicationCommandChannelOptionData, ApplicationCommandNumericOptionData, ApplicationCommandOptionType, ApplicationCommandPermissions, ApplicationCommandPermissionType, ApplicationCommandStringOptionData, Awaitable, CachedManager, Client, Guild, GuildChannel, Message, PermissionFlagsBits, PermissionsBitField, Snowflake } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
 import { _checkConditions } from "../../conditions/index.js";
-import { Command, CommandHandler, ParsedArguments } from "../../interfaces/Command.js";
+import { Command } from "../../interfaces/Command.js";
 import { MessageCommandRequest } from "./MessageCommandRequest.js";
 import { Translator } from "../../Translator.js";
 import { parseChannelMention, parseRoleMention, parseUserMention } from "../../util.js";
 import { ArgumentParseError } from "../errors/ArgumentParseError.js";
 import { CommandResultError } from "../errors/CommandResultError.js";
-import { EventHandlerOptions } from "../HandlerOptions.js";
+import { EventHandlerOptions } from "../EventHandlerOptions.js";
 import { EventHandler } from "../EventHandler.js";
 import { IterableElement } from "type-fest";
 
@@ -138,7 +138,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
         const commandRequest = new MessageCommandRequest(command, commandTranslator, msg, prefix);
 
         // Parse arguments
-        let argsObj: ParsedArguments;
+        let argsObj: Command.HandlerArguments;
         try {
             argsObj = await this.parseArguments(parts, command, msg.guild, translator);
         } catch (e) {
@@ -209,7 +209,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
         return allowed || this.options.shouldIgnoreAllPermissions(msg, command);
     }
 
-    private async parseArguments(parts: string[], command: Command, guild: Guild | null, translator: Translator): Promise<ParsedArguments> {
+    private async parseArguments(parts: string[], command: Command, guild: Guild | null, translator: Translator): Promise<Command.HandlerArguments> {
         const argCount = parts.length;
         const minArgs = command.args.min, maxArgs = command.args.max;
         if (argCount < minArgs) {
@@ -225,7 +225,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
             });
         }
 
-        const argsObj = {} as Parameters<CommandHandler>["1"];
+        const argsObj = {} as Parameters<Command.Handler>["1"];
         const argToGetter = new Map<ApplicationCommandOptionType, (key: string, value: string, arg: IterableElement<NonNullable<Command>["args"]["list"]>) => any>([
             [ApplicationCommandOptionType.String, (key, value, arg) => {
                 const arga = arg as ApplicationCommandStringOptionData;

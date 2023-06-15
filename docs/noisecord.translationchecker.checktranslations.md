@@ -9,7 +9,7 @@ Converts provided object key paths into an easier to use object, and schedules t
 **Signature:**
 
 ```typescript
-checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): PathTranslators<Paths>;
+checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): TranslationChecker.PathTranslators<Paths>;
 ```
 
 ## Parameters
@@ -21,7 +21,7 @@ checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: s
 
 **Returns:**
 
-[PathTranslators](./noisecord.pathtranslators.md)<!-- -->&lt;Paths&gt;
+[TranslationChecker.PathTranslators](./noisecord.translationchecker.pathtranslators.md)<!-- -->&lt;Paths&gt;
 
 Converted object.
 

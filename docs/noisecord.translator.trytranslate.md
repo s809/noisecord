@@ -9,7 +9,7 @@ Get a translation string.
 **Signature:**
 
 ```typescript
-tryTranslate(path: string, args?: FormatParameters): string | null;
+tryTranslate(path: string, args?: Translator.FormatParameters): string | null;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ tryTranslate(path: string, args?: FormatParameters): string | null;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  path | string | Path of translation entry. |
-|  args | [FormatParameters](./noisecord.formatparameters.md) | _(Optional)_ Arguments for string interpolation. |
+|  args | [Translator.FormatParameters](./noisecord.translator.formatparameters.md) | _(Optional)_ Arguments for string interpolation. |
 
 **Returns:**
 

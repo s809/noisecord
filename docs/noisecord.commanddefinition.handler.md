@@ -7,7 +7,5 @@
 **Signature:**
 
 ```typescript
-handler?: CommandHandler<OwnerOnly, AllowDMs, {
-        [Item in Args[number] as Item["key"]]: CommandHandlerArgument<Item>;
-    }>;
+handler?: Command.Handler<OwnerOnly, AllowDMs, CommandDefinition.HandlerArguments<Args>>;
 ```

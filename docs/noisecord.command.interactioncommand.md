@@ -7,5 +7,5 @@
 **Signature:**
 
 ```typescript
-interactionCommand: InteractionCommandData | null;
+interactionCommand: Command.InteractionCommandData | null;
 ```

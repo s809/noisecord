@@ -2,37 +2,18 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [Translator](./noisecord.translator.md)
 
-## Translator class
+## Translator namespace
 
-Provides functions for translating text to a specific locale.
 
 **Signature:**
 
 ```typescript
-export declare class Translator 
+export declare namespace Translator 
 ```
 
-## Remarks
+## Type Aliases
 
-The constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `Translator` class.
-
-The constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `Translator` class.
-
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [booleanValues](./noisecord.translator.booleanvalues.md) | <code>readonly</code> | \[string\[\], string\[\]\] | Array of arrays of translations of boolean values. Index 0 - negative values (e.g. "false"), index 1 - positive values (e.g. "true"). |
-|  [fallback](./noisecord.translator.fallback.md) | <code>readonly</code> | [Translator](./noisecord.translator.md) \| null | Translator of fallback locale with same prefix. |
-|  [localeString](./noisecord.translator.localestring.md) | <code>readonly</code> | LocaleString | Contains locale to which everything will be translated to |
-|  [root](./noisecord.translator.root.md) | <code>readonly</code> | [Translator](./noisecord.translator.md) \| null | Translator of same locale without prefix. |
-|  [setLocaleRegex](./noisecord.translator.setlocaleregex.md) | <code>readonly</code> | RegExp | RegExp for setting locale of specified locale |
-
-## Methods
-
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [getTranslationFromRecord(obj)](./noisecord.translator.gettranslationfromrecord.md) |  | Gets a translation value from object using this translator's locale string as a key. Tries to get result by a default locale key if this translator's key was not found. |
-|  [translate(path, args)](./noisecord.translator.translate.md) |  | Get a translation string. |
-|  [tryTranslate(path, args)](./noisecord.translator.trytranslate.md) |  | Get a translation string. |
+|  Type Alias | Description |
+|  --- | --- |
+|  [FormatParameters](./noisecord.translator.formatparameters.md) |  |
 

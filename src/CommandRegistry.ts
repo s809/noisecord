@@ -1,9 +1,6 @@
 import { LocaleString, Snowflake } from "discord.js";
 import path from "path";
-import {
-    createCommand,
-    CommandCreationHelper, InheritableOptions
-} from "./helpers/CommandCreationHelper.js";
+import {  CommandCreationHelper } from "./helpers/CommandCreationHelper.js";
 import { Command, CommandDefinition } from "./interfaces/Command.js";
 import { importModules, isTsNode } from "./helpers/importHelper.js";
 import { Translator } from "./Translator.js";
@@ -63,7 +60,7 @@ export class CommandRegistry {
 
         // Create and add commands to tree
         for (const [filePath, definition] of queue) {
-            const partialCommand = createCommand(definition);
+            const partialCommand = commandCreationHelper.createCommand(definition);
             const commandPath = path.relative(this.options.commandModuleDirectory, filePath).split(".")[0];
 
             const parentChain = getParentChain(commandPath);
@@ -77,7 +74,7 @@ export class CommandRegistry {
                     ownerOnly: lastParent.ownerOnly,
                     defaultMemberPermissions: lastParent.defaultMemberPermissions,
                     allowDMs: lastParent.allowDMs,
-                } as InheritableOptions
+                } as CommandCreationHelper.InheritableOptions
                 : undefined;
 
             if (inheritedOptions)

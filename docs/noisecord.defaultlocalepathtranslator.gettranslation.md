@@ -7,14 +7,14 @@
 **Signature:**
 
 ```typescript
-getTranslation(args?: FormatParameters): string;
+getTranslation(args?: Translator.FormatParameters): string;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | [FormatParameters](./noisecord.formatparameters.md) | _(Optional)_ |
+|  args | [Translator.FormatParameters](./noisecord.translator.formatparameters.md) | _(Optional)_ |
 
 **Returns:**
 

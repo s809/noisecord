@@ -7,5 +7,5 @@
 **Signature:**
 
 ```typescript
-args: CommandArguments;
+args: Command.ArgumentData;
 ```

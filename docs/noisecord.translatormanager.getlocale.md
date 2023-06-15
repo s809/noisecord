@@ -7,14 +7,14 @@
 **Signature:**
 
 ```typescript
-getLocale(nameOrContext: TranslationContextResolvable): Promise<string | null>;
+getLocale(nameOrContext: TranslatorManager.ContextResolvable): Promise<string | null>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  nameOrContext | [TranslationContextResolvable](./noisecord.translationcontextresolvable.md) |  |
+|  nameOrContext | [TranslatorManager.ContextResolvable](./noisecord.translatormanager.contextresolvable.md) |  |
 
 **Returns:**
 

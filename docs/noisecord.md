@@ -93,9 +93,7 @@ export default defineCommand({
 
 |  Interface | Description |
 |  --- | --- |
-|  [ArgumentToTypeMap](./noisecord.argumenttotypemap.md) |  |
 |  [Command](./noisecord.command.md) |  |
-|  [CommandArguments](./noisecord.commandarguments.md) |  |
 |  [CommandCondition](./noisecord.commandcondition.md) | Interface for adding a condition to a command. |
 |  [CommandDefinition](./noisecord.commanddefinition.md) | Definition for a command. |
 |  [CommandFrameworkOptions](./noisecord.commandframeworkoptions.md) | Options used to initialize [CommandFramework](./noisecord.commandframework.md)<!-- -->. |
@@ -104,7 +102,6 @@ export default defineCommand({
 |  [ContextMenuCommandDefinition](./noisecord.contextmenucommanddefinition.md) |  |
 |  [ContextMenuTypeToInteraction](./noisecord.contextmenutypetointeraction.md) |  |
 |  [EventHandlerOptions](./noisecord.eventhandleroptions.md) |  |
-|  [InteractionCommandData](./noisecord.interactioncommanddata.md) |  |
 |  [InteractionHandlerOptions](./noisecord.interactionhandleroptions.md) | Options for setting up an interaction handler. |
 |  [MessageHandlerOptions](./noisecord.messagehandleroptions.md) | Options for setting up a message handler. |
 |  [TranslatorManagerOptions](./noisecord.translatormanageroptions.md) |  |
@@ -114,8 +111,13 @@ export default defineCommand({
 |  Namespace | Description |
 |  --- | --- |
 |  [ArgumentParseError](./noisecord.argumentparseerror.md) |  |
+|  [Command](./noisecord.command.md) |  |
 |  [CommandCondition](./noisecord.commandcondition.md) |  |
+|  [CommandDefinition](./noisecord.commanddefinition.md) |  |
 |  [EventHandler](./noisecord.eventhandler.md) |  |
+|  [TranslationChecker](./noisecord.translationchecker.md) |  |
+|  [Translator](./noisecord.translator.md) |  |
+|  [TranslatorManager](./noisecord.translatormanager.md) |  |
 
 ## Variables
 
@@ -132,18 +134,10 @@ export default defineCommand({
 |  --- | --- |
 |  [AllowDMsCacheType](./noisecord.allowdmscachetype.md) |  |
 |  [AllowDMsInGuild](./noisecord.allowdmsinguild.md) |  |
-|  [CommandDefinitionArgument](./noisecord.commanddefinitionargument.md) |  |
-|  [CommandHandler](./noisecord.commandhandler.md) |  |
-|  [CommandHandlerArgument](./noisecord.commandhandlerargument.md) |  |
 |  [ContextMenuInteractionType](./noisecord.contextmenuinteractiontype.md) |  |
 |  [DeeplyNestedMap](./noisecord.deeplynestedmap.md) |  |
 |  [DistributiveOmit](./noisecord.distributiveomit.md) |  |
-|  [FormatParameters](./noisecord.formatparameters.md) |  |
 |  [InGuildCacheType](./noisecord.inguildcachetype.md) |  |
 |  [InteractionInGuild](./noisecord.interactioninguild.md) |  |
-|  [ParsedArguments](./noisecord.parsedarguments.md) |  |
-|  [PathTranslators](./noisecord.pathtranslators.md) |  |
-|  [PathTranslatorTypes](./noisecord.pathtranslatortypes.md) |  |
-|  [TranslationContextResolvable](./noisecord.translationcontextresolvable.md) |  |
 |  [UnionToIntersectionRecursive](./noisecord.uniontointersectionrecursive.md) |  |
 

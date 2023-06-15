@@ -26,7 +26,6 @@ export function _traverseTree<T>(path: string[],
     return result ?? null;
 };
 
-
 /**
  * Extracts ID from mention.
  * 

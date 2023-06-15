@@ -9,7 +9,7 @@ Allows to type check a command definition.
 **Signature:**
 
 ```typescript
-export declare function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
+export declare function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
 ```
 
 ## Parameters

@@ -65,7 +65,7 @@ export * from "./helpers/TranslationChecker.js";
 
 export * from "./handlers/errors/ArgumentParseError.js";
 export * from "./handlers/EventHandler.js"
-export * from "./handlers/HandlerOptions.js"
+export * from "./handlers/EventHandlerOptions.js"
 export * from "./handlers/CommandRequest.js";
 export * from "./handlers/CommandResponse.js";
 

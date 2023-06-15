@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ApplicationCommandOptionType, PermissionFlagsBits } from "discord.js";
-import { createCommand, CommandCreationHelper } from "./CommandCreationHelper.js";
+import { CommandCreationHelper } from "./CommandCreationHelper.js";
 import { TranslatorManager } from "../TranslatorManager.js";
 import { CommandDefinition } from "../interfaces/Command.js";
 
@@ -27,7 +27,7 @@ describe("CommandCreationHelper", () => {
                 key: "test"
             };
 
-            const partialCommand = createCommand(definition);
+            const partialCommand = commandCreationHelper.createCommand(definition);
             const inheritedOptions = undefined;
 
             partialCommand.path = partialCommand.key;

@@ -5,7 +5,7 @@ import { setTimeout } from "timers/promises";
 import sinon from "sinon";
 import { merge } from "lodash-es";
 import { InteractionCommandRequest } from "../Interaction/InteractionCommandRequest.js";
-import { Command, CommandHandler } from "../../interfaces/Command.js";
+import { Command } from "../../interfaces/Command.js";
 import { ContextMenuCommand } from "../../interfaces/ContextMenuCommand.js";
 import { CommandCondition } from "../../index.js";
 

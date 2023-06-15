@@ -2,35 +2,18 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [TranslatorManager](./noisecord.translatormanager.md)
 
-## TranslatorManager class
+## TranslatorManager namespace
 
 
 **Signature:**
 
 ```typescript
-export declare class TranslatorManager 
+export declare namespace TranslatorManager 
 ```
 
-## Constructors
+## Type Aliases
 
-|  Constructor | Modifiers | Description |
-|  --- | --- | --- |
-|  [(constructor)(options)](./noisecord.translatormanager._constructor_.md) |  | Constructs a new instance of the <code>TranslatorManager</code> class |
-
-## Properties
-
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [fallbackLocale](./noisecord.translatormanager.fallbacklocale.md) | <code>readonly</code> | "id" \| "en-US" \| "en-GB" \| "bg" \| "zh-CN" \| "zh-TW" \| "hr" \| "cs" \| "da" \| "nl" \| "fi" \| "fr" \| "de" \| "el" \| "hi" \| "hu" \| "it" \| "ja" \| "ko" \| "lt" \| "no" \| "pl" \| "pt-BR" \| "ro" \| "ru" \| "es-ES" \| "sv-SE" \| "th" \| "tr" \| "uk" \| "vi" |  |
-|  [fallbackTranslator](./noisecord.translatormanager.fallbacktranslator.md) | <code>readonly</code> | [Translator](./noisecord.translator.md) |  |
-|  [rootTranslators](./noisecord.translatormanager.roottranslators.md) | <code>readonly</code> | [Translator](./noisecord.translator.md)<!-- -->\[\] |  |
-|  [setLocaleRegexes](./noisecord.translatormanager.setlocaleregexes.md) | <code>readonly</code> | Record&lt;"id" \| "en-US" \| "en-GB" \| "bg" \| "zh-CN" \| "zh-TW" \| "hr" \| "cs" \| "da" \| "nl" \| "fi" \| "fr" \| "de" \| "el" \| "hi" \| "hu" \| "it" \| "ja" \| "ko" \| "lt" \| "no" \| "pl" \| "pt-BR" \| "ro" \| "ru" \| "es-ES" \| "sv-SE" \| "th" \| "tr" \| "uk" \| "vi", RegExp&gt; |  |
-
-## Methods
-
-|  Method | Modifiers | Description |
-|  --- | --- | --- |
-|  [getLocale(nameOrContext)](./noisecord.translatormanager.getlocale.md) |  |  |
-|  [getLocalizations(translationPath)](./noisecord.translatormanager.getlocalizations.md) |  |  |
-|  [getTranslator(nameOrContext, prefix)](./noisecord.translatormanager.gettranslator.md) |  |  |
+|  Type Alias | Description |
+|  --- | --- |
+|  [ContextResolvable](./noisecord.translatormanager.contextresolvable.md) |  |
 

@@ -2,31 +2,26 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [Command](./noisecord.command.md)
 
-## Command interface
+## Command namespace
 
 
 **Signature:**
 
 ```typescript
-export interface Command 
+export declare namespace Command 
 ```
 
-## Properties
+## Interfaces
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [allowDMs](./noisecord.command.allowdms.md) |  | boolean |  |
-|  [args](./noisecord.command.args.md) |  | [CommandArguments](./noisecord.commandarguments.md) |  |
-|  [conditions](./noisecord.command.conditions.md) |  | CommandCondition\[\] |  |
-|  [defaultMemberPermissions](./noisecord.command.defaultmemberpermissions.md) |  | PermissionResolvable |  |
-|  [descriptionTranslations](./noisecord.command.descriptiontranslations.md) |  | LocalizationMap |  |
-|  [handler](./noisecord.command.handler.md) |  | [CommandHandler](./noisecord.commandhandler.md) \| null |  |
-|  [interactionCommand](./noisecord.command.interactioncommand.md) |  | [InteractionCommandData](./noisecord.interactioncommanddata.md) \| null |  |
-|  [key](./noisecord.command.key.md) |  | string |  |
-|  [nameTranslations](./noisecord.command.nametranslations.md) |  | LocalizationMap |  |
-|  [ownerOnly](./noisecord.command.owneronly.md) |  | boolean |  |
-|  [path](./noisecord.command.path.md) |  | string |  |
-|  [subcommands](./noisecord.command.subcommands.md) |  | Map&lt;string, [Command](./noisecord.command.md)<!-- -->&gt; |  |
-|  [translationPath](./noisecord.command.translationpath.md) |  | string |  |
-|  [usageTranslations](./noisecord.command.usagetranslations.md) |  | LocalizationMap |  |
+|  Interface | Description |
+|  --- | --- |
+|  [ArgumentData](./noisecord.command.argumentdata.md) |  |
+|  [InteractionCommandData](./noisecord.command.interactioncommanddata.md) |  |
+
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [Handler](./noisecord.command.handler.md) |  |
+|  [HandlerArguments](./noisecord.command.handlerarguments.md) |  |
 

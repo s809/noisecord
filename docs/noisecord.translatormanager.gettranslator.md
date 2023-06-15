@@ -7,14 +7,14 @@
 **Signature:**
 
 ```typescript
-getTranslator(nameOrContext: TranslationContextResolvable, prefix?: string): Promise<Translator>;
+getTranslator(nameOrContext: TranslatorManager.ContextResolvable, prefix?: string): Promise<Translator>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  nameOrContext | [TranslationContextResolvable](./noisecord.translationcontextresolvable.md) |  |
+|  nameOrContext | [TranslatorManager.ContextResolvable](./noisecord.translatormanager.contextresolvable.md) |  |
 |  prefix | string | _(Optional)_ |
 
 **Returns:**

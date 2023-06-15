@@ -7,43 +7,45 @@ import { castArray } from "lodash-es";
 import { ErrorCollector } from "./ErrorCollector.js";
 import assert from "assert";
 
-export interface InheritableOptions {
-    path: string;
-    conditions: CommandCondition[];
-    interactionCommand: Command["interactionCommand"];
-    ownerOnly: boolean;
-    defaultMemberPermissions: PermissionResolvable;
-    allowDMs: boolean;
-}
-
-export function createCommand(definition: CommandDefinition): Partial<Command> {
-    return {
-        // Specific to this command
-        key: definition.key,
-
-        handler: definition.handler ?? null,
-
-        conditions: definition.conditions
-            ? castArray(definition.conditions)
-            : [],
-
-        subcommands: new Map(),
-
-        // Inherited
-        interactionCommand: !definition.ownerOnly
-            ? {
-                id: null
-            }
-            : null,
-        defaultMemberPermissions: definition.defaultMemberPermissions!,
-        allowDMs: definition.allowDMs,
-        ownerOnly: definition.ownerOnly
-    };
+export namespace CommandCreationHelper {
+    export interface InheritableOptions {
+        path: string;
+        conditions: CommandCondition[];
+        interactionCommand: Command["interactionCommand"];
+        ownerOnly: boolean;
+        defaultMemberPermissions: PermissionResolvable;
+        allowDMs: boolean;
+    }
 }
 
 export class CommandCreationHelper extends ErrorCollector {
     constructor(private translatorManager: TranslatorManager) {
         super("while creating commands");
+    }
+
+    createCommand(definition: CommandDefinition): Partial<Command> {
+        return {
+            // Specific to this command
+            key: definition.key,
+
+            handler: definition.handler ?? null,
+
+            conditions: definition.conditions
+                ? castArray(definition.conditions)
+                : [],
+
+            subcommands: new Map(),
+
+            // Inherited
+            interactionCommand: !definition.ownerOnly
+                ? {
+                    id: null
+                }
+                : null,
+            defaultMemberPermissions: definition.defaultMemberPermissions!,
+            allowDMs: definition.allowDMs,
+            ownerOnly: definition.ownerOnly
+        };
     }
 
     private checkLocalizations(a: any, b: any, name: string, name2?: string) {
@@ -61,7 +63,7 @@ export class CommandCreationHelper extends ErrorCollector {
         }
     };
 
-    fillInheritableOptions(partialCommand: Partial<Command>, inheritedOptions?: InheritableOptions) {
+    fillInheritableOptions(partialCommand: Partial<Command>, inheritedOptions?: CommandCreationHelper.InheritableOptions) {
         if (inheritedOptions) {
             partialCommand.conditions!.push(...inheritedOptions.conditions);
 

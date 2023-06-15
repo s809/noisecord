@@ -7,7 +7,7 @@
 **Signature:**
 
 ```typescript
-getTranslation(context: CommandRequest | Translator, args?: FormatParameters): string;
+getTranslation(context: CommandRequest | Translator, args?: Translator.FormatParameters): string;
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ getTranslation(context: CommandRequest | Translator, args?: FormatParameters): s
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  context | [CommandRequest](./noisecord.commandrequest.md) \| [Translator](./noisecord.translator.md) |  |
-|  args | [FormatParameters](./noisecord.formatparameters.md) | _(Optional)_ |
+|  args | [Translator.FormatParameters](./noisecord.translator.formatparameters.md) | _(Optional)_ |
 
 **Returns:**
 

@@ -7,15 +7,15 @@
 **Signature:**
 
 ```typescript
-getTranslation(context: TranslationContextResolvable, args?: FormatParameters): Promise<string>;
+getTranslation(context: TranslatorManager.ContextResolvable, args?: Translator.FormatParameters): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  context | [TranslationContextResolvable](./noisecord.translationcontextresolvable.md) |  |
-|  args | [FormatParameters](./noisecord.formatparameters.md) | _(Optional)_ |
+|  context | [TranslatorManager.ContextResolvable](./noisecord.translatormanager.contextresolvable.md) |  |
+|  args | [Translator.FormatParameters](./noisecord.translator.formatparameters.md) | _(Optional)_ |
 
 **Returns:**
 

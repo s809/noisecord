@@ -1,27 +1,10 @@
 import { IsLiteral } from "type-fest";
 import { ConditionalSimplifyDeep } from "type-fest/source/conditional-simplify.js";
-import { CommandRequest, Translator } from "../index.js";
-import { FormatParameters } from "../Translator.js";
-import { TranslationContextResolvable, TranslatorManager } from "../TranslatorManager.js";
+import { CommandRequest } from "../index.js";
+import { Translator } from "../Translator.js";
+import { TranslatorManager } from "../TranslatorManager.js";
 import { UnionToIntersectionRecursive } from "../util.js";
 import { ErrorCollector } from "./ErrorCollector.js";
-
-/** @public */
-export type PathTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
-    [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]:
-        K extends `${string}.${infer Rest}`
-            ? PathTranslators<{ [K2 in Rest]: Input[K] }>
-            : K extends string
-                ? IsLiteral<Input[K]> extends true
-                    ? Input[K] extends true
-                        ? AllLocalesPathTranslator
-                        : DefaultLocalePathTranslator
-                    : never
-                : never;
-}>, PathTranslatorTypes>;
-
-/** @public */
-export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTranslator;
 
 /** @public */
 export class DefaultLocalePathTranslator {
@@ -31,7 +14,7 @@ export class DefaultLocalePathTranslator {
     /** @internal */
     constructor(readonly path: string) { }
     
-    getTranslation(args?: FormatParameters) {
+    getTranslation(args?: Translator.FormatParameters) {
         return this.translatorManager!.fallbackTranslator.translate(this.path, args);
     }
 }
@@ -44,9 +27,9 @@ export class AllLocalesPathTranslator {
     /** @internal */
     constructor(readonly path: string) { }
 
-    getTranslation(context: TranslationContextResolvable, args?: FormatParameters): Promise<string>;
-    getTranslation(context: CommandRequest | Translator, args?: FormatParameters): string;
-    getTranslation(context: TranslationContextResolvable | CommandRequest | Translator, args?: FormatParameters) {
+    getTranslation(context: TranslatorManager.ContextResolvable, args?: Translator.FormatParameters): Promise<string>;
+    getTranslation(context: CommandRequest | Translator, args?: Translator.FormatParameters): string;
+    getTranslation(context: TranslatorManager.ContextResolvable | CommandRequest | Translator, args?: Translator.FormatParameters) {
         if (context instanceof CommandRequest)
             return context.translator.translate(this.path, args);
 
@@ -61,9 +44,29 @@ export class AllLocalesPathTranslator {
 }
 
 /** @public */
+export namespace TranslationChecker {
+    /** @public */
+    export type PathTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
+        [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]:
+        K extends `${string}.${infer Rest}`
+        ? PathTranslators<{ [K2 in Rest]: Input[K] }>
+        : K extends string
+        ? IsLiteral<Input[K]> extends true
+        ? Input[K] extends true
+        ? AllLocalesPathTranslator
+        : DefaultLocalePathTranslator
+        : never
+        : never;
+    }>, PathTranslatorTypes>;
+
+    /** @public */
+    export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTranslator;
+}
+
+/** @public */
 export class TranslationChecker extends ErrorCollector {
     private toCheck: Record<string, boolean> = {};
-    private pathTranslatorsToPrepare = new Map<string, PathTranslatorTypes[]>();
+    private pathTranslatorsToPrepare = new Map<string, TranslationChecker.PathTranslatorTypes[]>();
 
     /** @internal */
     constructor() {
@@ -77,7 +80,7 @@ export class TranslationChecker extends ErrorCollector {
      * @param prefix - Prefix to use.
      * @returns Converted object.
      */
-    checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): PathTranslators<Paths> {
+    checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): TranslationChecker.PathTranslators<Paths> {
         const result: any = {};
 
         for (const [key, value] of Object.entries(data)) {
@@ -111,7 +114,7 @@ export class TranslationChecker extends ErrorCollector {
                 this.pathTranslatorsToPrepare.set(fullPath, [resultPart[parts[0]]]);
         }
 
-        return result as PathTranslators<Paths>;
+        return result as TranslationChecker.PathTranslators<Paths>;
     }
 
     /** @internal */

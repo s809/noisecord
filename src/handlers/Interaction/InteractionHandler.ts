@@ -1,10 +1,10 @@
 import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
-import { Command, CommandHandler, ParsedArguments } from "../../interfaces/Command.js";
+import { Command } from "../../interfaces/Command.js";
 import { InteractionCommandRequest } from "./InteractionCommandRequest.js";
 import { ArgumentParseError } from "../errors/ArgumentParseError.js";
 import { CommandResultError } from "../errors/CommandResultError.js";
-import { EventHandlerOptions } from "../HandlerOptions.js";
+import { EventHandlerOptions } from "../EventHandlerOptions.js";
 import { EventHandler } from "../EventHandler.js";
 import { Translator } from "../../Translator.js";
 import assert from "assert";
@@ -96,7 +96,7 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
         const commandRequest = new InteractionCommandRequest(command, commandTranslator, interaction);
 
         // Parse arguments
-        let argsObj: ParsedArguments;
+        let argsObj: Command.HandlerArguments;
         try {
             argsObj = await this.parseArguments(interaction.options, command);
         } catch (e) {
@@ -122,8 +122,8 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
         await this.executeCommand(commandRequest, () => command.handler(commandRequest as any), commandTranslator);
     }
 
-    private async parseArguments(interactionOptions: ChatInputCommandInteraction["options"], command: Command): Promise<ParsedArguments> {
-        const argsObj = {} as Parameters<CommandHandler>["1"];
+    private async parseArguments(interactionOptions: ChatInputCommandInteraction["options"], command: Command): Promise<Command.HandlerArguments> {
+        const argsObj = {} as Parameters<Command.Handler>["1"];
         const argToGetter = new Map<ApplicationCommandOptionType, (name: string, require?: boolean) => any>([
             [ApplicationCommandOptionType.String, interactionOptions.getString],
             [ApplicationCommandOptionType.Number, interactionOptions.getNumber],

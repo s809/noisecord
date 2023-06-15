@@ -2,25 +2,25 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [CommandDefinition](./noisecord.commanddefinition.md)
 
-## CommandDefinition interface
+## CommandDefinition namespace
 
-Definition for a command.
 
 **Signature:**
 
 ```typescript
-export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinitionArgument[] = readonly CommandDefinitionArgument[]> 
+export declare namespace CommandDefinition 
 ```
 
-## Properties
+## Interfaces
 
-|  Property | Modifiers | Type | Description |
-|  --- | --- | --- | --- |
-|  [allowDMs?](./noisecord.commanddefinition.allowdms.md) |  | AllowDMs | _(Optional)_ |
-|  [args?](./noisecord.commanddefinition.args.md) |  | Args | _(Optional)_ |
-|  [conditions?](./noisecord.commanddefinition.conditions.md) |  | CommandCondition \| CommandCondition\[\] | _(Optional)_ |
-|  [defaultMemberPermissions?](./noisecord.commanddefinition.defaultmemberpermissions.md) |  | PermissionResolvable \| null | _(Optional)_ |
-|  [handler?](./noisecord.commanddefinition.handler.md) |  | [CommandHandler](./noisecord.commandhandler.md)<!-- -->&lt;OwnerOnly, AllowDMs, { \[Item in Args\[number\] as Item\["key"\]\]: [CommandHandlerArgument](./noisecord.commandhandlerargument.md)<!-- -->&lt;Item&gt;; }&gt; | _(Optional)_ |
-|  [key](./noisecord.commanddefinition.key.md) |  | string |  |
-|  [ownerOnly?](./noisecord.commanddefinition.owneronly.md) |  | OwnerOnly | _(Optional)_ |
+|  Interface | Description |
+|  --- | --- |
+|  [ArgumentToTypeMap](./noisecord.commanddefinition.argumenttotypemap.md) |  |
+
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [Argument](./noisecord.commanddefinition.argument.md) |  |
+|  [HandlerArguments](./noisecord.commanddefinition.handlerarguments.md) |  |
 
