@@ -2,13 +2,17 @@
  * Command framework.
  * 
  * @example
+ * To create a simple bot, use the following code:
+ * 
+ * - index.ts:
  * ```
+ * import { CommandFramework } from "@s809/noisecord";
+ * 
  * const commandFramework = CommandFramework.create(client, {
  *     commandRegistryOptions: {
  *         // If you're using TypeScript, properties below should point to a directory with build output;
  *         // Otherwise you'll want to remove "build/" parts.
- *         commandModuleDirectory: "./build/commands",
- *         contextMenuModuleDirectory: "./build/contextMenuCommands"
+ *         commandModuleDirectory: "./build/commands"
  *     },
  * 
  *     translationOptions: {
@@ -26,7 +30,19 @@
  *         prefix: "!"
  *     }
  * });
+ * 
+ * // Create your client anywhere before next line
  * await client.login(token);
+ * ```
+ * 
+ * - commands/mycommand.ts
+ * ```
+ * import { defineCommand } from "@s809/noisecord";
+ * 
+ * export default defineCommand({
+ *     key: "ping",
+ *     handler: req => req.reply("Pong!");
+ * });
  * ```
  *
  * @packageDocumentation
@@ -36,8 +52,9 @@ export * from "./CommandFramework.js";
 export * from "./CommandRegistry.js";
 export * from "./conditions/index.js";
 
-export * from "./definitions/Command.js";
-export * from "./definitions/ContextMenuCommand.js";
+export * from "./interfaces/Command.js";
+export * from "./interfaces/ContextMenuCommand.js";
+export * from "./interfaces/common.js"
 
 export * from "./util.js";
 export * from "./helpers/ErrorCollector.js";
@@ -46,7 +63,7 @@ export * from "./Translator.js";
 export * from "./TranslatorManager.js";
 export * from "./helpers/TranslationChecker.js";
 
-export * from "./handlers/errors.js";
+export * from "./handlers/errors/ArgumentParseError.js";
 export * from "./handlers/EventHandler.js"
 export * from "./handlers/HandlerOptions.js"
 export * from "./handlers/CommandRequest.js";

@@ -1,13 +1,13 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction, Interaction, MessageContextMenuCommandInteraction } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction, Interaction, MessageContextMenuCommandInteraction, Awaitable } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { setTimeout } from "timers/promises";
 import sinon from "sinon";
 import { merge } from "lodash-es";
-import { CommandContextResolvable } from "../../conditions/index.js";
 import { InteractionCommandRequest } from "../Interaction/InteractionCommandRequest.js";
-import { Command } from "../../definitions/Command.js";
-import { ContextMenuCommand } from "../../definitions/ContextMenuCommand.js";
+import { Command, CommandHandler } from "../../interfaces/Command.js";
+import { ContextMenuCommand } from "../../interfaces/ContextMenuCommand.js";
+import { CommandCondition } from "../../index.js";
 
 enum _IdConstants {
     GuildNone,
@@ -86,7 +86,10 @@ export function makeFakeCommand(path: string, {
     } as unknown as Command;
 }
 
-export function createHandler<T extends new (...args: any) => InstanceType<T>>(constructor: T, commands?: Command[], options: ConstructorParameters<T>[2] = {}) {
+export function createHandler<T>(
+    callback: (client: Client, commandRegistry: CommandRegistry) => T,
+    commands?: Command[]
+) {
     // Do not use path slashes here
     commands ??= [
         ["normal", {}],
@@ -316,7 +319,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
         ["conditions", {
             conditions: [{
                 key: "Test condition",
-                check: (context: CommandContextResolvable) => context.guildId === IdConstants.Guild1
+                check: (context: CommandCondition.ContextResolvable) => context.guildId === IdConstants.Guild1
             }]
         }],
         ["arguments-count", {
@@ -364,7 +367,7 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
         subcommands: new Map()
     }, overrides));
 
-    return new constructor(
+    return callback(
         {
             on: sinon.stub(),
             application: {
@@ -563,7 +566,6 @@ export function createHandler<T extends new (...args: any) => InstanceType<T>>(c
                     ? `context_menu_commands.${pathOrKey}`
                     : `commands.${pathOrKey.replaceAll("/", "_")}`;
             }
-        } as unknown as CommandRegistry,
-        options
+        } as unknown as CommandRegistry
     )
 }

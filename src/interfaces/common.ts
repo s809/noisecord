@@ -14,7 +14,7 @@ export type AllowDMsInGuild<AllowDMs> = AllowDMs extends true ? boolean : true;
 
 /** @public */
 export const textChannels = [
-    ChannelType.GuildAnnouncement as const,
-    ChannelType.PublicThread as const, ChannelType.PrivateThread as const, ChannelType.AnnouncementThread as const,
-    ChannelType.GuildText as const
-];
+    ChannelType.GuildAnnouncement,
+    ChannelType.PublicThread, ChannelType.PrivateThread, ChannelType.AnnouncementThread,
+    ChannelType.GuildText
+] satisfies ChannelType[];

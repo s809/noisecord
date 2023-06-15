@@ -4,12 +4,12 @@ import {
     createCommand,
     CommandCreationHelper, InheritableOptions
 } from "./helpers/CommandCreationHelper.js";
-import { Command, CommandDefinition } from "./definitions/Command.js";
+import { Command, CommandDefinition } from "./interfaces/Command.js";
 import { importModules, isTsNode } from "./helpers/importHelper.js";
 import { Translator } from "./Translator.js";
 import { TranslatorManager } from "./TranslatorManager.js";
 import { DeeplyNestedMap, _traverseTree } from "./util.js";
-import { ContextMenuCommand, ContextMenuCommandDefinition } from "./definitions/ContextMenuCommand.js";
+import { ContextMenuCommand, ContextMenuCommandDefinition } from "./interfaces/ContextMenuCommand.js";
 
 /** 
  * Options used to initialize {@link CommandRegistry}

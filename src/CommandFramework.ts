@@ -5,6 +5,8 @@ import { _InteractionHandler, InteractionHandlerOptions } from "./handlers/Inter
 import { _MessageHandler, MessageHandlerOptions } from "./handlers/Message/MessageHandler.js";
 import { _getValueOrThrowInitError } from "./util.js";
 import { TranslationChecker } from "./helpers/TranslationChecker.js";
+import { EventHandler } from "./index.js";
+import { isUndefined, omitBy } from "lodash-es";
 
 /** 
  * Options used to initialize {@link CommandFramework}.
@@ -15,6 +17,7 @@ export interface CommandFrameworkOptions {
     translationOptions: TranslatorManagerOptions;
     interactionCommands?: InteractionHandlerOptions;
     messageCommands?: MessageHandlerOptions;
+    commonHandlerOptions?: EventHandler.CommonHandlerOptions;
 }
 
 /** 
@@ -80,15 +83,26 @@ export class CommandFramework {
     }
 
     private async attachCommandHandlers() {
-        if (this.options.messageCommands)
-            this.messageHandler = new _MessageHandler(this.client!, this.commandRegistry!, this.options.messageCommands);
-        if (this.options.interactionCommands)
-            this.interactionHandler = new _InteractionHandler(this.client!, this.commandRegistry!, this.options.interactionCommands);
+        const filteredOptions = omitBy(this.options.commonHandlerOptions, isUndefined);
+        if (this.options.messageCommands) {
+            this.options.messageCommands = {
+                ...filteredOptions,
+                ...this.options.messageCommands
+            };
+        }
+        if (this.options.interactionCommands) {
+            this.options.interactionCommands = {
+                ...filteredOptions,
+                ...this.options.interactionCommands
+            };
+        }
 
-        if (!this.options.messageCommands && !this.options.interactionCommands)
+        if (![this.options.interactionCommands, this.options.messageCommands].some(x => x))
             throw new Error("None of command handlers are attached.");
-        
-        await this.messageHandler?.init();
-        await this.interactionHandler?.init();
+
+        if (this.options.messageCommands)
+            this.messageHandler = new _MessageHandler(this.client, this.commandRegistry, this.options.messageCommands);
+        if (this.options.interactionCommands)
+            this.interactionHandler = await _InteractionHandler.create(this.client, this.commandRegistry, this.options.interactionCommands);
     }
 }

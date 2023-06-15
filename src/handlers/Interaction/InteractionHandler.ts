@@ -1,29 +1,41 @@
 import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
-import { Command, CommandHandler, ParsedArguments } from "../../definitions/Command.js";
+import { Command, CommandHandler, ParsedArguments } from "../../interfaces/Command.js";
 import { InteractionCommandRequest } from "./InteractionCommandRequest.js";
-import { ArgumentParseError, CommandResultError } from "../errors.js";
-import { _HandlerOptions } from "../HandlerOptions.js";
-import { _EventHandler } from "../EventHandler.js";
+import { ArgumentParseError } from "../errors/ArgumentParseError.js";
+import { CommandResultError } from "../errors/CommandResultError.js";
+import { EventHandlerOptions } from "../HandlerOptions.js";
+import { EventHandler } from "../EventHandler.js";
 import { Translator } from "../../Translator.js";
 import assert from "assert";
-import { ContextMenuCommand } from "../../definitions/ContextMenuCommand.js";
+import { ContextMenuCommand } from "../../interfaces/ContextMenuCommand.js";
 
 /** 
  * Options for setting up an interaction handler.
  * @public 
  */
-export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCommandRequest<any, any>> {
+export interface InteractionHandlerOptions extends Partial<EventHandlerOptions<InteractionCommandRequest<any, any>>> {
     registerApplicationCommands?: boolean;
 }
 
 /** @internal */
-export class _InteractionHandler extends _EventHandler<Required<InteractionHandlerOptions>, "interactionCreate"> {
+export class _InteractionHandler extends EventHandler<Required<InteractionHandlerOptions>, "interactionCreate"> {
     protected readonly eventName = "interactionCreate";
 
+    static async create(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {
+        const handler = new _InteractionHandler(client, commandRegistry, options);
+
+        if (options.registerApplicationCommands ??= true)
+            await handler.registerApplicationCommands();
+        
+        return handler;
+    }
+
+    /** @internal */
     constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {
         super(client, commandRegistry, {
-            registerApplicationCommands: options.registerApplicationCommands !== false
+            ...options,
+            registerApplicationCommands: options.registerApplicationCommands ?? true
         }, {
             async onSlowCommand(req: InteractionCommandRequest<any, any>) {
                 await req.deferReply();
@@ -45,15 +57,8 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
                     await req.replyOrEdit({ content }).catch(() => { });
                 else
                     await req.followUpForce({ content }).catch(() => { });
-            },
+            }
         });
-    }
-
-    override async init() {
-        await super.init();
-        if (this.options.registerApplicationCommands)
-            await this.registerApplicationCommands();
-        return this;
     }
 
     async handle(interaction: Interaction) {
@@ -87,23 +92,21 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
         if (!command || !command.handler)
             return this.replyUnknownCommand(interaction, translator);
 
+        const commandTranslator = await this.translatorManager.getTranslator(interaction, command.translationPath);
+        const commandRequest = new InteractionCommandRequest(command, commandTranslator, interaction);
+
         // Parse arguments
         let argsObj: ParsedArguments;
         try {
-            argsObj = await this.parseArguments(interaction.options, command, translator);
+            argsObj = await this.parseArguments(interaction.options, command);
         } catch (e) {
             if (!(e instanceof ArgumentParseError))
                 throw e;
 
-            await interaction.reply({
-                content: e.message,
-                ephemeral: true
-            });
+            await this.replyInvalidArguments(commandRequest, command, e, translator);
             return;
         }
 
-        const commandTranslator = await this.translatorManager.getTranslator(interaction, command.translationPath);
-        const commandRequest = new InteractionCommandRequest(command, commandTranslator, interaction);
         await this.executeCommand(commandRequest, () => command.handler!(commandRequest, argsObj), commandTranslator);
     }
 
@@ -119,7 +122,7 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
         await this.executeCommand(commandRequest, () => command.handler(commandRequest as any), commandTranslator);
     }
 
-    private async parseArguments(interactionOptions: ChatInputCommandInteraction["options"], command: Command, translator: Translator): Promise<ParsedArguments> {
+    private async parseArguments(interactionOptions: ChatInputCommandInteraction["options"], command: Command): Promise<ParsedArguments> {
         const argsObj = {} as Parameters<CommandHandler>["1"];
         const argToGetter = new Map<ApplicationCommandOptionType, (name: string, require?: boolean) => any>([
             [ApplicationCommandOptionType.String, interactionOptions.getString],
@@ -133,8 +136,13 @@ export class _InteractionHandler extends _EventHandler<Required<InteractionHandl
 
         for (const arg of command.args.list) {
             let getter = argToGetter.get(arg.type);
-            if (!getter)
-                throw new ArgumentParseError(translator.translate("errors.unsupported_argument_type"));
+            if (!getter) {
+                throw new ArgumentParseError("unsupported_argument_type", true, {
+                    argKey: arg.key,
+                    argValue: "null",
+                    type: ApplicationCommandOptionType[arg.type]
+                });
+            }
 
             argsObj[arg.key] = getter.bind(interactionOptions)(arg.name)!;
         }

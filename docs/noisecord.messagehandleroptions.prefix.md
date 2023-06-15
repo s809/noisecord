@@ -8,8 +8,6 @@ Sets a prefix.
 
 When it's a map: - Its key must be a guild ID, or `null` for default prefix; - If `null` key is not present, commands outside specified guilds will be ignored.
 
-A function can be passed if there's a need for custom processing.
-
 **Signature:**
 
 ```typescript

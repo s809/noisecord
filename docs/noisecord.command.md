@@ -17,7 +17,7 @@ export interface Command
 |  --- | --- | --- | --- |
 |  [allowDMs](./noisecord.command.allowdms.md) |  | boolean |  |
 |  [args](./noisecord.command.args.md) |  | [CommandArguments](./noisecord.commandarguments.md) |  |
-|  [conditions](./noisecord.command.conditions.md) |  | [CommandCondition](./noisecord.commandcondition.md)<!-- -->\[\] |  |
+|  [conditions](./noisecord.command.conditions.md) |  | CommandCondition\[\] |  |
 |  [defaultMemberPermissions](./noisecord.command.defaultmemberpermissions.md) |  | PermissionResolvable |  |
 |  [descriptionTranslations](./noisecord.command.descriptiontranslations.md) |  | LocalizationMap |  |
 |  [handler](./noisecord.command.handler.md) |  | [CommandHandler](./noisecord.commandhandler.md) \| null |  |

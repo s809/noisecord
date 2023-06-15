@@ -2,14 +2,24 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [CommandCondition](./noisecord.commandcondition.md)
 
-## CommandCondition variable
+## CommandCondition namespace
 
 
 **Signature:**
 
 ```typescript
-CommandCondition: {
-    InVoiceChannel: CommandCondition;
-    InVoiceWithBot: CommandCondition;
-}
+export declare namespace CommandCondition 
 ```
+
+## Variables
+
+|  Variable | Description |
+|  --- | --- |
+|  [BuiltInConditions](./noisecord.commandcondition.builtinconditions.md) |  |
+
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [ContextResolvable](./noisecord.commandcondition.contextresolvable.md) |  |
+

@@ -29,7 +29,7 @@ describe("TranslatorManager", () => {
 
     it("empty translation directory", async () => {
         const promise = new TranslatorManager(translationOptionsEmpty).init();
-        expect(promise).rejected;
+        await expect(promise).rejected;
     });
 
     it("#fallbackLocale", async () => {

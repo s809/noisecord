@@ -18,7 +18,7 @@ export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs
 |  --- | --- | --- | --- |
 |  [allowDMs?](./noisecord.commanddefinition.allowdms.md) |  | AllowDMs | _(Optional)_ |
 |  [args?](./noisecord.commanddefinition.args.md) |  | Args | _(Optional)_ |
-|  [conditions?](./noisecord.commanddefinition.conditions.md) |  | [CommandCondition](./noisecord.commandcondition.md) \| [CommandCondition](./noisecord.commandcondition.md)<!-- -->\[\] | _(Optional)_ |
+|  [conditions?](./noisecord.commanddefinition.conditions.md) |  | CommandCondition \| CommandCondition\[\] | _(Optional)_ |
 |  [defaultMemberPermissions?](./noisecord.commanddefinition.defaultmemberpermissions.md) |  | PermissionResolvable \| null | _(Optional)_ |
 |  [handler?](./noisecord.commanddefinition.handler.md) |  | [CommandHandler](./noisecord.commandhandler.md)<!-- -->&lt;OwnerOnly, AllowDMs, { \[Item in Args\[number\] as Item\["key"\]\]: [CommandHandlerArgument](./noisecord.commandhandlerargument.md)<!-- -->&lt;Item&gt;; }&gt; | _(Optional)_ |
 |  [key](./noisecord.commanddefinition.key.md) |  | string |  |

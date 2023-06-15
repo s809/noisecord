@@ -9,9 +9,9 @@ Options for setting up an interaction handler.
 **Signature:**
 
 ```typescript
-export interface InteractionHandlerOptions extends _HandlerOptions<InteractionCommandRequest<any, any>> 
+export interface InteractionHandlerOptions extends Partial<EventHandlerOptions<InteractionCommandRequest<any, any>>> 
 ```
-**Extends:** [\_HandlerOptions](./noisecord._handleroptions.md)<!-- -->&lt;[InteractionCommandRequest](./noisecord.interactioncommandrequest.md)<!-- -->&lt;any, any&gt;&gt;
+**Extends:** Partial&lt;[EventHandlerOptions](./noisecord.eventhandleroptions.md)<!-- -->&lt;[InteractionCommandRequest](./noisecord.interactioncommandrequest.md)<!-- -->&lt;any, any&gt;&gt;&gt;
 
 ## Properties
 

@@ -2,16 +2,24 @@
 
 [Home](./index.md) &gt; [@s809/noisecord](./noisecord.md) &gt; [ArgumentParseError](./noisecord.argumentparseerror.md)
 
-## ArgumentParseError class
+## ArgumentParseError namespace
+
 
 **Signature:**
 
 ```typescript
-export declare class ArgumentParseError extends Error 
+export declare namespace ArgumentParseError 
 ```
-**Extends:** Error
 
-## Remarks
+## Interfaces
 
-The constructor for this class is marked as internal. Third-party code should not call the constructor directly or create subclasses that extend the `ArgumentParseError` class.
+|  Interface | Description |
+|  --- | --- |
+|  [SingleCauseMap](./noisecord.argumentparseerror.singlecausemap.md) |  |
+
+## Type Aliases
+
+|  Type Alias | Description |
+|  --- | --- |
+|  [CauseMap](./noisecord.argumentparseerror.causemap.md) |  |
 

@@ -1,7 +1,7 @@
-import { CommandInteraction, Guild, GuildResolvable, LocaleString, LocalizationMap, Message, User } from "discord.js";
+import { CommandInteraction, Guild, GuildResolvable, LocaleString, Message, User } from "discord.js";
 import { readdir, readFile } from "fs/promises";
 import path from "path";
-import { ErrorCollector } from "./index.js";
+import { ErrorCollector } from "./helpers/ErrorCollector.js";
 import { Translator } from "./Translator.js";
 import { _getValueOrThrowInitError } from "./util.js";
 

@@ -8,14 +8,18 @@ Command framework.
 
 ## Example
 
+To create a simple bot, use the following code:
+
+- index.ts:
 
 ```
+import { CommandFramework } from "@s809/noisecord";
+
 const commandFramework = CommandFramework.create(client, {
     commandRegistryOptions: {
         // If you're using TypeScript, properties below should point to a directory with build output;
         // Otherwise you'll want to remove "build/" parts.
-        commandModuleDirectory: "./build/commands",
-        contextMenuModuleDirectory: "./build/contextMenuCommands"
+        commandModuleDirectory: "./build/commands"
     },
 
     translationOptions: {
@@ -33,7 +37,19 @@ const commandFramework = CommandFramework.create(client, {
         prefix: "!"
     }
 });
+
+// Create your client anywhere before next line
 await client.login(token);
+```
+- commands/mycommand.ts
+
+```
+import { defineCommand } from "@s809/noisecord";
+
+export default defineCommand({
+    key: "ping",
+    handler: req => req.reply("Pong!");
+});
 ```
 
 ## Classes
@@ -44,7 +60,6 @@ await client.login(token);
 |  [ArgumentParseError](./noisecord.argumentparseerror.md) |  |
 |  [CommandFramework](./noisecord.commandframework.md) | Entry point for using a command framework. |
 |  [CommandRegistry](./noisecord.commandregistry.md) | Contains the data/functions for working with commands. |
-|  [CommandResultError](./noisecord.commandresulterror.md) |  |
 |  [DefaultLocalePathTranslator](./noisecord.defaultlocalepathtranslator.md) |  |
 |  [ErrorCollector](./noisecord.errorcollector.md) |  |
 |  [InteractionCommandRequest](./noisecord.interactioncommandrequest.md) | Command request data from an interaction. |
@@ -61,13 +76,12 @@ await client.login(token);
 |  --- | --- |
 |  [CommandRequest](./noisecord.commandrequest.md) | Abstract instance of command related data. |
 |  [CommandResponse](./noisecord.commandresponse.md) | Abstract instance of response-to-command related data. |
+|  [EventHandler](./noisecord.eventhandler.md) |  |
 
 ## Functions
 
 |  Function | Description |
 |  --- | --- |
-|  [checkConditions(context, conditions)](./noisecord.checkconditions.md) | <p>Checks the provided list of conditions against a message.</p><p><code>allowed</code> is true if all conditions are satisfied.</p><p><code>message</code> is the message of the first failed condition if all failed conditions have messages, otherwise undefined.</p> |
-|  [checkConditions(context, command)](./noisecord.checkconditions_1.md) | <p>Checks the command's list of conditions against a message.</p><p><code>allowed</code> is true if all conditions are satisfied.</p><p><code>message</code> is the message of the first failed condition if all failed conditions have messages, otherwise undefined.</p> |
 |  [defineCommand(definition)](./noisecord.definecommand.md) | Allows to type check a command definition. |
 |  [defineContextMenuCommand(definition)](./noisecord.definecontextmenucommand.md) | Allows to type check a context menu command definition. |
 |  [parseChannelMention(text)](./noisecord.parsechannelmention.md) | Extracts channel ID from mention. |
@@ -79,7 +93,6 @@ await client.login(token);
 
 |  Interface | Description |
 |  --- | --- |
-|  [\_HandlerOptions](./noisecord._handleroptions.md) |  |
 |  [ArgumentToTypeMap](./noisecord.argumenttotypemap.md) |  |
 |  [Command](./noisecord.command.md) |  |
 |  [CommandArguments](./noisecord.commandarguments.md) |  |
@@ -90,25 +103,35 @@ await client.login(token);
 |  [ContextMenuCommand](./noisecord.contextmenucommand.md) |  |
 |  [ContextMenuCommandDefinition](./noisecord.contextmenucommanddefinition.md) |  |
 |  [ContextMenuTypeToInteraction](./noisecord.contextmenutypetointeraction.md) |  |
+|  [EventHandlerOptions](./noisecord.eventhandleroptions.md) |  |
 |  [InteractionCommandData](./noisecord.interactioncommanddata.md) |  |
 |  [InteractionHandlerOptions](./noisecord.interactionhandleroptions.md) | Options for setting up an interaction handler. |
 |  [MessageHandlerOptions](./noisecord.messagehandleroptions.md) | Options for setting up a message handler. |
 |  [TranslatorManagerOptions](./noisecord.translatormanageroptions.md) |  |
 
+## Namespaces
+
+|  Namespace | Description |
+|  --- | --- |
+|  [ArgumentParseError](./noisecord.argumentparseerror.md) |  |
+|  [CommandCondition](./noisecord.commandcondition.md) |  |
+|  [EventHandler](./noisecord.eventhandler.md) |  |
+
 ## Variables
 
 |  Variable | Description |
 |  --- | --- |
-|  [CommandCondition](./noisecord.commandcondition.md) |  |
 |  [failureEmoji](./noisecord.failureemoji.md) | Default emote for failure state on a message command. |
 |  [loadingEmoji](./noisecord.loadingemoji.md) | Default emote for loading state on a message command. |
 |  [successEmoji](./noisecord.successemoji.md) | Default emote for success state on a message command. |
+|  [textChannels](./noisecord.textchannels.md) |  |
 
 ## Type Aliases
 
 |  Type Alias | Description |
 |  --- | --- |
-|  [CommandContextResolvable](./noisecord.commandcontextresolvable.md) |  |
+|  [AllowDMsCacheType](./noisecord.allowdmscachetype.md) |  |
+|  [AllowDMsInGuild](./noisecord.allowdmsinguild.md) |  |
 |  [CommandDefinitionArgument](./noisecord.commanddefinitionargument.md) |  |
 |  [CommandHandler](./noisecord.commandhandler.md) |  |
 |  [CommandHandlerArgument](./noisecord.commandhandlerargument.md) |  |
@@ -116,6 +139,8 @@ await client.login(token);
 |  [DeeplyNestedMap](./noisecord.deeplynestedmap.md) |  |
 |  [DistributiveOmit](./noisecord.distributiveomit.md) |  |
 |  [FormatParameters](./noisecord.formatparameters.md) |  |
+|  [InGuildCacheType](./noisecord.inguildcachetype.md) |  |
+|  [InteractionInGuild](./noisecord.interactioninguild.md) |  |
 |  [ParsedArguments](./noisecord.parsedarguments.md) |  |
 |  [PathTranslators](./noisecord.pathtranslators.md) |  |
 |  [PathTranslatorTypes](./noisecord.pathtranslatortypes.md) |  |

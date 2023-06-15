@@ -7,5 +7,5 @@
 **Signature:**
 
 ```typescript
-check: (context: CommandContextResolvable) => boolean;
+check: (context: CommandCondition.ContextResolvable) => boolean;
 ```

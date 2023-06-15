@@ -1,10 +1,10 @@
 import { CommandInteraction, InteractionReplyOptions, Message } from 'discord.js';
 import { Translator } from "../../Translator.js";
-import { Command } from "../../definitions/Command.js";
+import { Command } from "../../interfaces/Command.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
-import { ContextMenuCommand } from '../../definitions/ContextMenuCommand.js';
-import { InGuildCacheType, InteractionInGuild } from '../../definitions/common.js';
+import { ContextMenuCommand } from '../../interfaces/ContextMenuCommand.js';
+import { InGuildCacheType, InteractionInGuild } from '../../interfaces/common.js';
 
 /** 
  * Command request data from an interaction.
@@ -19,7 +19,7 @@ export class InteractionCommandRequest<
 > {
     /** @internal */
     constructor(readonly command: CommandType, translator: Translator, readonly interaction: InteractionType) {
-        super(translator, new InteractionCommandResponse(interaction));
+        super(translator, "/", new InteractionCommandResponse(interaction));
         this.interaction = interaction;
     }
 

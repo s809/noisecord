@@ -1,5 +1,5 @@
-import { ContextMenuCommandInteraction, CacheType, CommandInteraction, ApplicationCommandType, UserContextMenuCommandInteraction, MessageContextMenuCommandInteraction, Snowflake, UserApplicationCommandData, MessageApplicationCommandData } from "discord.js";
-import { InteractionCommandRequest } from "../index.js";
+import { ContextMenuCommandInteraction, CacheType, ApplicationCommandType, UserContextMenuCommandInteraction, MessageContextMenuCommandInteraction, Snowflake, UserApplicationCommandData, MessageApplicationCommandData } from "discord.js";
+import { InteractionCommandRequest } from "../handlers/Interaction/InteractionCommandRequest.js";
 import { AllowDMsCacheType } from "./common.js";
 
 /** @public */

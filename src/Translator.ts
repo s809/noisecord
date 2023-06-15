@@ -2,7 +2,7 @@ import { LocaleString } from "discord.js";
 import { get } from "lodash-es";
 import format from "string-format";
 import { Primitive } from "type-fest";
-import { ErrorCollector } from "./index.js";
+import { ErrorCollector } from "./helpers/ErrorCollector.js";
 
 /** @public */
 export type FormatParameters = Record<string, Exclude<Primitive, symbol>>;

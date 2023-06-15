@@ -26,6 +26,7 @@ The constructor for this class is marked as internal. Third-party code should no
 |  [guild](./noisecord.commandrequest.guild.md) | <p><code>abstract</code></p><p><code>readonly</code></p> | If&lt;InGuild, Guild&gt; |  |
 |  [guildId](./noisecord.commandrequest.guildid.md) | <code>readonly</code> | If&lt;InGuild, Snowflake&gt; |  |
 |  [member](./noisecord.commandrequest.member.md) | <p><code>abstract</code></p><p><code>readonly</code></p> | If&lt;InGuild, GuildMember&gt; |  |
+|  [prefix](./noisecord.commandrequest.prefix.md) | <code>readonly</code> | string |  |
 |  [response](./noisecord.commandrequest.response.md) | <code>readonly</code> | Response | Response object, which is filled when a command request is replied. |
 |  [translator](./noisecord.commandrequest.translator.md) | <code>readonly</code> | [Translator](./noisecord.translator.md) |  |
 

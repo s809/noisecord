@@ -5,7 +5,7 @@ import sinon from "sinon";
 import { CommandRegistry } from "../../CommandRegistry.js";
 import {  _InteractionHandler } from "./InteractionHandler.js";
 import { makeFakeCommand, createHandler, IdConstants } from "../testData/index.js";
-import { ContextMenuCommand } from "../../definitions/ContextMenuCommand.js";
+import { ContextMenuCommand } from "../../interfaces/ContextMenuCommand.js";
 
 describe(_InteractionHandler.name, () => {
     describe("Registration of interaction commands", () => {
@@ -15,7 +15,7 @@ describe(_InteractionHandler.name, () => {
                 makeFakeCommand("test2")
             ];
 
-            await createHandler(_InteractionHandler, commands).init();
+            await createHandler((client, commandRegistry) => _InteractionHandler.create(client, commandRegistry, {}), commands);
 
             expect(commands[0].interactionCommand).null;
             expect(commands[1].interactionCommand).exist;
@@ -47,7 +47,7 @@ describe(_InteractionHandler.name, () => {
                 })
             ];
 
-            await createHandler(_InteractionHandler, commands).init();
+            await createHandler((client, commandRegistry) => _InteractionHandler.create(client, commandRegistry, {}), commands);
 
             for (const [i, command] of commands.entries()) {
                 expect([
@@ -82,7 +82,7 @@ describe(_InteractionHandler.name, () => {
                 }
             ];
 
-            const handler = new _InteractionHandler(
+            const handler = await _InteractionHandler.create(
                 {
                     on: sinon.stub(),
                     application: {
@@ -105,35 +105,37 @@ describe(_InteractionHandler.name, () => {
                 {}
             );
 
-            await handler.init();
-
             for (const [i, command] of contextMenuCommands.entries())
                 expect(command.appCommandId).equal(i.toString());
         });
 
         describe("errors", () => { 
-            it("Command with both subcommands and handler", async () => {
-                const commands = [
-                    makeFakeCommand("test", {
-                        hasHandler: true,
-                        subcommands: [
-                            makeFakeCommand("test/test")
-                        ]
-                    })
-                ];
+            //
+            // TODO Move this to CommandCreationHelper
+            //
+            
+            // it("Command with both subcommands and handler", async () => {
+            //     const commands = [
+            //         makeFakeCommand("test", {
+            //             hasHandler: true,
+            //             subcommands: [
+            //                 makeFakeCommand("test/test")
+            //             ]
+            //         })
+            //     ];
 
-                expect(createHandler(_InteractionHandler, commands).init()).rejectedWith("cannot have a handler");
-            });
+            //     await expect(createHandler((client, commandRegistry) => _InteractionHandler.create(client, commandRegistry, {}), commands)).rejectedWith("cannot have a handler");
+            // });
 
-            it("Command without either subcommands or handler", async () => {
-                const commands = [
-                    makeFakeCommand("test", {
-                        hasHandler: false
-                    })
-                ];
+            // it("Command without either subcommands or handler", async () => {
+            //     const commands = [
+            //         makeFakeCommand("test", {
+            //             hasHandler: false
+            //         })
+            //     ];
 
-                expect(createHandler(_InteractionHandler, commands).init()).rejectedWith("must have a handler");
-            });
+            //     await expect(createHandler((client, commandRegistry) => _InteractionHandler.create(client, commandRegistry, {}), commands)).rejectedWith("must have a handler");
+            // });
 
             it("Too many nested commands", async () => {
                 const commands = [
@@ -152,14 +154,14 @@ describe(_InteractionHandler.name, () => {
                     })
                 ];
 
-                expect(createHandler(_InteractionHandler, commands).init()).rejectedWith("depth was exceeded");
+                await expect(createHandler((client, commandRegistry) => _InteractionHandler.create(client, commandRegistry, {}), commands)).rejectedWith("depth was exceeded");
             });
         });
     });
 
     describe("Interaction handling", () => {
         it("Ignore non-command interactions", async () => {
-            const handler = await createHandler(_InteractionHandler).init();
+            const handler = await createHandler((client, commandRegistry) => _InteractionHandler.create(client, commandRegistry, {}));
             await handler.handle({
                 isCommand: () => false
             } as unknown as Interaction);
@@ -169,7 +171,7 @@ describe(_InteractionHandler.name, () => {
             async function handleChatInteraction(path: string, overrides?: object) {
                 const parts = path.split("/");
 
-                const handler = await createHandler(_InteractionHandler).init();
+                const handler = await createHandler((client, commandRegistry) => _InteractionHandler.create(client, commandRegistry, {}));
                 let deferred = false;
                 let replied = false;
                 const interaction = merge({
@@ -322,7 +324,7 @@ describe(_InteractionHandler.name, () => {
 
         describe("Context menu commands", () => {
             async function handleContextMenuInteraction(key: string, overrides?: object) {
-                const handler = await createHandler(_InteractionHandler).init();
+                const handler = await createHandler((client, commandRegistry) => _InteractionHandler.create(client, commandRegistry, {}));
 
                 const command = [...((handler as any).commandRegistry as CommandRegistry).commandsById.values()]
                     .find(c => (c as ContextMenuCommand).key === key) as ContextMenuCommand | undefined;

@@ -9,15 +9,15 @@ Options for setting up a message handler.
 **Signature:**
 
 ```typescript
-export interface MessageHandlerOptions extends _HandlerOptions 
+export interface MessageHandlerOptions extends Partial<EventHandlerOptions> 
 ```
-**Extends:** [\_HandlerOptions](./noisecord._handleroptions.md)
+**Extends:** Partial&lt;[EventHandlerOptions](./noisecord.eventhandleroptions.md)<!-- -->&gt;
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [ignoreAllPermissionsFor?](./noisecord.messagehandleroptions.ignoreallpermissionsfor.md) |  | Snowflake \| Snowflake\[\] \| ((msg: Message, command: [Command](./noisecord.command.md)<!-- -->) =&gt; Awaitable&lt;boolean&gt;) | <p>_(Optional)_ Allows specific users to execute any commands (including owner-only) regardless of any permissions.</p><p>A function can be passed if there's a need for custom processing.</p> |
-|  [ignoreOwnerOnlyFor?](./noisecord.messagehandleroptions.ignoreowneronlyfor.md) |  | Snowflake \| Snowflake\[\] \| ((msg: Message, command: [Command](./noisecord.command.md)<!-- -->) =&gt; Awaitable&lt;boolean&gt;) | <p>_(Optional)_ Allows specific users to execute owner-only commands.</p><p>A function can be passed if there's a need for custom processing.</p> |
-|  [prefix](./noisecord.messagehandleroptions.prefix.md) |  | string \| Map&lt;Snowflake \| null, string&gt; \| ((msg: Message) =&gt; Awaitable&lt;string \| null&gt;) | <p>Sets a prefix.</p><p>When it's a map: - Its key must be a guild ID, or <code>null</code> for default prefix; - If <code>null</code> key is not present, commands outside specified guilds will be ignored.</p><p>A function can be passed if there's a need for custom processing.</p> |
+|  [ignoreAllPermissionsFor?](./noisecord.messagehandleroptions.ignoreallpermissionsfor.md) |  | Snowflake \| Snowflake\[\] \| ((msg: Message, command: [Command](./noisecord.command.md)<!-- -->) =&gt; Awaitable&lt;boolean&gt;) | _(Optional)_ Allows specific users to execute any commands (including owner-only) regardless of any permissions. |
+|  [ignoreOwnerOnlyFor?](./noisecord.messagehandleroptions.ignoreowneronlyfor.md) |  | Snowflake \| Snowflake\[\] \| ((msg: Message, command: [Command](./noisecord.command.md)<!-- -->) =&gt; Awaitable&lt;boolean&gt;) | _(Optional)_ Allows specific users to execute owner-only commands. |
+|  [prefix](./noisecord.messagehandleroptions.prefix.md) |  | string \| Map&lt;Snowflake \| null, string&gt; \| ((msg: Message) =&gt; Awaitable&lt;string \| null&gt;) | <p>Sets a prefix.</p><p>When it's a map: - Its key must be a guild ID, or <code>null</code> for default prefix; - If <code>null</code> key is not present, commands outside specified guilds will be ignored.</p> |
 

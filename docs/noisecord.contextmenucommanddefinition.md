@@ -16,7 +16,7 @@ export interface ContextMenuCommandDefinition<InteractionType extends ContextMen
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [allowDMs?](./noisecord.contextmenucommanddefinition.allowdms.md) |  | AllowDMs | _(Optional)_ |
-|  [handler](./noisecord.contextmenucommanddefinition.handler.md) |  | (interaction: [InteractionCommandRequest](./noisecord.interactioncommandrequest.md)<!-- -->&lt;[ContextMenuCommand](./noisecord.contextmenucommand.md)<!-- -->, [ContextMenuTypeToInteraction](./noisecord.contextmenutypetointeraction.md)<!-- -->&lt;AllowDMsCacheType&lt;AllowDMs&gt;&gt;\[InteractionType\]&gt;) =&gt; void |  |
+|  [handler](./noisecord.contextmenucommanddefinition.handler.md) |  | (interaction: [InteractionCommandRequest](./noisecord.interactioncommandrequest.md)<!-- -->&lt;[ContextMenuCommand](./noisecord.contextmenucommand.md)<!-- -->, [ContextMenuTypeToInteraction](./noisecord.contextmenutypetointeraction.md)<!-- -->&lt;[AllowDMsCacheType](./noisecord.allowdmscachetype.md)<!-- -->&lt;AllowDMs&gt;&gt;\[InteractionType\]&gt;) =&gt; void |  |
 |  [key](./noisecord.contextmenucommanddefinition.key.md) |  | string |  |
 |  [type](./noisecord.contextmenucommanddefinition.type.md) |  | InteractionType |  |
 

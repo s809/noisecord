@@ -11,7 +11,7 @@ Command request data from an interaction.
 ```typescript
 export declare class InteractionCommandRequest<CommandType extends Command | ContextMenuCommand, InteractionType extends CommandInteraction> extends CommandRequest<InteractionType extends CommandInteraction<InGuildCacheType> ? true : false, InteractionCommandResponse> 
 ```
-**Extends:** [CommandRequest](./noisecord.commandrequest.md)<!-- -->&lt;InteractionType extends CommandInteraction&lt;InGuildCacheType&gt; ? true : false, [InteractionCommandResponse](./noisecord.interactioncommandresponse.md)<!-- -->&gt;
+**Extends:** [CommandRequest](./noisecord.commandrequest.md)<!-- -->&lt;InteractionType extends CommandInteraction&lt;[InGuildCacheType](./noisecord.inguildcachetype.md)<!-- -->&gt; ? true : false, [InteractionCommandResponse](./noisecord.interactioncommandresponse.md)<!-- -->&gt;
 
 ## Remarks
 
@@ -22,11 +22,11 @@ The constructor for this class is marked as internal. Third-party code should no
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [author](./noisecord.interactioncommandrequest.author.md) | <code>readonly</code> | import("discord.js").User |  |
-|  [channel](./noisecord.interactioncommandrequest.channel.md) | <code>readonly</code> | [CommandRequest](./noisecord.commandrequest.md)<!-- -->&lt;InteractionInGuild&lt;InteractionType&gt;&gt;\["channel"\] |  |
+|  [channel](./noisecord.interactioncommandrequest.channel.md) | <code>readonly</code> | [CommandRequest](./noisecord.commandrequest.md)<!-- -->&lt;[InteractionInGuild](./noisecord.interactioninguild.md)<!-- -->&lt;InteractionType&gt;&gt;\["channel"\] |  |
 |  [command](./noisecord.interactioncommandrequest.command.md) | <code>readonly</code> | CommandType |  |
-|  [guild](./noisecord.interactioncommandrequest.guild.md) | <code>readonly</code> | [CommandRequest](./noisecord.commandrequest.md)<!-- -->&lt;InteractionInGuild&lt;InteractionType&gt;&gt;\["guild"\] |  |
+|  [guild](./noisecord.interactioncommandrequest.guild.md) | <code>readonly</code> | [CommandRequest](./noisecord.commandrequest.md)<!-- -->&lt;[InteractionInGuild](./noisecord.interactioninguild.md)<!-- -->&lt;InteractionType&gt;&gt;\["guild"\] |  |
 |  [interaction](./noisecord.interactioncommandrequest.interaction.md) | <code>readonly</code> | InteractionType |  |
-|  [member](./noisecord.interactioncommandrequest.member.md) | <code>readonly</code> | [CommandRequest](./noisecord.commandrequest.md)<!-- -->&lt;InteractionInGuild&lt;InteractionType&gt;&gt;\["member"\] |  |
+|  [member](./noisecord.interactioncommandrequest.member.md) | <code>readonly</code> | [CommandRequest](./noisecord.commandrequest.md)<!-- -->&lt;[InteractionInGuild](./noisecord.interactioninguild.md)<!-- -->&lt;InteractionType&gt;&gt;\["member"\] |  |
 
 ## Methods
 

@@ -6,8 +6,6 @@
 
 Allows specific users to execute any commands (including owner-only) regardless of any permissions.
 
-A function can be passed if there's a need for custom processing.
-
 **Signature:**
 
 ```typescript

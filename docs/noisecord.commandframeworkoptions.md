@@ -17,6 +17,7 @@ export interface CommandFrameworkOptions
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [commandRegistryOptions](./noisecord.commandframeworkoptions.commandregistryoptions.md) |  | [CommandRegistryOptions](./noisecord.commandregistryoptions.md) |  |
+|  [commonHandlerOptions?](./noisecord.commandframeworkoptions.commonhandleroptions.md) |  | [EventHandler.CommonHandlerOptions](./noisecord.eventhandler.commonhandleroptions.md) | _(Optional)_ |
 |  [interactionCommands?](./noisecord.commandframeworkoptions.interactioncommands.md) |  | [InteractionHandlerOptions](./noisecord.interactionhandleroptions.md) | _(Optional)_ |
 |  [messageCommands?](./noisecord.commandframeworkoptions.messagecommands.md) |  | [MessageHandlerOptions](./noisecord.messagehandleroptions.md) | _(Optional)_ |
 |  [translationOptions](./noisecord.commandframeworkoptions.translationoptions.md) |  | [TranslatorManagerOptions](./noisecord.translatormanageroptions.md) |  |

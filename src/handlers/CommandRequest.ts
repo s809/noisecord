@@ -10,6 +10,7 @@ export abstract class CommandRequest<InGuild extends boolean = boolean, Response
     /** @internal */
     constructor(
         readonly translator: Translator,
+        readonly prefix: string,
         /** Response object, which is filled when a command request is replied. */
         readonly response: Response
     ) { }

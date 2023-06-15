@@ -1,6 +1,6 @@
 import { Message, MessageReplyOptions, TextBasedChannel } from 'discord.js';
 import { Translator } from "../../Translator.js";
-import { Command } from "../../definitions/Command.js";
+import { Command } from "../../interfaces/Command.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
 
@@ -10,8 +10,8 @@ import { MessageCommandResponse } from "./MessageCommandResponse.js";
  */
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, MessageCommandResponse> {
     /** @internal */
-    constructor(readonly command: Command, translator: Translator, readonly message: Message) {
-        super(translator, new MessageCommandResponse(message.channel));
+    constructor(readonly command: Command, translator: Translator, readonly message: Message, prefix: string) {
+        super(translator, prefix, new MessageCommandResponse(message.channel));
     }
 
     /** Replies to the command. */

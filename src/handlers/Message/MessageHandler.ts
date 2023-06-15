@@ -1,13 +1,14 @@
 import { ApplicationCommandChannelOptionData, ApplicationCommandNumericOptionData, ApplicationCommandOptionType, ApplicationCommandPermissions, ApplicationCommandPermissionType, ApplicationCommandStringOptionData, Awaitable, CachedManager, Client, Guild, GuildChannel, Message, PermissionFlagsBits, PermissionsBitField, Snowflake } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
-import { checkConditions } from "../../conditions/index.js";
-import { Command, CommandHandler, ParsedArguments } from "../../definitions/Command.js";
+import { _checkConditions } from "../../conditions/index.js";
+import { Command, CommandHandler, ParsedArguments } from "../../interfaces/Command.js";
 import { MessageCommandRequest } from "./MessageCommandRequest.js";
 import { Translator } from "../../Translator.js";
 import { parseChannelMention, parseRoleMention, parseUserMention } from "../../util.js";
-import { ArgumentParseError, CommandResultError } from "../errors.js";
-import { _HandlerOptions } from "../HandlerOptions.js";
-import { _EventHandler } from "../EventHandler.js";
+import { ArgumentParseError } from "../errors/ArgumentParseError.js";
+import { CommandResultError } from "../errors/CommandResultError.js";
+import { EventHandlerOptions } from "../HandlerOptions.js";
+import { EventHandler } from "../EventHandler.js";
 import { IterableElement } from "type-fest";
 
 /** 
@@ -32,49 +33,42 @@ export const failureEmoji = "❌";
  * Options for setting up a message handler.
  * @public 
  */
-export interface MessageHandlerOptions extends _HandlerOptions {
+export interface MessageHandlerOptions extends Partial<EventHandlerOptions> {
     /**
      * Sets a prefix.
      * 
      * When it's a map:
      * - Its key must be a guild ID, or `null` for default prefix;
      * - If `null` key is not present, commands outside specified guilds will be ignored.
-     * 
-     * A function can be passed if there's a need for custom processing.
      */
     prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string | null>);
     
     /**
      * Allows specific users to execute any commands (including owner-only) regardless of any permissions.
-     *
-     * A function can be passed if there's a need for custom processing.
      */
     ignoreAllPermissionsFor?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>);
 
     /**
      * Allows specific users to execute owner-only commands.
-     *
-     * A function can be passed if there's a need for custom processing.
      */
     ignoreOwnerOnlyFor?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>);
 };
 
 /** @internal */
-export interface _MessageHandlerConvertedOptions extends Required<_HandlerOptions> {
+export interface _MessageHandlerConvertedOptions extends EventHandlerOptions<MessageCommandRequest> {
     getPrefix: (msg: Message) => Awaitable<string | null>;
     shouldIgnoreAllPermissions: (msg: Message, command: Command) => Awaitable<boolean>;
     shouldIgnoreOwnerOnly: (msg: Message, command: Command) => Awaitable<boolean>;
 };
 
 /** @internal */
-export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptions, "messageCreate"> {
+export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOptions, "messageCreate"> {
     protected readonly eventName = "messageCreate";
 
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions) {
         const shouldIgnore = (option?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>)) => {
             return (msg: Message, command: Command) => {
-                if (typeof option === "string")
-                    return msg.author.id === option;
+                if (typeof option === "string") return msg.author.id === option;
                 if (Array.isArray(option))
                     return option.includes(msg.author.id);
                 if (option)
@@ -84,6 +78,7 @@ export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptio
         };
         
         super(client, commandRegistry, {
+            ...options,
             getPrefix(msg) {
                 if (typeof options.prefix === "string") return options.prefix;
                 if (options.prefix instanceof Map) return options.prefix.get(msg.guildId ?? "")
@@ -95,16 +90,16 @@ export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptio
             shouldIgnoreAllPermissions: shouldIgnore(options.ignoreAllPermissionsFor),
             shouldIgnoreOwnerOnly: shouldIgnore(options.ignoreOwnerOnlyFor)
         }, {
-            async onSlowCommand(req: MessageCommandRequest) {
+            async onSlowCommand(req) {
                 await req.message.react(loadingEmoji).catch(() => { });
             },
-            async onSuccess(req: MessageCommandRequest) {
+            async onSuccess(req) {
                 await Promise.allSettled([
                     req.message.reactions.resolve(loadingEmoji)?.users.remove(),
                     req.message.react(successEmoji)
                 ]);
             },
-            async onFailure(req: MessageCommandRequest, e) {
+            async onFailure(req, e) {
                 await Promise.allSettled([
                     req.message.reactions.resolve(loadingEmoji)?.users.remove(),
                     req.message.react(failureEmoji),
@@ -133,11 +128,14 @@ export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptio
             return;
 
         // Check conditions
-        const checkResult = checkConditions(msg, command);
+        const checkResult = _checkConditions(msg, command);
         if (checkResult) {
             await msg.channel.send(checkResult);
             return;
         }
+
+        const commandTranslator = await this.translatorManager.getTranslator(msg, command.translationPath);
+        const commandRequest = new MessageCommandRequest(command, commandTranslator, msg, prefix);
 
         // Parse arguments
         let argsObj: ParsedArguments;
@@ -147,20 +145,16 @@ export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptio
             if (!(e instanceof ArgumentParseError))
                 throw e;
             
-            await msg.channel.send(e.message + "\n"
-                + translator.translate("strings.command_usage", { usage: this.commandRegistry.getCommandUsageString(command, prefix, translator) }));
+            await this.replyInvalidArguments(commandRequest, command, e, translator);
             return;
         }
-
-        const commandTranslator = await this.translatorManager.getTranslator(msg, command.translationPath);
-        const commandRequest = new MessageCommandRequest(command, commandTranslator, msg);
         await this.executeCommand(commandRequest, () => command.handler!(commandRequest, argsObj), commandTranslator);
     }
 
     private async checkCommandPermissions(msg: Message, command: Command): Promise<boolean> {
         // Owner only check
         if (command.ownerOnly) {
-            return await this.options.shouldIgnoreAllPermissions(msg, command) ||
+            return (await this.options.shouldIgnoreAllPermissions(msg, command)) ||
                 this.options.shouldIgnoreOwnerOnly(msg, command);
         }
 
@@ -216,139 +210,107 @@ export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptio
     }
 
     private async parseArguments(parts: string[], command: Command, guild: Guild | null, translator: Translator): Promise<ParsedArguments> {
-        if (parts.length < command.args.min || parts.length > command.args.max) {
-            throw new ArgumentParseError(parts.length < command.args.min
-                ? translator.translate("errors.too_few_arguments")
-                : translator.translate("errors.too_many_arguments"));
+        const argCount = parts.length;
+        const minArgs = command.args.min, maxArgs = command.args.max;
+        if (argCount < minArgs) {
+            throw new ArgumentParseError("too_few_arguments", false, {
+                argCount,
+                minArgs
+            });
         }
-
-        // Combined for numeric & integer
-        const parseNumberValue = (input: string, arg: IterableElement<NonNullable<Command>["args"]["list"]>, check: (x: number) => boolean) => {
-            const value = parseInt(input);
-            const arga = arg as ApplicationCommandNumericOptionData;
-
-            if (!check(value))
-                throw ["invalid_numeric", input];
-            if (arga.choices && !arga.choices.some(c => c.value === value)) {
-
-                throw ["value_not_allowed", input, {
-                    allowedValues: arga.choices.map(c => c.value).join(", ")
-                }];
-            }
-            if (arga.minValue && value < arga.minValue) {
-
-                throw ["value_too_small", input, {
-                    minValue: arga.minValue
-                }];
-            }
-            if (arga.maxValue && value > arga.maxValue) {
-
-                throw ["value_too_large", input, {
-                    maxValue: arga.maxValue
-                }];
-            }
-
-            return value;
-        }
-
-        // For objects obtainable with their managers
-        function parseResolvableValue(input: string,
-            parse: (text: string) => string | null,
-            manager: CachedManager<Snowflake, any, any> | undefined,
-            errorName: string) {
-            const id = parse(input);
-            if (id === null)
-                throw [errorName, input];
-
-            const result = manager?.resolve(id);
-            if (!result)
-                throw [errorName, input];
-
-            return result;
+        if (argCount > maxArgs) {
+            throw new ArgumentParseError("too_many_arguments", false, {
+                argCount,
+                maxArgs
+            });
         }
 
         const argsObj = {} as Parameters<CommandHandler>["1"];
-        const argToGetter = new Map<ApplicationCommandOptionType, (value: string, arg: IterableElement<NonNullable<Command>["args"]["list"]>) => any>([
-            [ApplicationCommandOptionType.String, (input, arg) => {
+        const argToGetter = new Map<ApplicationCommandOptionType, (key: string, value: string, arg: IterableElement<NonNullable<Command>["args"]["list"]>) => any>([
+            [ApplicationCommandOptionType.String, (key, value, arg) => {
                 const arga = arg as ApplicationCommandStringOptionData;
 
                 if (arga.choices) {
                     // Transform localized choice to internal value
                     for (const choice of arga.choices) {
                         const localization = (choice.nameLocalizations as any)[translator.localeString];
-                        if (localization && input.toLocaleLowerCase() === localization // translator's locale
-                            || input.toLocaleLowerCase() === choice.name) // default locale
+                        if (localization && value.toLocaleLowerCase() === localization // translator's locale
+                            || value.toLocaleLowerCase() === choice.name) // default locale
                             return choice.value;
                     }
 
-                    throw ["value_not_allowed", input, {
-                        allowedValues: arga.choices.map(choice => `"${(choice.nameLocalizations as any)[translator.localeString] ?? choice.name}"`).join(", ")
-                    }];
+                    throw new ArgumentParseError("value_not_allowed", true, {
+                        argKey: key,
+                        argValue: value,
+                        ...this.getAllowedValues(arga.choices.map(choice => `"${(choice.nameLocalizations as any)[translator.localeString] ?? choice.name}"`))
+                    });
                 } else {
-                    if (arga.minLength && input.length < arga.minLength) {
-
-                        throw ["value_too_short", input, {
+                    if (arga.minLength && value.length < arga.minLength) {
+                        throw new ArgumentParseError("value_too_short", true, {
+                            argKey: key,
+                            argValue: value,
                             minLength: arga.minLength
-                        }];
+                        });
                     }
-                    if (arga.maxLength && input.length > arga.maxLength) {
-
-                        throw ["value_too_long", input, {
+                    if (arga.maxLength && value.length > arga.maxLength) {
+                        throw new ArgumentParseError("value_too_long", true, {
+                            argKey: key,
+                            argValue: value,
                             maxLength: arga.maxLength
-                        }];
+                        });
                     }
                 }
 
-                return input;
+                return value;
             }],
-            [ApplicationCommandOptionType.Number, (input, arg) => parseNumberValue(input, arg, isFinite)],
-            [ApplicationCommandOptionType.Integer, (input, arg) => parseNumberValue(input, arg, Number.isSafeInteger)],
-            [ApplicationCommandOptionType.Boolean, input => {
+            [ApplicationCommandOptionType.Number, (key, value, arg) => this.parseNumberValue(key, value, arg, isFinite)],
+            [ApplicationCommandOptionType.Integer, (key, value, arg) => this.parseNumberValue(key, value, arg, Number.isSafeInteger)],
+            [ApplicationCommandOptionType.Boolean, (key, value) => {
                 // Merge boolean values of current and fallback translators
                 const merged = translator.booleanValues.map((v, i) => translator.fallback
                     ? v.concat(translator.fallback.booleanValues[i])
                     : v);
                 for (const [i, variants] of merged.entries()) {
-                    if (variants.includes(input.toLocaleLowerCase()))
+                    if (variants.includes(value.toLocaleLowerCase()))
                         return Boolean(i);
                 }
-                throw ["invalid_boolean", input];
+
+                throw new ArgumentParseError("value_not_allowed", true, {
+                    argKey: key,
+                    argValue: value,
+                    ...this.getAllowedValues(merged.flat())
+                });
             }],
-            [ApplicationCommandOptionType.Channel, (input, arg) => {
-                const resolvedChannel: GuildChannel = parseResolvableValue(input, parseChannelMention, guild?.channels, "invalid_channel");
+            [ApplicationCommandOptionType.Channel, (key, value, arg) => {
+                const resolvedChannel: GuildChannel = this.parseResolvableValue(key, value, parseChannelMention, guild?.channels, "invalid_channel");
                 const fits = (arg as ApplicationCommandChannelOptionData).channelTypes?.some(type => resolvedChannel.type === type) ?? true;
-                if (!fits)
-                    throw ["channel_constraints_not_met", resolvedChannel.toString()];
-                return resolvedChannel;
+                if (fits)
+                    return resolvedChannel;
+
+                throw new ArgumentParseError("channel_constraints_not_met", true, {
+                    argKey: key,
+                    argValue: resolvedChannel.toString()
+                });
             }],
-            [ApplicationCommandOptionType.User, input => parseResolvableValue(input, parseUserMention, guild?.members, "invalid_user")],
-            [ApplicationCommandOptionType.Role, input => parseResolvableValue(input, parseRoleMention, guild?.roles, "invalid_role")],
+            [ApplicationCommandOptionType.User, (key, value) => this.parseResolvableValue(key, value, parseUserMention, guild?.members, "invalid_user")],
+            [ApplicationCommandOptionType.Role, (key, value) => this.parseResolvableValue(key, value, parseRoleMention, guild?.roles, "invalid_role")],
         ]);
 
         for (const arg of command.args.list) {
-            let getter = argToGetter.get(arg.type);
-            if (!getter)
-                throw new ArgumentParseError(translator.translate("errors.unsupported_argument_type"));
-
             const argValue = parts.shift()!;
+
+            const getter = argToGetter.get(arg.type);
+            if (!getter) {
+                throw new ArgumentParseError("unsupported_argument_type", true, {
+                    argKey: arg.key,
+                    argValue,
+                    type: ApplicationCommandOptionType[arg.type]
+                });
+            }
             if (!arg.required && !argValue)
                 continue;
 
-            try {
-                argsObj[arg.key] = getter(argValue, arg);
-            } catch (e) {
-                if (Array.isArray(e)) {
-                    const argName = translator.getTranslationFromRecord(arg.nameLocalizations!);
-                    const valueWithArgName = `"${e[1]}" (${translator.translate("strings.argument_name", { name: argName })})`;
-
-                    e = new ArgumentParseError(translator.translate(`errors.${e[0]}`, {
-                        arg: valueWithArgName,
-                        ...e[2]
-                    }));
-                }
-                
-                throw e;
-            }
+            argsObj[arg.key] = getter(arg.key, argValue, arg);
         }
 
         // Append remaining arguments to extras argument
@@ -359,5 +321,80 @@ export class _MessageHandler extends _EventHandler<_MessageHandlerConvertedOptio
         }
 
         return argsObj;
+    }
+
+    private getAllowedValues(values: string[]): ArgumentParseError.SingleCauseMap["value_not_allowed"] {
+        return {
+            allowedValuesItems: values,
+            allowedValues: values.join(", ")
+        };
+    }
+
+    // Combined for numeric & integer
+    private parseNumberValue(
+        key: string,
+        value: string,
+        arg: IterableElement<NonNullable<Command>["args"]["list"]>,
+        check: (x: number) => boolean
+    ) {
+        const parsed = parseInt(value);
+        const arga = arg as ApplicationCommandNumericOptionData;
+
+        if (!check(parsed)) {
+            throw new ArgumentParseError("invalid_numeric", true, {
+                argKey: key,
+                argValue: value
+            });
+        }
+        if (arga.choices && !arga.choices.some(c => c.value === parsed)) {
+            throw new ArgumentParseError("value_not_allowed", true, {
+                argKey: key,
+                argValue: value,
+                ...this.getAllowedValues(arga.choices.map(c => c.value.toString()))
+            });
+        }
+        if (arga.minValue && parsed < arga.minValue) {
+            throw new ArgumentParseError("value_too_small", true, {
+                argKey: key,
+                argValue: value,
+                minValue: arga.minValue
+            });
+        }
+        if (arga.maxValue && parsed > arga.maxValue) {
+            throw new ArgumentParseError("value_too_large", true, {
+                argKey: key,
+                argValue: value,
+                maxValue: arga.maxValue
+            });
+        }
+
+        return parsed;
+    }
+
+    // For objects obtainable with their managers
+    private parseResolvableValue(
+        key: string,
+        value: string,
+        parse: (text: string) => string | null,
+        manager: CachedManager<Snowflake, any, any> | undefined,
+        errorName: keyof ArgumentParseError.SingleCauseMap
+    ) {
+        const id = parse(value);
+        if (id === null) {
+            throw new ArgumentParseError(errorName, true, {
+                argKey: key,
+                argValue: value
+            });
+        }
+
+        const result = manager?.resolve(id);
+        if (!result) {
+            throw new ArgumentParseError(errorName, true, {
+                argKey: key,
+                argValue: value
+            });
+        }
+
+        return result;
     }
 }

@@ -1,41 +1,49 @@
 import { Message } from "discord.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
-import { Command } from "../definitions/Command.js";
+import { Command } from "../interfaces/Command.js";
 import { InVoiceChannel } from "./InVoiceChannel.js";
 import { InVoiceWithBot } from "./InVoiceWithBot.js";
 
 /**
  * Interface for adding a condition to a command.
- * @public 
+ * @public
  */
 export interface CommandCondition {
     key: string;
-    check: (context: CommandContextResolvable) => boolean;
+    check: (context: CommandCondition.ContextResolvable) => boolean;
     hideInDescription?: boolean;
     satisfiedBy?: CommandCondition | CommandCondition[];
     requires?: CommandCondition | CommandCondition[];
 }
 
 /** @public */
-export type CommandContextResolvable = Message | CommandRequest;
+export namespace CommandCondition {
+    /** @public */
+    export type ContextResolvable = Message | CommandRequest;
+
+    /** @public */
+    export const BuiltInConditions = {
+        InVoiceChannel,
+        InVoiceWithBot
+    }
+}
 
 /**
  * Checks a provided command condition against a message.
  * 
  * `allowed` is true if the condition is (at least one of):
- * - overridable and {@link override} is true
  * - satisfied with and its subconditions are satisfied
  * - satisfied by any of alternatives
  */
 function checkCondition(
-    context: CommandContextResolvable,
+    context: CommandCondition.ContextResolvable,
     condition: CommandCondition
 ): string | null {
     if (condition.requires) {
         const requires = Array.isArray(condition.requires)
             ? condition.requires
             : [condition.requires];
-        const result = checkConditions(context, requires);
+        const result = _checkConditions(context, requires);
         if (!result)
             return result;
     }
@@ -57,29 +65,15 @@ function checkCondition(
 }
 
 /**
- * Checks the provided list of conditions against a message.
+ * Checks the command's list of conditions against a message or a list of command conditions.
  * 
  * `allowed` is true if all conditions are satisfied.
  *
  * `message` is the message of the first failed condition if all failed conditions have messages, otherwise undefined.
- * 
- * @see checkCondition
- * @public
+ * @internal
  */
-export function checkConditions(context: CommandContextResolvable, conditions: CommandCondition[]): string | null;
-
-/**
- * Checks the command's list of conditions against a message.
- * 
- * `allowed` is true if all conditions are satisfied.
- *
- * `message` is the message of the first failed condition if all failed conditions have messages, otherwise undefined.
- * @public
- */
-export function checkConditions(context: CommandContextResolvable, command: Command): string | null;
-
-export function checkConditions(
-    context: CommandContextResolvable,
+export function _checkConditions(
+    context: CommandCondition.ContextResolvable,
     source: Command | CommandCondition[]
 ): string | null {
     if (!Array.isArray(source))
@@ -88,10 +82,4 @@ export function checkConditions(
     return source
         .map(condition => checkCondition(context, condition))
         .filter(result => result)[0] ?? null;
-}
-
-/** @public */
-export const CommandCondition = {
-    InVoiceChannel,
-    InVoiceWithBot
 }
