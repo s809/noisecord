@@ -37,7 +37,10 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
         async onInvalidArguments(req, command, e, translator) {
             await req.replyOrEdit(translator.translate(`errors.${e.message}`, e.cause) + "\n"
                 + translator.translate("strings.command_usage", { usage: this.commandRegistry.getCommandUsageString(command, req.prefix, req.translator) }));
-        }
+        },
+        async onConditionsUnsatisfied(req, key, translator) {
+            await req.replyOrEdit(translator.translate(`condition_errors.${key}`));
+        },
     } satisfies Partial<EventHandler.CleanHandlerOptions<Options>>;
 
     protected constructor(
@@ -71,6 +74,10 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
 
             return part.replace("\\\"", "\"").replace("\\\\", "\\");
         }) ?? [];
+    }
+
+    protected async replyConditionsUnsatisfied(commandRequest: CommandRequest, key: string, translator: Translator) {
+        await this.options.onConditionsUnsatisfied.call(this, commandRequest, key, translator);
     }
 
     protected async replyInvalidArguments(commandRequest: CommandRequest, command: Command, e: Error, translator: Translator) {

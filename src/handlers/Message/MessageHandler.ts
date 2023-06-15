@@ -127,15 +127,15 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
         if (!(await this.checkCommandPermissions(msg, command)))
             return;
 
-        // Check conditions
-        const checkResult = _checkConditions(msg, command);
-        if (checkResult) {
-            await msg.channel.send(checkResult);
-            return;
-        }
-
         const commandTranslator = await this.translatorManager.getTranslator(msg, command.translationPath);
         const commandRequest = new MessageCommandRequest(command, commandTranslator, msg, prefix);
+
+        // Check conditions
+        const condFailureKey = _checkConditions(commandRequest, command);
+        if (condFailureKey) {
+            await this.replyConditionsUnsatisfied(commandRequest, condFailureKey, translator);
+            return;
+        }
 
         // Parse arguments
         let argsObj: Command.HandlerArguments;
@@ -148,6 +148,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
             await this.replyInvalidArguments(commandRequest, command, e, translator);
             return;
         }
+
         await this.executeCommand(commandRequest, () => command.handler!(commandRequest, argsObj), commandTranslator);
     }
 

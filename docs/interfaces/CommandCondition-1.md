@@ -36,7 +36,7 @@ Interface for adding a condition to a command.
 
 #### Defined in
 
-[src/conditions/index.ts:13](https://github.com/s809/noisecord/blob/50a8c6b/src/conditions/index.ts#L13)
+[src/conditions/index.ts:13](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L13)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:14](https://github.com/s809/noisecord/blob/50a8c6b/src/conditions/index.ts#L14)
+[src/conditions/index.ts:14](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L14)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:12](https://github.com/s809/noisecord/blob/50a8c6b/src/conditions/index.ts#L12)
+[src/conditions/index.ts:12](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L12)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:16](https://github.com/s809/noisecord/blob/50a8c6b/src/conditions/index.ts#L16)
+[src/conditions/index.ts:16](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L16)
 
 ___
 
@@ -76,4 +76,4 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:15](https://github.com/s809/noisecord/blob/50a8c6b/src/conditions/index.ts#L15)
+[src/conditions/index.ts:15](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L15)

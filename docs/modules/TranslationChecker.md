@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[src/helpers/TranslationChecker.ts:63](https://github.com/s809/noisecord/blob/50a8c6b/src/helpers/TranslationChecker.ts#L63)
+[src/helpers/TranslationChecker.ts:63](https://github.com/s809/noisecord/blob/6d7ed8b/src/helpers/TranslationChecker.ts#L63)
 
 ___
 
@@ -33,4 +33,4 @@ ___
 
 #### Defined in
 
-[src/helpers/TranslationChecker.ts:49](https://github.com/s809/noisecord/blob/50a8c6b/src/helpers/TranslationChecker.ts#L49)
+[src/helpers/TranslationChecker.ts:49](https://github.com/s809/noisecord/blob/6d7ed8b/src/helpers/TranslationChecker.ts#L49)

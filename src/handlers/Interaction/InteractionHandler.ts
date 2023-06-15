@@ -9,6 +9,7 @@ import { EventHandler } from "../EventHandler.js";
 import { Translator } from "../../Translator.js";
 import assert from "assert";
 import { ContextMenuCommand } from "../../interfaces/ContextMenuCommand.js";
+import { _checkConditions } from "../../conditions/index.js";
 
 /** 
  * Options for setting up an interaction handler.
@@ -94,6 +95,13 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
 
         const commandTranslator = await this.translatorManager.getTranslator(interaction, command.translationPath);
         const commandRequest = new InteractionCommandRequest(command, commandTranslator, interaction);
+
+        // Check conditions
+        const condFailureKey = _checkConditions(commandRequest, command);
+        if (condFailureKey) {
+            await this.replyConditionsUnsatisfied(commandRequest, condFailureKey, translator);
+            return;
+        }
 
         // Parse arguments
         let argsObj: Command.HandlerArguments;

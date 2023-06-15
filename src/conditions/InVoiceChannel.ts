@@ -1,7 +1,6 @@
 import { CommandCondition } from "./index.js";
 
 export const InVoiceChannel: CommandCondition = {
-    key: "In Voice Channel",
+    key: "in_voice_channel",
     check: req => !!req.member?.voice.channelId,
-    hideInDescription: true
 };

@@ -318,8 +318,8 @@ export function createHandler<T>(
         }],
         ["conditions", {
             conditions: [{
-                key: "Test condition",
-                check: (context: CommandCondition.ContextResolvable) => context.guildId === IdConstants.Guild1
+                key: "test_condition",
+                check: (context: CommandRequest) => context.guildId === IdConstants.Guild1
             }]
         }],
         ["arguments-count", {

@@ -51,7 +51,7 @@ Command request data from an interaction.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:21](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L21)
+[src/handlers/Interaction/InteractionCommandRequest.ts:21](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L21)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:21](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L21)
+[src/handlers/Interaction/InteractionCommandRequest.ts:21](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L21)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:13](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/CommandRequest.ts#L13)
+[src/handlers/CommandRequest.ts:13](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/CommandRequest.ts#L13)
 
 ___
 
@@ -91,7 +91,7 @@ Response object, which is filled when a command request is replied.
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:15](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/CommandRequest.ts#L15)
+[src/handlers/CommandRequest.ts:15](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/CommandRequest.ts#L15)
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:12](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/CommandRequest.ts#L12)
+[src/handlers/CommandRequest.ts:12](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/CommandRequest.ts#L12)
 
 ## Accessors
 
@@ -123,7 +123,7 @@ CommandRequest.author
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:60](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L60)
+[src/handlers/Interaction/InteractionCommandRequest.ts:60](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L60)
 
 ___
 
@@ -141,7 +141,7 @@ CommandRequest.channel
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:48](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L48)
+[src/handlers/Interaction/InteractionCommandRequest.ts:48](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L48)
 
 ___
 
@@ -159,7 +159,7 @@ CommandRequest.channelId
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:25](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/CommandRequest.ts#L25)
+[src/handlers/CommandRequest.ts:25](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/CommandRequest.ts#L25)
 
 ___
 
@@ -177,7 +177,7 @@ CommandRequest.guild
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:52](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L52)
+[src/handlers/Interaction/InteractionCommandRequest.ts:52](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L52)
 
 ___
 
@@ -195,7 +195,7 @@ CommandRequest.guildId
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:31](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/CommandRequest.ts#L31)
+[src/handlers/CommandRequest.ts:31](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/CommandRequest.ts#L31)
 
 ___
 
@@ -213,7 +213,7 @@ CommandRequest.member
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:56](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L56)
+[src/handlers/Interaction/InteractionCommandRequest.ts:56](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L56)
 
 ## Methods
 
@@ -235,7 +235,7 @@ Defers the reply, if possible.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:27](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L27)
+[src/handlers/Interaction/InteractionCommandRequest.ts:27](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L27)
 
 ___
 
@@ -258,7 +258,7 @@ If interaction is not replied to fully, throws an error.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:40](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L40)
+[src/handlers/Interaction/InteractionCommandRequest.ts:40](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L40)
 
 ___
 
@@ -276,7 +276,7 @@ this is InteractionCommandRequest<CommandType, CommandInteraction<"cached" \| "r
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:44](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L44)
+[src/handlers/Interaction/InteractionCommandRequest.ts:44](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L44)
 
 ___
 
@@ -302,4 +302,4 @@ Replies to the command.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:32](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/Interaction/InteractionCommandRequest.ts#L32)
+[src/handlers/Interaction/InteractionCommandRequest.ts:32](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Interaction/InteractionCommandRequest.ts#L32)

@@ -44,7 +44,7 @@ Called if the command returned a value other than `undefined` or threw an except
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:25](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/EventHandlerOptions.ts#L25)
+[src/handlers/EventHandlerOptions.ts:25](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L25)
 
 ___
 
@@ -74,7 +74,7 @@ Called if the command received invalid arguments.
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:30](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/EventHandlerOptions.ts#L30)
+[src/handlers/EventHandlerOptions.ts:30](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L30)
 
 ___
 
@@ -101,7 +101,7 @@ Called if the command did not complete before a specified delay (default is 1000
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:15](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/EventHandlerOptions.ts#L15)
+[src/handlers/EventHandlerOptions.ts:15](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L15)
 
 ___
 
@@ -128,7 +128,7 @@ Called if the command returned `undefined`.
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:20](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/EventHandlerOptions.ts#L20)
+[src/handlers/EventHandlerOptions.ts:20](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L20)
 
 ___
 
@@ -138,4 +138,4 @@ ___
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:10](https://github.com/s809/noisecord/blob/50a8c6b/src/handlers/EventHandlerOptions.ts#L10)
+[src/handlers/EventHandlerOptions.ts:10](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L10)

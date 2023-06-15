@@ -28,4 +28,9 @@ export interface EventHandlerOptions<TCommandRequest = CommandRequest> {
      * Called if the command received invalid arguments.
      */
     onInvalidArguments: (this: EventHandler, req: TCommandRequest, command: Command, e: ArgumentParseError<any>, translator: Translator) => Awaitable<void>;
+
+    /**
+     * Called if the command was attempted to run and conditions were not satisfied.
+     */
+    onConditionsUnsatisfied: (this: EventHandler, req: TCommandRequest, key: string, translator: Translator) => Awaitable<void>;
 }

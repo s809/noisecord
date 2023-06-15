@@ -1,4 +1,3 @@
-import { Message } from "discord.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
 import { Command } from "../interfaces/Command.js";
 import { InVoiceChannel } from "./InVoiceChannel.js";
@@ -10,17 +9,13 @@ import { InVoiceWithBot } from "./InVoiceWithBot.js";
  */
 export interface CommandCondition {
     key: string;
-    check: (context: CommandCondition.ContextResolvable) => boolean;
-    hideInDescription?: boolean;
+    check: (context: CommandRequest) => boolean;
     satisfiedBy?: CommandCondition | CommandCondition[];
     requires?: CommandCondition | CommandCondition[];
 }
 
 /** @public */
 export namespace CommandCondition {
-    /** @public */
-    export type ContextResolvable = Message | CommandRequest;
-
     /** @public */
     export const BuiltInConditions = {
         InVoiceChannel,
@@ -36,7 +31,7 @@ export namespace CommandCondition {
  * - satisfied by any of alternatives
  */
 function checkCondition(
-    context: CommandCondition.ContextResolvable,
+    context: CommandRequest,
     condition: CommandCondition
 ): string | null {
     if (condition.requires) {
@@ -73,7 +68,7 @@ function checkCondition(
  * @internal
  */
 export function _checkConditions(
-    context: CommandCondition.ContextResolvable,
+    context: CommandRequest,
     source: Command | CommandCondition[]
 ): string | null {
     if (!Array.isArray(source))
