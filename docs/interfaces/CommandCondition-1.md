@@ -9,7 +9,6 @@ Interface for adding a condition to a command.
 ### Properties
 
 - [check](CommandCondition-1.md#check)
-- [hideInDescription](CommandCondition-1.md#hideindescription)
 - [key](CommandCondition-1.md#key)
 - [requires](CommandCondition-1.md#requires)
 - [satisfiedBy](CommandCondition-1.md#satisfiedby)
@@ -18,7 +17,7 @@ Interface for adding a condition to a command.
 
 ### check
 
- **check**: (`context`: [`ContextResolvable`](../modules/CommandCondition.md#contextresolvable)) => `boolean`
+ **check**: (`context`: [`CommandRequest`](../classes/CommandRequest.md)<`boolean`, [`CommandResponse`](../classes/CommandResponse.md)\>) => `boolean`
 
 #### Type declaration
 
@@ -28,7 +27,7 @@ Interface for adding a condition to a command.
 
 | Name | Type |
 | :------ | :------ |
-| `context` | [`ContextResolvable`](../modules/CommandCondition.md#contextresolvable) |
+| `context` | [`CommandRequest`](../classes/CommandRequest.md)<`boolean`, [`CommandResponse`](../classes/CommandResponse.md)\> |
 
 ##### Returns
 
@@ -36,17 +35,7 @@ Interface for adding a condition to a command.
 
 #### Defined in
 
-[src/conditions/index.ts:13](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L13)
-
-___
-
-### hideInDescription
-
- `Optional` **hideInDescription**: `boolean`
-
-#### Defined in
-
-[src/conditions/index.ts:14](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L14)
+[src/conditions/index.ts:12](https://github.com/s809/noisecord/blob/ab0ef27/src/conditions/index.ts#L12)
 
 ___
 
@@ -56,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:12](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L12)
+[src/conditions/index.ts:11](https://github.com/s809/noisecord/blob/ab0ef27/src/conditions/index.ts#L11)
 
 ___
 
@@ -66,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:16](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L16)
+[src/conditions/index.ts:14](https://github.com/s809/noisecord/blob/ab0ef27/src/conditions/index.ts#L14)
 
 ___
 
@@ -76,4 +65,4 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:15](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L15)
+[src/conditions/index.ts:13](https://github.com/s809/noisecord/blob/ab0ef27/src/conditions/index.ts#L13)

@@ -145,7 +145,7 @@ export namespace ArgumentParseError {
 }
 
 // @internal
-export function _checkConditions(context: CommandCondition.ContextResolvable, source: Command | CommandCondition[]): string | null;
+export function _checkConditions(context: CommandRequest, source: Command | CommandCondition[]): string | null;
 
 // @public (undocumented)
 export interface Command {
@@ -210,9 +210,7 @@ export namespace Command {
 // @public
 export interface CommandCondition {
     // (undocumented)
-    check: (context: CommandCondition.ContextResolvable) => boolean;
-    // (undocumented)
-    hideInDescription?: boolean;
+    check: (context: CommandRequest) => boolean;
     // (undocumented)
     key: string;
     // (undocumented)
@@ -223,8 +221,6 @@ export interface CommandCondition {
 
 // @public (undocumented)
 export namespace CommandCondition {
-    // (undocumented)
-    export type ContextResolvable = Message | CommandRequest;
     const // (undocumented)
     BuiltInConditions: {
         InVoiceChannel: CommandCondition;
@@ -476,6 +472,7 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
     readonly defaultCommonStatusHandlers: {
         slowCommandDelayMs: number;
         onInvalidArguments(this: EventHandler<EventHandlerOptions<CommandRequest<boolean, CommandResponse_2>>, keyof ClientEvents>, req: EventHandler.HandlerOptionsCommandRequest<Options>, command: Command, e: ArgumentParseError_2<any>, translator: Translator): Promise<void>;
+        onConditionsUnsatisfied(this: EventHandler<EventHandlerOptions<CommandRequest<boolean, CommandResponse_2>>, keyof ClientEvents>, req: EventHandler.HandlerOptionsCommandRequest<Options>, key: string, translator: Translator): Promise<void>;
     };
     // (undocumented)
     readonly defaultStatusHandlers: EventHandler.CleanHandlerOptions<Options>;
@@ -488,6 +485,8 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
     // (undocumented)
     protected readonly options: Required<Options>;
     // (undocumented)
+    protected replyConditionsUnsatisfied(commandRequest: CommandRequest, key: string, translator: Translator): Promise<void>;
+    // (undocumented)
     protected replyInvalidArguments(commandRequest: CommandRequest, command: Command, e: Error, translator: Translator): Promise<void>;
     // (undocumented)
     protected splitByWhitespace(str: string): string[];
@@ -497,6 +496,7 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
 
 // @public (undocumented)
 export interface EventHandlerOptions<TCommandRequest = CommandRequest> {
+    onConditionsUnsatisfied: (this: EventHandler, req: TCommandRequest, key: string, translator: Translator) => Awaitable<void>;
     onFailure: (this: EventHandler, req: TCommandRequest, error: Error) => Awaitable<void>;
     onInvalidArguments: (this: EventHandler, req: TCommandRequest, command: Command, e: ArgumentParseError<any>, translator: Translator) => Awaitable<void>;
     onSlowCommand: (this: EventHandler, req: TCommandRequest) => Awaitable<void>;

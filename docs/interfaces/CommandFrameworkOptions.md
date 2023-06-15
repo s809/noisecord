@@ -22,7 +22,7 @@ Options used to initialize [CommandFramework](../classes/CommandFramework.md).
 
 #### Defined in
 
-[src/CommandFramework.ts:16](https://github.com/s809/noisecord/blob/6d7ed8b/src/CommandFramework.ts#L16)
+[src/CommandFramework.ts:16](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandFramework.ts#L16)
 
 ___
 
@@ -35,11 +35,12 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `slowCommandDelayMs` | `number` |
+| `onConditionsUnsatisfied` | (`this`: [`EventHandler`](../classes/EventHandler-1.md)<[`EventHandlerOptions`](EventHandlerOptions.md)<[`CommandRequest`](../classes/CommandRequest.md)<`boolean`, [`CommandResponse`](../classes/CommandResponse.md)\>\>, keyof `ClientEvents`\>, `req`: [`CommandRequest`](../classes/CommandRequest.md)<`boolean`, [`CommandResponse`](../classes/CommandResponse.md)\>, `key`: `string`, `translator`: [`Translator`](../classes/Translator-1.md)) => `Promise`<`void`\> |
 | `onInvalidArguments` | (`this`: [`EventHandler`](../classes/EventHandler-1.md)<[`EventHandlerOptions`](EventHandlerOptions.md)<[`CommandRequest`](../classes/CommandRequest.md)<`boolean`, [`CommandResponse`](../classes/CommandResponse.md)\>\>, keyof `ClientEvents`\>, `req`: [`CommandRequest`](../classes/CommandRequest.md)<`boolean`, [`CommandResponse`](../classes/CommandResponse.md)\>, `command`: [`Command`](Command-1.md), `e`: [`ArgumentParseError`](../classes/ArgumentParseError-1.md)<`any`\>, `translator`: [`Translator`](../classes/Translator-1.md)) => `Promise`<`void`\> |
 
 #### Defined in
 
-[src/CommandFramework.ts:20](https://github.com/s809/noisecord/blob/6d7ed8b/src/CommandFramework.ts#L20)
+[src/CommandFramework.ts:20](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandFramework.ts#L20)
 
 ___
 
@@ -49,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/CommandFramework.ts:18](https://github.com/s809/noisecord/blob/6d7ed8b/src/CommandFramework.ts#L18)
+[src/CommandFramework.ts:18](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandFramework.ts#L18)
 
 ___
 
@@ -59,7 +60,7 @@ ___
 
 #### Defined in
 
-[src/CommandFramework.ts:19](https://github.com/s809/noisecord/blob/6d7ed8b/src/CommandFramework.ts#L19)
+[src/CommandFramework.ts:19](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandFramework.ts#L19)
 
 ___
 
@@ -69,4 +70,4 @@ ___
 
 #### Defined in
 
-[src/CommandFramework.ts:17](https://github.com/s809/noisecord/blob/6d7ed8b/src/CommandFramework.ts#L17)
+[src/CommandFramework.ts:17](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandFramework.ts#L17)

@@ -136,7 +136,7 @@ export default defineCommand({
 
 #### Defined in
 
-[src/interfaces/common.ts:4](https://github.com/s809/noisecord/blob/6d7ed8b/src/interfaces/common.ts#L4)
+[src/interfaces/common.ts:4](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/common.ts#L4)
 
 ___
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/common.ts:13](https://github.com/s809/noisecord/blob/6d7ed8b/src/interfaces/common.ts#L13)
+[src/interfaces/common.ts:13](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/common.ts#L13)
 
 ___
 
@@ -168,7 +168,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:90](https://github.com/s809/noisecord/blob/6d7ed8b/src/util.ts#L90)
+[src/util.ts:90](https://github.com/s809/noisecord/blob/ab0ef27/src/util.ts#L90)
 
 ___
 
@@ -185,7 +185,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:85](https://github.com/s809/noisecord/blob/6d7ed8b/src/util.ts#L85)
+[src/util.ts:85](https://github.com/s809/noisecord/blob/ab0ef27/src/util.ts#L85)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/common.ts:7](https://github.com/s809/noisecord/blob/6d7ed8b/src/interfaces/common.ts#L7)
+[src/interfaces/common.ts:7](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/common.ts#L7)
 
 ___
 
@@ -217,7 +217,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/common.ts:10](https://github.com/s809/noisecord/blob/6d7ed8b/src/interfaces/common.ts#L10)
+[src/interfaces/common.ts:10](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/common.ts#L10)
 
 ___
 
@@ -233,7 +233,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:93](https://github.com/s809/noisecord/blob/6d7ed8b/src/util.ts#L93)
+[src/util.ts:93](https://github.com/s809/noisecord/blob/ab0ef27/src/util.ts#L93)
 
 ## Variables
 
@@ -245,7 +245,7 @@ Default emote for failure state on a message command.
 
 #### Defined in
 
-[src/handlers/Message/MessageHandler.ts:30](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Message/MessageHandler.ts#L30)
+[src/handlers/Message/MessageHandler.ts:30](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/Message/MessageHandler.ts#L30)
 
 ___
 
@@ -257,7 +257,7 @@ Default emote for loading state on a message command.
 
 #### Defined in
 
-[src/handlers/Message/MessageHandler.ts:18](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Message/MessageHandler.ts#L18)
+[src/handlers/Message/MessageHandler.ts:18](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/Message/MessageHandler.ts#L18)
 
 ___
 
@@ -269,7 +269,7 @@ Default emote for success state on a message command.
 
 #### Defined in
 
-[src/handlers/Message/MessageHandler.ts:24](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/Message/MessageHandler.ts#L24)
+[src/handlers/Message/MessageHandler.ts:24](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/Message/MessageHandler.ts#L24)
 
 ___
 
@@ -279,7 +279,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/common.ts:16](https://github.com/s809/noisecord/blob/6d7ed8b/src/interfaces/common.ts#L16)
+[src/interfaces/common.ts:16](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/common.ts#L16)
 
 ## Functions
 
@@ -334,7 +334,7 @@ export default defineCommand({
 
 #### Defined in
 
-[src/interfaces/Command.ts:142](https://github.com/s809/noisecord/blob/6d7ed8b/src/interfaces/Command.ts#L142)
+[src/interfaces/Command.ts:142](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/Command.ts#L142)
 
 ___
 
@@ -378,7 +378,7 @@ export default defineContextMenuCommand({
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:51](https://github.com/s809/noisecord/blob/6d7ed8b/src/interfaces/ContextMenuCommand.ts#L51)
+[src/interfaces/ContextMenuCommand.ts:51](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/ContextMenuCommand.ts#L51)
 
 ___
 
@@ -402,7 +402,7 @@ Extracted ID.
 
 #### Defined in
 
-[src/util.ts:51](https://github.com/s809/noisecord/blob/6d7ed8b/src/util.ts#L51)
+[src/util.ts:51](https://github.com/s809/noisecord/blob/ab0ef27/src/util.ts#L51)
 
 ___
 
@@ -427,7 +427,7 @@ Extracted ID.
 
 #### Defined in
 
-[src/util.ts:36](https://github.com/s809/noisecord/blob/6d7ed8b/src/util.ts#L36)
+[src/util.ts:36](https://github.com/s809/noisecord/blob/ab0ef27/src/util.ts#L36)
 
 ___
 
@@ -451,7 +451,7 @@ Extracted ID.
 
 #### Defined in
 
-[src/util.ts:73](https://github.com/s809/noisecord/blob/6d7ed8b/src/util.ts#L73)
+[src/util.ts:73](https://github.com/s809/noisecord/blob/ab0ef27/src/util.ts#L73)
 
 ___
 
@@ -475,4 +475,4 @@ Extracted ID.
 
 #### Defined in
 
-[src/util.ts:62](https://github.com/s809/noisecord/blob/6d7ed8b/src/util.ts#L62)
+[src/util.ts:62](https://github.com/s809/noisecord/blob/ab0ef27/src/util.ts#L62)

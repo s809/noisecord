@@ -27,11 +27,12 @@
 | Name | Type |
 | :------ | :------ |
 | `slowCommandDelayMs` | `number` |
+| `onConditionsUnsatisfied` | (`this`: [`EventHandler`](EventHandler-1.md)<[`EventHandlerOptions`](../interfaces/EventHandlerOptions.md)<[`CommandRequest`](CommandRequest.md)<`boolean`, [`CommandResponse`](CommandResponse.md)\>\>, keyof `ClientEvents`\>, `req`: [`HandlerOptionsCommandRequest`](../modules/EventHandler.md#handleroptionscommandrequest)<`Options`\>, `key`: `string`, `translator`: [`Translator`](Translator-1.md)) => `Promise`<`void`\> |
 | `onInvalidArguments` | (`this`: [`EventHandler`](EventHandler-1.md)<[`EventHandlerOptions`](../interfaces/EventHandlerOptions.md)<[`CommandRequest`](CommandRequest.md)<`boolean`, [`CommandResponse`](CommandResponse.md)\>\>, keyof `ClientEvents`\>, `req`: [`HandlerOptionsCommandRequest`](../modules/EventHandler.md#handleroptionscommandrequest)<`Options`\>, `command`: [`Command`](../interfaces/Command-1.md), `e`: [`ArgumentParseError`](ArgumentParseError-1.md)<`any`\>, `translator`: [`Translator`](Translator-1.md)) => `Promise`<`void`\> |
 
 #### Defined in
 
-[src/handlers/EventHandler.ts:35](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandler.ts#L35)
+[src/handlers/EventHandler.ts:35](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/EventHandler.ts#L35)
 
 ___
 
@@ -41,4 +42,4 @@ ___
 
 #### Defined in
 
-[src/handlers/EventHandler.ts:34](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandler.ts#L34)
+[src/handlers/EventHandler.ts:34](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/EventHandler.ts#L34)

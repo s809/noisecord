@@ -12,6 +12,7 @@
 
 ### Properties
 
+- [onConditionsUnsatisfied](EventHandlerOptions.md#onconditionsunsatisfied)
 - [onFailure](EventHandlerOptions.md#onfailure)
 - [onInvalidArguments](EventHandlerOptions.md#oninvalidarguments)
 - [onSlowCommand](EventHandlerOptions.md#onslowcommand)
@@ -19,6 +20,35 @@
 - [slowCommandDelayMs](EventHandlerOptions.md#slowcommanddelayms)
 
 ## Properties
+
+### onConditionsUnsatisfied
+
+ **onConditionsUnsatisfied**: (`this`: [`EventHandler`](../classes/EventHandler-1.md)<[`EventHandlerOptions`](EventHandlerOptions.md)<[`CommandRequest`](../classes/CommandRequest.md)<`boolean`, [`CommandResponse`](../classes/CommandResponse.md)\>\>, keyof `ClientEvents`\>, `req`: `TCommandRequest`, `key`: `string`, `translator`: [`Translator`](../classes/Translator-1.md)) => `Awaitable`<`void`\>
+
+#### Type declaration
+
+(`this`, `req`, `key`, `translator`): `Awaitable`<`void`\>
+
+Called if the command was attempted to run and conditions were not satisfied.
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `this` | [`EventHandler`](../classes/EventHandler-1.md)<[`EventHandlerOptions`](EventHandlerOptions.md)<[`CommandRequest`](../classes/CommandRequest.md)<`boolean`, [`CommandResponse`](../classes/CommandResponse.md)\>\>, keyof `ClientEvents`\> |
+| `req` | `TCommandRequest` |
+| `key` | `string` |
+| `translator` | [`Translator`](../classes/Translator-1.md) |
+
+##### Returns
+
+`Awaitable`<`void`\>
+
+#### Defined in
+
+[src/handlers/EventHandlerOptions.ts:35](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/EventHandlerOptions.ts#L35)
+
+___
 
 ### onFailure
 
@@ -44,7 +74,7 @@ Called if the command returned a value other than `undefined` or threw an except
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:25](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L25)
+[src/handlers/EventHandlerOptions.ts:25](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/EventHandlerOptions.ts#L25)
 
 ___
 
@@ -74,7 +104,7 @@ Called if the command received invalid arguments.
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:30](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L30)
+[src/handlers/EventHandlerOptions.ts:30](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/EventHandlerOptions.ts#L30)
 
 ___
 
@@ -101,7 +131,7 @@ Called if the command did not complete before a specified delay (default is 1000
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:15](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L15)
+[src/handlers/EventHandlerOptions.ts:15](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/EventHandlerOptions.ts#L15)
 
 ___
 
@@ -128,7 +158,7 @@ Called if the command returned `undefined`.
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:20](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L20)
+[src/handlers/EventHandlerOptions.ts:20](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/EventHandlerOptions.ts#L20)
 
 ___
 
@@ -138,4 +168,4 @@ ___
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:10](https://github.com/s809/noisecord/blob/6d7ed8b/src/handlers/EventHandlerOptions.ts#L10)
+[src/handlers/EventHandlerOptions.ts:10](https://github.com/s809/noisecord/blob/ab0ef27/src/handlers/EventHandlerOptions.ts#L10)

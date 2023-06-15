@@ -4,23 +4,9 @@
 
 ## Table of contents
 
-### Type Aliases
-
-- [ContextResolvable](CommandCondition.md#contextresolvable)
-
 ### Variables
 
 - [BuiltInConditions](CommandCondition.md#builtinconditions)
-
-## Type Aliases
-
-### ContextResolvable
-
- **ContextResolvable**: `Message` \| [`CommandRequest`](../classes/CommandRequest.md)
-
-#### Defined in
-
-[src/conditions/index.ts:22](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L22)
 
 ## Variables
 
@@ -37,4 +23,4 @@
 
 #### Defined in
 
-[src/conditions/index.ts:25](https://github.com/s809/noisecord/blob/6d7ed8b/src/conditions/index.ts#L25)
+[src/conditions/index.ts:20](https://github.com/s809/noisecord/blob/ab0ef27/src/conditions/index.ts#L20)
