@@ -32,7 +32,7 @@ Definition for a command.
 
 #### Defined in
 
-[src/interfaces/Command.ts:22](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/Command.ts#L22)
+[src/interfaces/Command.ts:22](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/Command.ts#L22)
 
 ___
 
@@ -42,17 +42,17 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:25](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/Command.ts#L25)
+[src/interfaces/Command.ts:25](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/Command.ts#L25)
 
 ___
 
 ### conditions
 
- `Optional` **conditions**: [`CommandCondition`](CommandCondition-1.md) \| [`CommandCondition`](CommandCondition-1.md)[]
+ `Optional` **conditions**: [`CommandCondition`](CommandCondition.md) \| [`CommandCondition`](CommandCondition.md)[]
 
 #### Defined in
 
-[src/interfaces/Command.ts:23](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/Command.ts#L23)
+[src/interfaces/Command.ts:23](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/Command.ts#L23)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:21](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/Command.ts#L21)
+[src/interfaces/Command.ts:21](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/Command.ts#L21)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:26](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/Command.ts#L26)
+[src/interfaces/Command.ts:26](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/Command.ts#L26)
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:18](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/Command.ts#L18)
+[src/interfaces/Command.ts:18](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/Command.ts#L18)
 
 ___
 
@@ -92,4 +92,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:20](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/Command.ts#L20)
+[src/interfaces/Command.ts:20](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/Command.ts#L20)

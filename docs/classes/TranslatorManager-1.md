@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[src/TranslatorManager.ts:39](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L39)
+[src/TranslatorManager.ts:39](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L39)
 
 ## Properties
 
@@ -49,7 +49,7 @@
 
 #### Defined in
 
-[src/TranslatorManager.ts:29](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L29)
+[src/TranslatorManager.ts:29](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L29)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:28](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L28)
+[src/TranslatorManager.ts:28](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L28)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:24](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L24)
+[src/TranslatorManager.ts:24](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L24)
 
 ## Accessors
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:31](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L31)
+[src/TranslatorManager.ts:31](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L31)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:34](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L34)
+[src/TranslatorManager.ts:34](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L34)
 
 ## Methods
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:85](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L85)
+[src/TranslatorManager.ts:85](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L85)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:155](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L155)
+[src/TranslatorManager.ts:155](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L155)
 
 ___
 
@@ -158,4 +158,4 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:135](https://github.com/s809/noisecord/blob/ab0ef27/src/TranslatorManager.ts#L135)
+[src/TranslatorManager.ts:135](https://github.com/s809/noisecord/blob/5de1f63/src/TranslatorManager.ts#L135)

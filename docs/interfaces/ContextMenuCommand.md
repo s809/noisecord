@@ -31,7 +31,7 @@ Required.allowDMs
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:9](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/ContextMenuCommand.ts#L9)
+[src/interfaces/ContextMenuCommand.ts:9](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/ContextMenuCommand.ts#L9)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:31](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/ContextMenuCommand.ts#L31)
+[src/interfaces/ContextMenuCommand.ts:31](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/ContextMenuCommand.ts#L31)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:30](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/ContextMenuCommand.ts#L30)
+[src/interfaces/ContextMenuCommand.ts:30](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/ContextMenuCommand.ts#L30)
 
 ___
 
@@ -79,7 +79,7 @@ Required.handler
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:10](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/ContextMenuCommand.ts#L10)
+[src/interfaces/ContextMenuCommand.ts:10](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/ContextMenuCommand.ts#L10)
 
 ___
 
@@ -93,7 +93,7 @@ Required.key
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:7](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/ContextMenuCommand.ts#L7)
+[src/interfaces/ContextMenuCommand.ts:7](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/ContextMenuCommand.ts#L7)
 
 ___
 
@@ -107,4 +107,4 @@ Required.type
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:8](https://github.com/s809/noisecord/blob/ab0ef27/src/interfaces/ContextMenuCommand.ts#L8)
+[src/interfaces/ContextMenuCommand.ts:8](https://github.com/s809/noisecord/blob/5de1f63/src/interfaces/ContextMenuCommand.ts#L8)

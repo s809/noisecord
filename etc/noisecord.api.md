@@ -144,6 +144,12 @@ export namespace ArgumentParseError {
     }
 }
 
+// @public (undocumented)
+export const BuiltInCommandConditions: {
+    InVoiceChannel: CommandCondition;
+    InVoiceWithBot: CommandCondition;
+};
+
 // @internal
 export function _checkConditions(context: CommandRequest, source: Command | CommandCondition[]): string | null;
 
@@ -217,15 +223,6 @@ export interface CommandCondition {
     requires?: CommandCondition | CommandCondition[];
     // (undocumented)
     satisfiedBy?: CommandCondition | CommandCondition[];
-}
-
-// @public (undocumented)
-export namespace CommandCondition {
-    const // (undocumented)
-    BuiltInConditions: {
-        InVoiceChannel: CommandCondition;
-        InVoiceWithBot: CommandCondition;
-    };
 }
 
 // @public

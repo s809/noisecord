@@ -15,12 +15,9 @@ export interface CommandCondition {
 }
 
 /** @public */
-export namespace CommandCondition {
-    /** @public */
-    export const BuiltInConditions = {
-        InVoiceChannel,
-        InVoiceWithBot
-    }
+export const BuiltInCommandConditions = {
+    InVoiceChannel,
+    InVoiceWithBot
 }
 
 /**

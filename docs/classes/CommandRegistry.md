@@ -31,7 +31,7 @@ Contains the data/functions for working with commands.
 
 #### Defined in
 
-[src/CommandRegistry.ts:25](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L25)
+[src/CommandRegistry.ts:25](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L25)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[src/CommandRegistry.ts:28](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L28)
+[src/CommandRegistry.ts:28](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L28)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[src/CommandRegistry.ts:26](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L26)
+[src/CommandRegistry.ts:26](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L26)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[src/CommandRegistry.ts:27](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L27)
+[src/CommandRegistry.ts:27](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L27)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[src/CommandRegistry.ts:31](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L31)
+[src/CommandRegistry.ts:31](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L31)
 
 ## Methods
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[src/CommandRegistry.ts:159](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L159)
+[src/CommandRegistry.ts:159](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L159)
 
 **getCommandTranslationPath**(`key`, `contextMenu`): `string`
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[src/CommandRegistry.ts:160](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L160)
+[src/CommandRegistry.ts:160](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L160)
 
 ___
 
@@ -134,7 +134,7 @@ Usage string.
 
 #### Defined in
 
-[src/CommandRegistry.ts:216](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L216)
+[src/CommandRegistry.ts:216](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L216)
 
 ___
 
@@ -150,7 +150,7 @@ Recursively iterates commands.
 
 #### Defined in
 
-[src/CommandRegistry.ts:231](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L231)
+[src/CommandRegistry.ts:231](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L231)
 
 ___
 
@@ -172,7 +172,7 @@ Recursively iterates a map with commands.
 
 #### Defined in
 
-[src/CommandRegistry.ts:240](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L240)
+[src/CommandRegistry.ts:240](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L240)
 
 ___
 
@@ -198,7 +198,7 @@ Command, if it was found.
 
 #### Defined in
 
-[src/CommandRegistry.ts:192](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L192)
+[src/CommandRegistry.ts:192](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L192)
 
 ___
 
@@ -223,4 +223,4 @@ Command, if it was found.
 
 #### Defined in
 
-[src/CommandRegistry.ts:174](https://github.com/s809/noisecord/blob/ab0ef27/src/CommandRegistry.ts#L174)
+[src/CommandRegistry.ts:174](https://github.com/s809/noisecord/blob/5de1f63/src/CommandRegistry.ts#L174)
