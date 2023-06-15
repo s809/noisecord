@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, Collection, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction, Interaction, MessageContextMenuCommandInteraction, Awaitable } from "discord.js";
+import { ApplicationCommandOptionType, ApplicationCommandDataResolvable, Client, ApplicationCommandPermissionType, Snowflake, Message, LocalizationMap, ChannelType, ApplicationCommandType, ContextMenuCommandInteraction, Interaction, MessageContextMenuCommandInteraction, Awaitable } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { setTimeout } from "timers/promises";
@@ -7,7 +7,7 @@ import { merge } from "lodash-es";
 import { InteractionCommandRequest } from "../Interaction/InteractionCommandRequest.js";
 import { Command } from "../../interfaces/Command.js";
 import { ContextMenuCommand } from "../../interfaces/ContextMenuCommand.js";
-import { CommandCondition } from "../../index.js";
+import { CommandCondition } from "../../conditions/index.js";
 
 enum _IdConstants {
     GuildNone,

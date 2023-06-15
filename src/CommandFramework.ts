@@ -5,7 +5,7 @@ import { _InteractionHandler, InteractionHandlerOptions } from "./handlers/Inter
 import { _MessageHandler, MessageHandlerOptions } from "./handlers/Message/MessageHandler.js";
 import { _getValueOrThrowInitError } from "./util.js";
 import { TranslationChecker } from "./helpers/TranslationChecker.js";
-import { EventHandler } from "./index.js";
+import { EventHandler } from "./handlers/EventHandler.js";
 import { isUndefined, omitBy } from "lodash-es";
 
 /** 
