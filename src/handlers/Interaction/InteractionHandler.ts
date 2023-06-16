@@ -21,8 +21,6 @@ export interface InteractionHandlerOptions extends Partial<EventHandlerOptions<I
 
 /** @internal */
 export class _InteractionHandler extends EventHandler<Required<InteractionHandlerOptions>, "interactionCreate"> {
-    protected readonly eventName = "interactionCreate";
-
     static async create(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {
         const handler = new _InteractionHandler(client, commandRegistry, options);
 
@@ -34,7 +32,7 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
 
     /** @internal */
     constructor(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions) {
-        super(client, commandRegistry, {
+        super(client, "interactionCreate", commandRegistry, {
             ...options,
             registerApplicationCommands: options.registerApplicationCommands ?? true
         }, {

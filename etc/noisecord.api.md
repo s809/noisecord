@@ -460,7 +460,7 @@ export namespace EventHandler {
 
 // @public (undocumented)
 export abstract class EventHandler<Options extends EventHandlerOptions = EventHandlerOptions, EventName extends keyof ClientEvents = keyof ClientEvents> {
-    protected constructor(client: Client, commandRegistry: CommandRegistry, options: Merge<Required<Options>, Partial<EventHandler.CleanHandlerOptions<Options>>>, defaultStatusHandlers: Merge<EventHandler.CleanHandlerOptions<Options>, Partial<EventHandler.CommonHandlerOptions>>);
+    protected constructor(client: Client, eventName: EventName, commandRegistry: CommandRegistry, options: Merge<Required<Options>, Partial<EventHandler.CleanHandlerOptions<Options>>>, defaultStatusHandlers: Merge<EventHandler.CleanHandlerOptions<Options>, Partial<EventHandler.CommonHandlerOptions>>);
     // (undocumented)
     protected readonly client: Client;
     // (undocumented)
@@ -474,7 +474,7 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
     // (undocumented)
     readonly defaultStatusHandlers: EventHandler.CleanHandlerOptions<Options>;
     // (undocumented)
-    protected abstract readonly eventName: EventName;
+    protected readonly eventName: EventName;
     // (undocumented)
     protected executeCommand(commandRequest: EventHandler.HandlerOptionsCommandRequest<Options>, execute: () => Awaitable<string | void>, translator: Translator): Promise<void>;
     // (undocumented)
@@ -560,8 +560,6 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
     // (undocumented)
     static create(client: Client, commandRegistry: CommandRegistry, options: InteractionHandlerOptions): Promise<_InteractionHandler>;
     // (undocumented)
-    protected readonly eventName = "interactionCreate";
-    // (undocumented)
     handle(interaction: Interaction): Promise<void>;
 }
 
@@ -612,8 +610,6 @@ export class MessageCommandResponse extends CommandResponse {
 // @internal (undocumented)
 export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOptions, "messageCreate"> {
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions);
-    // (undocumented)
-    protected readonly eventName = "messageCreate";
     // (undocumented)
     handle(msg: Message): Promise<void>;
 }

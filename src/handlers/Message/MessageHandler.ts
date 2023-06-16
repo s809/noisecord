@@ -63,8 +63,6 @@ export interface _MessageHandlerConvertedOptions extends EventHandlerOptions<Mes
 
 /** @internal */
 export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOptions, "messageCreate"> {
-    protected readonly eventName = "messageCreate";
-
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions) {
         const shouldIgnore = (option?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>)) => {
             return (msg: Message, command: Command) => {
@@ -77,7 +75,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
             };
         };
         
-        super(client, commandRegistry, {
+        super(client, "messageCreate", commandRegistry, {
             ...options,
             getPrefix(msg) {
                 if (typeof options.prefix === "string") return options.prefix;

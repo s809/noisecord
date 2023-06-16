@@ -53,7 +53,7 @@ Partial.onConditionsUnsatisfied
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:35](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/EventHandlerOptions.ts#L35)
+[src/handlers/EventHandlerOptions.ts:35](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L35)
 
 ___
 
@@ -85,7 +85,7 @@ Partial.onFailure
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:25](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/EventHandlerOptions.ts#L25)
+[src/handlers/EventHandlerOptions.ts:25](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L25)
 
 ___
 
@@ -119,7 +119,7 @@ Partial.onInvalidArguments
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:30](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/EventHandlerOptions.ts#L30)
+[src/handlers/EventHandlerOptions.ts:30](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L30)
 
 ___
 
@@ -150,7 +150,7 @@ Partial.onSlowCommand
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:15](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/EventHandlerOptions.ts#L15)
+[src/handlers/EventHandlerOptions.ts:15](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L15)
 
 ___
 
@@ -181,7 +181,7 @@ Partial.onSuccess
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:20](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/EventHandlerOptions.ts#L20)
+[src/handlers/EventHandlerOptions.ts:20](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L20)
 
 ___
 
@@ -191,7 +191,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionHandler.ts:19](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionHandler.ts#L19)
+[src/handlers/Interaction/InteractionHandler.ts:19](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionHandler.ts#L19)
 
 ___
 
@@ -205,4 +205,4 @@ Partial.slowCommandDelayMs
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:10](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/EventHandlerOptions.ts#L10)
+[src/handlers/EventHandlerOptions.ts:10](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L10)

@@ -49,7 +49,7 @@ Command request data from a message.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:13](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L13)
+[src/handlers/Message/MessageCommandRequest.ts:13](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L13)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:13](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L13)
+[src/handlers/Message/MessageCommandRequest.ts:13](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L13)
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:13](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/CommandRequest.ts#L13)
+[src/handlers/CommandRequest.ts:13](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandRequest.ts#L13)
 
 ___
 
@@ -89,7 +89,7 @@ Response object, which is filled when a command request is replied.
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:15](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/CommandRequest.ts#L15)
+[src/handlers/CommandRequest.ts:15](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandRequest.ts#L15)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:12](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/CommandRequest.ts#L12)
+[src/handlers/CommandRequest.ts:12](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandRequest.ts#L12)
 
 ## Accessors
 
@@ -121,7 +121,7 @@ CommandRequest.author
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:42](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L42)
+[src/handlers/Message/MessageCommandRequest.ts:42](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L42)
 
 ___
 
@@ -139,7 +139,7 @@ CommandRequest.channel
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:30](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L30)
+[src/handlers/Message/MessageCommandRequest.ts:30](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L30)
 
 ___
 
@@ -157,7 +157,7 @@ CommandRequest.channelId
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:25](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/CommandRequest.ts#L25)
+[src/handlers/CommandRequest.ts:25](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandRequest.ts#L25)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:22](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L22)
+[src/handlers/Message/MessageCommandRequest.ts:22](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L22)
 
 ___
 
@@ -189,7 +189,7 @@ CommandRequest.guild
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:34](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L34)
+[src/handlers/Message/MessageCommandRequest.ts:34](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L34)
 
 ___
 
@@ -207,7 +207,7 @@ CommandRequest.guildId
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:31](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/CommandRequest.ts#L31)
+[src/handlers/CommandRequest.ts:31](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandRequest.ts#L31)
 
 ___
 
@@ -225,7 +225,7 @@ CommandRequest.member
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:38](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L38)
+[src/handlers/Message/MessageCommandRequest.ts:38](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L38)
 
 ## Methods
 
@@ -243,7 +243,7 @@ this is MessageCommandRequest<true\>
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:26](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L26)
+[src/handlers/Message/MessageCommandRequest.ts:26](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L26)
 
 ___
 
@@ -269,4 +269,4 @@ Replies to the command.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandRequest.ts:18](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Message/MessageCommandRequest.ts#L18)
+[src/handlers/Message/MessageCommandRequest.ts:18](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Message/MessageCommandRequest.ts#L18)

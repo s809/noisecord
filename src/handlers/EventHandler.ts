@@ -27,8 +27,6 @@ export namespace EventHandler {
 
 /** @public */
 export abstract class EventHandler<Options extends EventHandlerOptions = EventHandlerOptions, EventName extends keyof ClientEvents = keyof ClientEvents> {
-    protected abstract readonly eventName: EventName;
-
     protected readonly translatorManager: TranslatorManager;
     protected readonly options: Required<Options>;
     readonly defaultStatusHandlers: EventHandler.CleanHandlerOptions<Options>;
@@ -45,6 +43,7 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
 
     protected constructor(
         protected readonly client: Client,
+        protected readonly eventName: EventName,
         protected readonly commandRegistry: CommandRegistry,
         options: Merge<Required<Options>, Partial<EventHandler.CleanHandlerOptions<Options>>>,
         defaultStatusHandlers: Merge<EventHandler.CleanHandlerOptions<Options>, Partial<EventHandler.CommonHandlerOptions>>
@@ -58,11 +57,8 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
             ...this.defaultStatusHandlers,
             ...options
         } as any;
-        this.addClientOnHandler();
-    }
-
-    private addClientOnHandler() {
-        this.client.on(this.eventName, this.handle.bind(this));
+        
+        this.client.on(eventName, this.handle.bind(this));
     }
 
     protected abstract handle(...args: ClientEvents[EventName]): Promise<void>;

@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:19](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionCommandResponse.ts#L19)
+[src/handlers/Interaction/InteractionCommandResponse.ts:19](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionCommandResponse.ts#L19)
 
 ## Accessors
 
@@ -58,7 +58,7 @@ CommandResponse.content
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:22](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/CommandResponse.ts#L22)
+[src/handlers/CommandResponse.ts:22](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L22)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:9](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionCommandResponse.ts#L9)
+[src/handlers/Interaction/InteractionCommandResponse.ts:9](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionCommandResponse.ts#L9)
 
 ___
 
@@ -92,7 +92,7 @@ CommandResponse.embeds
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:27](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/CommandResponse.ts#L27)
+[src/handlers/CommandResponse.ts:27](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L27)
 
 ___
 
@@ -112,7 +112,7 @@ CommandResponse.flags
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:32](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/CommandResponse.ts#L32)
+[src/handlers/CommandResponse.ts:32](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L32)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:14](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionCommandResponse.ts#L14)
+[src/handlers/Interaction/InteractionCommandResponse.ts:14](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionCommandResponse.ts#L14)
 
 ## Methods
 
@@ -158,7 +158,7 @@ Creates collector of message components.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:94](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionCommandResponse.ts#L94)
+[src/handlers/Interaction/InteractionCommandResponse.ts:94](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionCommandResponse.ts#L94)
 
 ___
 
@@ -178,7 +178,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:23](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionCommandResponse.ts#L23)
+[src/handlers/Interaction/InteractionCommandResponse.ts:23](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionCommandResponse.ts#L23)
 
 ___
 
@@ -198,7 +198,7 @@ Deletes the message, if possible.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:83](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionCommandResponse.ts#L83)
+[src/handlers/Interaction/InteractionCommandResponse.ts:83](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionCommandResponse.ts#L83)
 
 ___
 
@@ -221,7 +221,7 @@ If interaction is not replied to fully, throws an error.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:70](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionCommandResponse.ts#L70)
+[src/handlers/Interaction/InteractionCommandResponse.ts:70](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionCommandResponse.ts#L70)
 
 ___
 
@@ -247,4 +247,4 @@ Replies to interaction or edits it.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:36](https://github.com/s809/noisecord/blob/5de1f63/src/handlers/Interaction/InteractionCommandResponse.ts#L36)
+[src/handlers/Interaction/InteractionCommandResponse.ts:36](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/Interaction/InteractionCommandResponse.ts#L36)
