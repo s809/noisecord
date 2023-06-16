@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:31](https://github.com/s809/noisecord/blob/b944b1f/src/helpers/ErrorCollector.ts#L31)
+[src/helpers/ErrorCollector.ts:31](https://github.com/s809/noisecord/blob/d5882c2/src/helpers/ErrorCollector.ts#L31)
 
 ## Accessors
 
@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:33](https://github.com/s809/noisecord/blob/b944b1f/src/helpers/ErrorCollector.ts#L33)
+[src/helpers/ErrorCollector.ts:33](https://github.com/s809/noisecord/blob/d5882c2/src/helpers/ErrorCollector.ts#L33)
 
 ## Methods
 
@@ -72,7 +72,7 @@
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:58](https://github.com/s809/noisecord/blob/b944b1f/src/helpers/ErrorCollector.ts#L58)
+[src/helpers/ErrorCollector.ts:58](https://github.com/s809/noisecord/blob/d5882c2/src/helpers/ErrorCollector.ts#L58)
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:47](https://github.com/s809/noisecord/blob/b944b1f/src/helpers/ErrorCollector.ts#L47)
+[src/helpers/ErrorCollector.ts:47](https://github.com/s809/noisecord/blob/d5882c2/src/helpers/ErrorCollector.ts#L47)
 
 ___
 
@@ -107,4 +107,4 @@ ___
 
 #### Defined in
 
-[src/helpers/ErrorCollector.ts:37](https://github.com/s809/noisecord/blob/b944b1f/src/helpers/ErrorCollector.ts#L37)
+[src/helpers/ErrorCollector.ts:37](https://github.com/s809/noisecord/blob/d5882c2/src/helpers/ErrorCollector.ts#L37)

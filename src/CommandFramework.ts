@@ -14,7 +14,7 @@ import { isUndefined, omitBy } from "lodash-es";
  */
 export interface CommandFrameworkOptions {
     commandRegistryOptions: CommandRegistryOptions;
-    translationOptions: TranslatorManagerOptions;
+    translationOptions?: TranslatorManagerOptions;
     interactionCommands?: InteractionHandlerOptions;
     messageCommands?: MessageHandlerOptions;
     commonHandlerOptions?: EventHandler.CommonHandlerOptions;

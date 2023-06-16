@@ -39,7 +39,7 @@ export class TranslatorManager {
     }
     private _fallbackTranslator?: Translator;
 
-    constructor(private options: TranslatorManagerOptions) { }
+    constructor(private options: TranslatorManagerOptions = {}) { }
 
     /** @internal */
     async init() {

@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[src/interfaces/Command.ts:111](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L111)
+[src/interfaces/Command.ts:111](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L111)

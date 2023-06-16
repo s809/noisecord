@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:62](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L62)
+[src/handlers/errors/ArgumentParseError.ts:62](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L62)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:61](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L61)
+[src/handlers/errors/ArgumentParseError.ts:61](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L61)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:44](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L44)
+[src/handlers/errors/ArgumentParseError.ts:44](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L44)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:64](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L64)
+[src/handlers/errors/ArgumentParseError.ts:64](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L64)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:63](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L63)
+[src/handlers/errors/ArgumentParseError.ts:63](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L63)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:65](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L65)
+[src/handlers/errors/ArgumentParseError.ts:65](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L65)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:45](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L45)
+[src/handlers/errors/ArgumentParseError.ts:45](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L45)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:52](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L52)
+[src/handlers/errors/ArgumentParseError.ts:52](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L52)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:58](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L58)
+[src/handlers/errors/ArgumentParseError.ts:58](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L58)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:55](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L55)
+[src/handlers/errors/ArgumentParseError.ts:55](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L55)
 
 ___
 
@@ -165,4 +165,4 @@ ___
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:49](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L49)
+[src/handlers/errors/ArgumentParseError.ts:49](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L49)

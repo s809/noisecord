@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[src/interfaces/Command.ts:74](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L74)
+[src/interfaces/Command.ts:74](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L74)
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:79](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L79)
+[src/interfaces/Command.ts:79](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L79)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:75](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L75)
+[src/interfaces/Command.ts:75](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L75)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:73](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L73)
+[src/interfaces/Command.ts:73](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L73)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:69](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L69)
+[src/interfaces/Command.ts:69](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L69)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:80](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L80)
+[src/interfaces/Command.ts:80](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L80)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:77](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L77)
+[src/interfaces/Command.ts:77](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L77)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:65](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L65)
+[src/interfaces/Command.ts:65](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L65)
 
 ___
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:68](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L68)
+[src/interfaces/Command.ts:68](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L68)
 
 ___
 
@@ -119,7 +119,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:72](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L72)
+[src/interfaces/Command.ts:72](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L72)
 
 ___
 
@@ -129,7 +129,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:64](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L64)
+[src/interfaces/Command.ts:64](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L64)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:82](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L82)
+[src/interfaces/Command.ts:82](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L82)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:66](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L66)
+[src/interfaces/Command.ts:66](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L66)
 
 ___
 
@@ -159,4 +159,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:70](https://github.com/s809/noisecord/blob/b944b1f/src/interfaces/Command.ts#L70)
+[src/interfaces/Command.ts:70](https://github.com/s809/noisecord/blob/d5882c2/src/interfaces/Command.ts#L70)

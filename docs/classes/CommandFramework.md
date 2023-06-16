@@ -40,7 +40,7 @@ Entry point for using a command framework.
 
 #### Defined in
 
-[src/CommandFramework.ts:51](https://github.com/s809/noisecord/blob/b944b1f/src/CommandFramework.ts#L51)
+[src/CommandFramework.ts:51](https://github.com/s809/noisecord/blob/d5882c2/src/CommandFramework.ts#L51)
 
 ## Properties
 
@@ -50,7 +50,7 @@ Entry point for using a command framework.
 
 #### Defined in
 
-[src/CommandFramework.ts:46](https://github.com/s809/noisecord/blob/b944b1f/src/CommandFramework.ts#L46)
+[src/CommandFramework.ts:46](https://github.com/s809/noisecord/blob/d5882c2/src/CommandFramework.ts#L46)
 
 ## Accessors
 
@@ -68,7 +68,7 @@ CommandRegistry
 
 #### Defined in
 
-[src/CommandFramework.ts:36](https://github.com/s809/noisecord/blob/b944b1f/src/CommandFramework.ts#L36)
+[src/CommandFramework.ts:36](https://github.com/s809/noisecord/blob/d5882c2/src/CommandFramework.ts#L36)
 
 ___
 
@@ -84,7 +84,7 @@ Tree of commands.
 
 #### Defined in
 
-[src/CommandFramework.ts:31](https://github.com/s809/noisecord/blob/b944b1f/src/CommandFramework.ts#L31)
+[src/CommandFramework.ts:31](https://github.com/s809/noisecord/blob/d5882c2/src/CommandFramework.ts#L31)
 
 ___
 
@@ -102,7 +102,7 @@ TranslatorManager
 
 #### Defined in
 
-[src/CommandFramework.ts:42](https://github.com/s809/noisecord/blob/b944b1f/src/CommandFramework.ts#L42)
+[src/CommandFramework.ts:42](https://github.com/s809/noisecord/blob/d5882c2/src/CommandFramework.ts#L42)
 
 ## Methods
 
@@ -118,7 +118,7 @@ Initializes everything related to the framework.
 
 #### Defined in
 
-[src/CommandFramework.ts:67](https://github.com/s809/noisecord/blob/b944b1f/src/CommandFramework.ts#L67)
+[src/CommandFramework.ts:67](https://github.com/s809/noisecord/blob/d5882c2/src/CommandFramework.ts#L67)
 
 ___
 
@@ -148,4 +148,4 @@ for the case when construction and initialization need to be split.
 
 #### Defined in
 
-[src/CommandFramework.ts:62](https://github.com/s809/noisecord/blob/b944b1f/src/CommandFramework.ts#L62)
+[src/CommandFramework.ts:62](https://github.com/s809/noisecord/blob/d5882c2/src/CommandFramework.ts#L62)
