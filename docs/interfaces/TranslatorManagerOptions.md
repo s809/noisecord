@@ -10,22 +10,23 @@
 - [getGuildLocale](TranslatorManagerOptions.md#getguildlocale)
 - [getUserLocale](TranslatorManagerOptions.md#getuserlocale)
 - [translationFileDirectory](TranslatorManagerOptions.md#translationfiledirectory)
+- [useBuiltInFallback](TranslatorManagerOptions.md#usebuiltinfallback)
 
 ## Properties
 
 ### defaultLocale
 
- **defaultLocale**: ``"id"`` \| ``"en-US"`` \| ``"en-GB"`` \| ``"bg"`` \| ``"zh-CN"`` \| ``"zh-TW"`` \| ``"hr"`` \| ``"cs"`` \| ``"da"`` \| ``"nl"`` \| ``"fi"`` \| ``"fr"`` \| ``"de"`` \| ``"el"`` \| ``"hi"`` \| ``"hu"`` \| ``"it"`` \| ``"ja"`` \| ``"ko"`` \| ``"lt"`` \| ``"no"`` \| ``"pl"`` \| ``"pt-BR"`` \| ``"ro"`` \| ``"ru"`` \| ``"es-ES"`` \| ``"sv-SE"`` \| ``"th"`` \| ``"tr"`` \| ``"uk"`` \| ``"vi"``
+ `Optional` **defaultLocale**: ``"id"`` \| ``"en-US"`` \| ``"en-GB"`` \| ``"bg"`` \| ``"zh-CN"`` \| ``"zh-TW"`` \| ``"hr"`` \| ``"cs"`` \| ``"da"`` \| ``"nl"`` \| ``"fi"`` \| ``"fr"`` \| ``"de"`` \| ``"el"`` \| ``"hi"`` \| ``"hu"`` \| ``"it"`` \| ``"ja"`` \| ``"ko"`` \| ``"lt"`` \| ``"no"`` \| ``"pl"`` \| ``"pt-BR"`` \| ``"ro"`` \| ``"ru"`` \| ``"es-ES"`` \| ``"sv-SE"`` \| ``"th"`` \| ``"tr"`` \| ``"uk"`` \| ``"vi"``
 
 #### Defined in
 
-[src/TranslatorManager.ts:11](https://github.com/s809/noisecord/blob/a1ec49a/src/TranslatorManager.ts#L11)
+[src/translations/TranslatorManager.ts:13](https://github.com/s809/noisecord/blob/b944b1f/src/translations/TranslatorManager.ts#L13)
 
 ___
 
 ### getGuildLocale
 
- **getGuildLocale**: (`guild`: `Guild`) => `Promise`<``null`` \| ``"id"`` \| ``"en-US"`` \| ``"en-GB"`` \| ``"bg"`` \| ``"zh-CN"`` \| ``"zh-TW"`` \| ``"hr"`` \| ``"cs"`` \| ``"da"`` \| ``"nl"`` \| ``"fi"`` \| ``"fr"`` \| ``"de"`` \| ``"el"`` \| ``"hi"`` \| ``"hu"`` \| ``"it"`` \| ``"ja"`` \| ``"ko"`` \| ``"lt"`` \| ``"no"`` \| ``"pl"`` \| ``"pt-BR"`` \| ``"ro"`` \| ``"ru"`` \| ``"es-ES"`` \| ``"sv-SE"`` \| ``"th"`` \| ``"tr"`` \| ``"uk"`` \| ``"vi"``\>
+ `Optional` **getGuildLocale**: (`guild`: `Guild`) => `Promise`<``null`` \| ``"id"`` \| ``"en-US"`` \| ``"en-GB"`` \| ``"bg"`` \| ``"zh-CN"`` \| ``"zh-TW"`` \| ``"hr"`` \| ``"cs"`` \| ``"da"`` \| ``"nl"`` \| ``"fi"`` \| ``"fr"`` \| ``"de"`` \| ``"el"`` \| ``"hi"`` \| ``"hu"`` \| ``"it"`` \| ``"ja"`` \| ``"ko"`` \| ``"lt"`` \| ``"no"`` \| ``"pl"`` \| ``"pt-BR"`` \| ``"ro"`` \| ``"ru"`` \| ``"es-ES"`` \| ``"sv-SE"`` \| ``"th"`` \| ``"tr"`` \| ``"uk"`` \| ``"vi"``\>
 
 #### Type declaration
 
@@ -43,13 +44,13 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:13](https://github.com/s809/noisecord/blob/a1ec49a/src/TranslatorManager.ts#L13)
+[src/translations/TranslatorManager.ts:16](https://github.com/s809/noisecord/blob/b944b1f/src/translations/TranslatorManager.ts#L16)
 
 ___
 
 ### getUserLocale
 
- **getUserLocale**: (`user`: `User`) => `Promise`<``null`` \| ``"id"`` \| ``"en-US"`` \| ``"en-GB"`` \| ``"bg"`` \| ``"zh-CN"`` \| ``"zh-TW"`` \| ``"hr"`` \| ``"cs"`` \| ``"da"`` \| ``"nl"`` \| ``"fi"`` \| ``"fr"`` \| ``"de"`` \| ``"el"`` \| ``"hi"`` \| ``"hu"`` \| ``"it"`` \| ``"ja"`` \| ``"ko"`` \| ``"lt"`` \| ``"no"`` \| ``"pl"`` \| ``"pt-BR"`` \| ``"ro"`` \| ``"ru"`` \| ``"es-ES"`` \| ``"sv-SE"`` \| ``"th"`` \| ``"tr"`` \| ``"uk"`` \| ``"vi"``\>
+ `Optional` **getUserLocale**: (`user`: `User`) => `Promise`<``null`` \| ``"id"`` \| ``"en-US"`` \| ``"en-GB"`` \| ``"bg"`` \| ``"zh-CN"`` \| ``"zh-TW"`` \| ``"hr"`` \| ``"cs"`` \| ``"da"`` \| ``"nl"`` \| ``"fi"`` \| ``"fr"`` \| ``"de"`` \| ``"el"`` \| ``"hi"`` \| ``"hu"`` \| ``"it"`` \| ``"ja"`` \| ``"ko"`` \| ``"lt"`` \| ``"no"`` \| ``"pl"`` \| ``"pt-BR"`` \| ``"ro"`` \| ``"ru"`` \| ``"es-ES"`` \| ``"sv-SE"`` \| ``"th"`` \| ``"tr"`` \| ``"uk"`` \| ``"vi"``\>
 
 #### Type declaration
 
@@ -67,14 +68,24 @@ ___
 
 #### Defined in
 
-[src/TranslatorManager.ts:12](https://github.com/s809/noisecord/blob/a1ec49a/src/TranslatorManager.ts#L12)
+[src/translations/TranslatorManager.ts:15](https://github.com/s809/noisecord/blob/b944b1f/src/translations/TranslatorManager.ts#L15)
 
 ___
 
 ### translationFileDirectory
 
- **translationFileDirectory**: `string`
+ `Optional` **translationFileDirectory**: `string`
 
 #### Defined in
 
-[src/TranslatorManager.ts:10](https://github.com/s809/noisecord/blob/a1ec49a/src/TranslatorManager.ts#L10)
+[src/translations/TranslatorManager.ts:12](https://github.com/s809/noisecord/blob/b944b1f/src/translations/TranslatorManager.ts#L12)
+
+___
+
+### useBuiltInFallback
+
+ `Optional` **useBuiltInFallback**: `boolean`
+
+#### Defined in
+
+[src/translations/TranslatorManager.ts:14](https://github.com/s809/noisecord/blob/b944b1f/src/translations/TranslatorManager.ts#L14)

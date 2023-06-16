@@ -46,7 +46,7 @@ Called if the command was attempted to run and conditions were not satisfied.
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:35](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L35)
+[src/handlers/EventHandlerOptions.ts:35](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/EventHandlerOptions.ts#L35)
 
 ___
 
@@ -74,7 +74,7 @@ Called if the command returned a value other than `undefined` or threw an except
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:25](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L25)
+[src/handlers/EventHandlerOptions.ts:25](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/EventHandlerOptions.ts#L25)
 
 ___
 
@@ -104,7 +104,7 @@ Called if the command received invalid arguments.
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:30](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L30)
+[src/handlers/EventHandlerOptions.ts:30](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/EventHandlerOptions.ts#L30)
 
 ___
 
@@ -131,7 +131,7 @@ Called if the command did not complete before a specified delay (default is 1000
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:15](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L15)
+[src/handlers/EventHandlerOptions.ts:15](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/EventHandlerOptions.ts#L15)
 
 ___
 
@@ -158,7 +158,7 @@ Called if the command returned `undefined`.
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:20](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L20)
+[src/handlers/EventHandlerOptions.ts:20](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/EventHandlerOptions.ts#L20)
 
 ___
 
@@ -168,4 +168,4 @@ ___
 
 #### Defined in
 
-[src/handlers/EventHandlerOptions.ts:10](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/EventHandlerOptions.ts#L10)
+[src/handlers/EventHandlerOptions.ts:10](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/EventHandlerOptions.ts#L10)

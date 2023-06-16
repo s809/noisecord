@@ -726,13 +726,15 @@ export class TranslatorManager {
 // @public (undocumented)
 export interface TranslatorManagerOptions {
     // (undocumented)
-    defaultLocale: LocaleString;
+    defaultLocale?: LocaleString;
     // (undocumented)
-    getGuildLocale: (guild: Guild) => Promise<LocaleString | null>;
+    getGuildLocale?: (guild: Guild) => Promise<LocaleString | null>;
     // (undocumented)
-    getUserLocale: (user: User) => Promise<LocaleString | null>;
+    getUserLocale?: (user: User) => Promise<LocaleString | null>;
     // (undocumented)
-    translationFileDirectory: string;
+    translationFileDirectory?: string;
+    // (undocumented)
+    useBuiltInFallback?: boolean;
 }
 
 // @internal (undocumented)

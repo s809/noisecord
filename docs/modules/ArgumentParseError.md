@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:28](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/errors/ArgumentParseError.ts#L28)
+[src/handlers/errors/ArgumentParseError.ts:28](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/errors/ArgumentParseError.ts#L28)

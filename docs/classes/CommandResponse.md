@@ -50,7 +50,7 @@ Get content of the message, if present.
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:22](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L22)
+[src/handlers/CommandResponse.ts:22](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/CommandResponse.ts#L22)
 
 ___
 
@@ -66,7 +66,7 @@ Get all embeds of the message, or empty array if there are none.
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:27](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L27)
+[src/handlers/CommandResponse.ts:27](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/CommandResponse.ts#L27)
 
 ___
 
@@ -82,7 +82,7 @@ Get flags of the message, if present.
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:32](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L32)
+[src/handlers/CommandResponse.ts:32](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/CommandResponse.ts#L32)
 
 ## Methods
 
@@ -110,7 +110,7 @@ Creates collector of message components.
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:17](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L17)
+[src/handlers/CommandResponse.ts:17](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/CommandResponse.ts#L17)
 
 ___
 
@@ -126,7 +126,7 @@ Deletes the message, if possible.
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:14](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L14)
+[src/handlers/CommandResponse.ts:14](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/CommandResponse.ts#L14)
 
 ___
 
@@ -148,4 +148,4 @@ Edits the message, if possible.
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:11](https://github.com/s809/noisecord/blob/a1ec49a/src/handlers/CommandResponse.ts#L11)
+[src/handlers/CommandResponse.ts:11](https://github.com/s809/noisecord/blob/b944b1f/src/handlers/CommandResponse.ts#L11)
