@@ -1,5 +1,5 @@
 import { Message, MessageReplyOptions, TextBasedChannel } from 'discord.js';
-import { Translator } from "../../Translator.js";
+import { Translator } from "../../translations/Translator.js";
 import { Command } from "../../interfaces/Command.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";

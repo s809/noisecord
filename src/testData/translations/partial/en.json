@@ -1,0 +1,19 @@
+{
+  "locale_string": "en-US",
+  "set_locale_regex": "en",
+  "boolean_values": [
+    ["false"],
+    ["true"]
+  ],
+  "command_processor": {
+    "strings": {
+      "command_usage": "Command usage: `{usage}`",
+      "argument_name": "argument: \"{name}\"",
+      "done": "Done!"
+    },
+    "errors": {
+      "unknown_command": "Unknown command.",
+      "too_few_arguments": "Partial translation test string"
+    }
+  }
+}

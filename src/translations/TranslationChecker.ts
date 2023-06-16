@@ -1,9 +1,9 @@
 import { IsLiteral } from "type-fest";
 import { ConditionalSimplifyDeep } from "type-fest/source/conditional-simplify.js";
-import { Translator } from "../Translator.js";
-import { TranslatorManager } from "../TranslatorManager.js";
+import { Translator } from "../translations/Translator.js";
+import { TranslatorManager } from "../translations/TranslatorManager.js";
 import { UnionToIntersectionRecursive } from "../util.js";
-import { ErrorCollector } from "./ErrorCollector.js";
+import { ErrorCollector } from "../helpers/ErrorCollector.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
 
 /** @public */

@@ -2,7 +2,7 @@ import { PermissionResolvable } from "discord.js";
 import { CommandCondition } from "../conditions/index.js";
 import { Command, CommandDefinition } from "../interfaces/Command.js";
 import { ApplicationCommandOptionType, LocaleString, PermissionFlagsBits } from "discord.js";
-import { TranslatorManager } from "../TranslatorManager.js";
+import { TranslatorManager } from "../translations/TranslatorManager.js";
 import { castArray } from "lodash-es";
 import { ErrorCollector } from "./ErrorCollector.js";
 import assert from "assert";

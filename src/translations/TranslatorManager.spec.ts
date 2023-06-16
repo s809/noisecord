@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { CommandInteraction, Guild, Message, TextChannel, User } from "discord.js";
 import sinon from "sinon";
-import { testInitCheck } from "./testData/initCheck.js";
+import { testInitCheck } from "../testData/initCheck.js";
 import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
 
 const translationOptions: TranslatorManagerOptions = {
@@ -9,11 +9,6 @@ const translationOptions: TranslatorManagerOptions = {
     defaultLocale: "en-US",
     getUserLocale: async () => "ru",
     getGuildLocale: async () => "ru",
-};
-
-const translationOptionsEmpty: TranslatorManagerOptions = {
-    ...translationOptions,
-    translationFileDirectory: "./src/testData/translations/empty"
 };
 
 describe("TranslatorManager", () => {
@@ -27,9 +22,33 @@ describe("TranslatorManager", () => {
         "fallbackTranslator"
     ], instance => instance.init());
 
-    it("empty translation directory", async () => {
-        const promise = new TranslatorManager(translationOptionsEmpty).init();
-        await expect(promise).rejected;
+    describe("empty translation directory", () => {
+        it("no extra options", async () => {
+            const promise = new TranslatorManager({
+                ...translationOptions,
+                translationFileDirectory: "./src/testData/translations/empty"
+            }).init();
+            await expect(promise).fulfilled;
+        });
+
+        it("useBuiltInFallback set to false", async () => {
+            const promise = new TranslatorManager({
+                ...translationOptions,
+                translationFileDirectory: "./src/testData/translations/empty",
+                useBuiltInFallback: false
+            }).init();
+            await expect(promise).rejected;
+        });
+    });
+
+    it("Built in fallback handling", async () => {
+        const translatorManager = await new TranslatorManager({
+            ...translationOptions,
+            translationFileDirectory: "./src/testData/translations/partial"
+        }).init();
+        
+        expect(translatorManager.fallbackTranslator.translate("command_processor.errors.unknown_command")).equal("Unknown command.");
+        expect(translatorManager.fallbackTranslator.translate("command_processor.errors.too_few_arguments")).equal("Partial translation test string");
     });
 
     it("#fallbackLocale", async () => {

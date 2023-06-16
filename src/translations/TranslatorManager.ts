@@ -1,16 +1,19 @@
 import { CommandInteraction, Guild, GuildResolvable, LocaleString, Message, User } from "discord.js";
 import { readdir, readFile } from "fs/promises";
 import path from "path";
-import { ErrorCollector } from "./helpers/ErrorCollector.js";
+import { ErrorCollector } from "../helpers/ErrorCollector.js";
 import { Translator } from "./Translator.js";
-import { _getValueOrThrowInitError } from "./util.js";
+import { _getValueOrThrowInitError } from "../util.js";
+import defaultTranslations from "./defaultTranslations.js";
+import { merge } from "lodash-es";
 
 /** @public */
 export interface TranslatorManagerOptions {
-    translationFileDirectory: string;
-    defaultLocale: LocaleString;
-    getUserLocale: (user: User) => Promise<LocaleString | null>;
-    getGuildLocale: (guild: Guild) => Promise<LocaleString | null>;
+    translationFileDirectory?: string;
+    defaultLocale?: LocaleString;
+    useBuiltInFallback?: boolean;
+    getUserLocale?: (user: User) => Promise<LocaleString | null>;
+    getGuildLocale?: (guild: Guild) => Promise<LocaleString | null>;
 }
 
 /** @public */
@@ -36,31 +39,53 @@ export class TranslatorManager {
     }
     private _fallbackTranslator?: Translator;
 
-    constructor(private options: TranslatorManagerOptions) {}
+    constructor(private options: TranslatorManagerOptions) { }
 
     /** @internal */
     async init() {
         const errorCollector = new ErrorCollector("while initializing translators");
 
-        for (let file of await readdir(this.options.translationFileDirectory)) {
-            if (!file.endsWith(".json")) continue;
-            errorCollector.setHeader(0, `File: ${file}`);
+        this.options.defaultLocale ??= TranslatorManager.defaultDiscordLocale;
+        this.options.useBuiltInFallback ??= true;
+        const defaultTranslationsCopy = Object.assign(structuredClone(defaultTranslations), { 
+            locale_string: this.options.defaultLocale 
+        });
 
-            try {
-                const data = JSON.parse(await readFile(path.join(this.options.translationFileDirectory, file), "utf8"));
-                const translator = new Translator(data, errorCollector);
+        const files = this.options.translationFileDirectory
+            ? (await readdir(this.options.translationFileDirectory)).filter(file => file.endsWith(".json"))
+            : [];
 
-                this.translators.set(translator.localeString, new Map([
-                    [null, translator]
-                ]));
-                this.rootTranslators.push(translator);
-                this.setLocaleRegexes[translator.localeString] = translator.setLocaleRegex;
-            } catch (e: unknown) {
-                if (!(e instanceof Error))
-                    e = new Error(`${e}`);
-                (e as Error).message += `\nFile: ${file}`;
-                throw e;
+        if (files.length) {
+            for (const file of files) {
+                errorCollector.setHeader(0, `File: ${file}`);
+
+                try {
+                    let data = JSON.parse(await readFile(path.join(this.options.translationFileDirectory!, file), "utf8"));
+                    if (this.options.useBuiltInFallback && data.locale_string === this.options.defaultLocale)
+                        data = merge(defaultTranslationsCopy, data);
+
+                    const translator = new Translator(data, errorCollector);
+
+                    this.translators.set(translator.localeString, new Map([
+                        [null, translator]
+                    ]));
+                    this.rootTranslators.push(translator);
+                    this.setLocaleRegexes[translator.localeString] = translator.setLocaleRegex;
+                } catch (e: unknown) {
+                    if (!(e instanceof Error))
+                        e = new Error(`${e}`);
+                    (e as Error).message += `\nFile: ${file}`;
+                    throw e;
+                }
             }
+        } else if (this.options.useBuiltInFallback) {
+            const translator = new Translator(Object.assign(defaultTranslationsCopy), errorCollector);
+
+            this.translators.set(translator.localeString, new Map([
+                [null, translator]
+            ]));
+            this.rootTranslators.push(translator);
+            this.setLocaleRegexes[translator.localeString] = translator.setLocaleRegex;
         }
 
         if (!this.translators.has(this.options.defaultLocale)) {
@@ -120,12 +145,12 @@ export class TranslatorManager {
         }
 
         if (user) {
-            return await this.options.getUserLocale(user)
+            return await this.options.getUserLocale?.(user)
                 ?? (interactionLocale !== TranslatorManager.defaultDiscordLocale
                     ? interactionLocale
                     : null);
         } else if (guild) {
-            return await this.options.getGuildLocale(guild)
+            return await this.options.getGuildLocale?.(guild)
                 ?? this.getLocale((await guild.fetchOwner()).user);
         } else {
             throw new Error("Invalid context.");
@@ -133,19 +158,19 @@ export class TranslatorManager {
     }
 
     async getTranslator(nameOrContext: TranslatorManager.ContextResolvable, prefix?: string): Promise<Translator> {
-        const locale = (await this.getLocale(nameOrContext)) ?? this.options.defaultLocale;
+        const locale = (await this.getLocale(nameOrContext)) ?? this.fallbackLocale;
 
         const translatorsInLocale = this.translators.get(locale as LocaleString);
         if (!translatorsInLocale)
-            return this.getTranslator(this.options.defaultLocale, prefix);
+            return this.getTranslator(this.fallbackLocale, prefix);
         
         let translator = translatorsInLocale.get(prefix ?? null);
         if (!translator) {
             // prefix always exists at this point since translatorsInLocale && !translator
             // (at least null is always present)
-            translator = new Translator(translatorsInLocale.get(null)!, locale === this.options.defaultLocale
+            translator = new Translator(translatorsInLocale.get(null)!, locale === this.fallbackLocale
                 ? prefix!
-                : await this.getTranslator(this.options.defaultLocale, prefix));
+                : await this.getTranslator(this.fallbackLocale, prefix));
             translatorsInLocale.set(prefix!, translator);
         }
 

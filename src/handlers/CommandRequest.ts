@@ -1,5 +1,5 @@
 import { Guild, GuildMember, If, InteractionReplyOptions, TextBasedChannel, GuildTextBasedChannel, MessageReplyOptions, User, Snowflake } from 'discord.js';
-import { Translator } from "../Translator.js";
+import { Translator } from "../translations/Translator.js";
 import { CommandResponse } from "./CommandResponse.js";
 
 /** 

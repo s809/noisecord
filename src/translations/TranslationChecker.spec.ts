@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { TranslatorManager } from "../TranslatorManager.js";
+import { TranslatorManager } from "./TranslatorManager.js";
 import { TranslationChecker } from "./TranslationChecker.js";
 
 describe(TranslationChecker.name, () => {

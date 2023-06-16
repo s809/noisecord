@@ -3,7 +3,7 @@ import { ArgumentParseError } from "./errors/ArgumentParseError.js";
 import { CommandRequest } from "./CommandRequest.js";
 import { EventHandler } from "./EventHandler.js";
 import { Command } from "../interfaces/Command.js";
-import { Translator } from "../Translator.js";
+import { Translator } from "../translations/Translator.js";
 
 /** @public */
 export interface EventHandlerOptions<TCommandRequest = CommandRequest> {

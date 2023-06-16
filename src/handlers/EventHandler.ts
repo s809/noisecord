@@ -1,10 +1,10 @@
 import { Awaitable, Client, ClientEvents } from "discord.js";
 import { CommandRegistry } from "../CommandRegistry.js";
-import { TranslatorManager } from "../TranslatorManager.js";
+import { TranslatorManager } from "../translations/TranslatorManager.js";
 import { CommandResultError } from "./errors/CommandResultError.js";
 import { EventHandlerOptions } from "./EventHandlerOptions.js";
 import { setTimeout } from "timers/promises";
-import { Translator } from "../Translator.js";
+import { Translator } from "../translations/Translator.js";
 import { Merge } from "type-fest";
 import { Command } from "../interfaces/Command.js";
 import { CommandRequest } from "./CommandRequest.js";

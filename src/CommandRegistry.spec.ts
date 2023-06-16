@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { CommandRegistry } from "./CommandRegistry.js";
-import { TranslatorManager } from "./TranslatorManager.js";
+import { TranslatorManager } from "./translations/TranslatorManager.js";
 
 describe("CommandRegistry", () => {
     let translatorManager: TranslatorManager;

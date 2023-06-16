@@ -3,7 +3,7 @@ import { CommandRegistry } from "../../CommandRegistry.js";
 import { _checkConditions } from "../../conditions/index.js";
 import { Command } from "../../interfaces/Command.js";
 import { MessageCommandRequest } from "./MessageCommandRequest.js";
-import { Translator } from "../../Translator.js";
+import { Translator } from "../../translations/Translator.js";
 import { parseChannelMention, parseRoleMention, parseUserMention } from "../../util.js";
 import { ArgumentParseError } from "../errors/ArgumentParseError.js";
 import { CommandResultError } from "../errors/CommandResultError.js";

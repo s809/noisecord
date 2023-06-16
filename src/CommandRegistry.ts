@@ -3,8 +3,8 @@ import path from "path";
 import {  CommandCreationHelper } from "./helpers/CommandCreationHelper.js";
 import { Command, CommandDefinition } from "./interfaces/Command.js";
 import { importModules, isTsNode } from "./helpers/importHelper.js";
-import { Translator } from "./Translator.js";
-import { TranslatorManager } from "./TranslatorManager.js";
+import { Translator } from "./translations/Translator.js";
+import { TranslatorManager } from "./translations/TranslatorManager.js";
 import { DeeplyNestedMap, _traverseTree } from "./util.js";
 import { ContextMenuCommand, ContextMenuCommandDefinition } from "./interfaces/ContextMenuCommand.js";
 

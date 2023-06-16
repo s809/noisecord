@@ -59,9 +59,9 @@ export * from "./interfaces/common.js"
 export * from "./util.js";
 export * from "./helpers/ErrorCollector.js";
 
-export * from "./Translator.js";
-export * from "./TranslatorManager.js";
-export * from "./helpers/TranslationChecker.js";
+export * from "./translations/Translator.js";
+export * from "./translations/TranslatorManager.js";
+export * from "./translations/TranslationChecker.js";
 
 export * from "./handlers/errors/ArgumentParseError.js";
 export * from "./handlers/EventHandler.js"
@@ -76,4 +76,3 @@ export * from "./handlers/Interaction/InteractionCommandResponse.js";
 export * from "./handlers/Message/MessageHandler.js";
 export * from "./handlers/Message/MessageCommandRequest.js";
 export * from "./handlers/Message/MessageCommandResponse.js";
-

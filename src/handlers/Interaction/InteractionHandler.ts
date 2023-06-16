@@ -6,7 +6,7 @@ import { ArgumentParseError } from "../errors/ArgumentParseError.js";
 import { CommandResultError } from "../errors/CommandResultError.js";
 import { EventHandlerOptions } from "../EventHandlerOptions.js";
 import { EventHandler } from "../EventHandler.js";
-import { Translator } from "../../Translator.js";
+import { Translator } from "../../translations/Translator.js";
 import assert from "assert";
 import { ContextMenuCommand } from "../../interfaces/ContextMenuCommand.js";
 import { _checkConditions } from "../../conditions/index.js";

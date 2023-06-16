@@ -1,10 +1,10 @@
 import { CommandRegistry, CommandRegistryOptions } from "./CommandRegistry.js";
-import { TranslatorManager, TranslatorManagerOptions } from "./TranslatorManager.js";
+import { TranslatorManager, TranslatorManagerOptions } from "./translations/TranslatorManager.js";
 import { Client } from "discord.js";
 import { _InteractionHandler, InteractionHandlerOptions } from "./handlers/Interaction/InteractionHandler.js";
 import { _MessageHandler, MessageHandlerOptions } from "./handlers/Message/MessageHandler.js";
 import { _getValueOrThrowInitError } from "./util.js";
-import { TranslationChecker } from "./helpers/TranslationChecker.js";
+import { TranslationChecker } from "./translations/TranslationChecker.js";
 import { EventHandler } from "./handlers/EventHandler.js";
 import { isUndefined, omitBy } from "lodash-es";
 
