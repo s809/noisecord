@@ -43,7 +43,7 @@ Error.cause
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:9](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L9)
+[src/handlers/errors/ArgumentParseError.ts:9](https://github.com/s809/noisecord/blob/37daa76/src/handlers/errors/ArgumentParseError.ts#L9)
 
 ___
 
@@ -57,7 +57,7 @@ Error.message
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:7](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L7)
+[src/handlers/errors/ArgumentParseError.ts:7](https://github.com/s809/noisecord/blob/37daa76/src/handlers/errors/ArgumentParseError.ts#L7)
 
 ___
 
@@ -160,7 +160,7 @@ this is ArgumentParseError<T\>
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:20](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L20)
+[src/handlers/errors/ArgumentParseError.ts:20](https://github.com/s809/noisecord/blob/37daa76/src/handlers/errors/ArgumentParseError.ts#L20)
 
 ___
 
@@ -174,7 +174,7 @@ this is ArgumentParseError<Extract<TReason, keyof SingleCauseMap\>\>
 
 #### Defined in
 
-[src/handlers/errors/ArgumentParseError.ts:16](https://github.com/s809/noisecord/blob/d5882c2/src/handlers/errors/ArgumentParseError.ts#L16)
+[src/handlers/errors/ArgumentParseError.ts:16](https://github.com/s809/noisecord/blob/37daa76/src/handlers/errors/ArgumentParseError.ts#L16)
 
 ___
 

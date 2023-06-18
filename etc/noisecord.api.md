@@ -302,7 +302,7 @@ export interface CommandFrameworkOptions {
     // (undocumented)
     messageCommands?: MessageHandlerOptions;
     // (undocumented)
-    translationOptions: TranslatorManagerOptions;
+    translationOptions?: TranslatorManagerOptions;
 }
 
 // @public
@@ -338,6 +338,8 @@ export interface CommandRegistryOptions {
     commandModuleDirectory?: string;
     // (undocumented)
     contextMenuModuleDirectory?: string;
+    // (undocumented)
+    requireCommandTranslations?: boolean;
 }
 
 // @public
@@ -702,7 +704,7 @@ export namespace TranslatorManager {
 
 // @public (undocumented)
 export class TranslatorManager {
-    constructor(options: TranslatorManagerOptions);
+    constructor(options?: TranslatorManagerOptions);
     // (undocumented)
     static readonly defaultDiscordLocale: LocaleString;
     // (undocumented)
