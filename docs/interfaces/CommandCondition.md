@@ -35,7 +35,7 @@ Interface for adding a condition to a command.
 
 #### Defined in
 
-[src/conditions/index.ts:12](https://github.com/s809/noisecord/blob/5e7fdcd/src/conditions/index.ts#L12)
+[src/conditions/index.ts:12](https://github.com/s809/noisecord/blob/777b7e5/src/conditions/index.ts#L12)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:11](https://github.com/s809/noisecord/blob/5e7fdcd/src/conditions/index.ts#L11)
+[src/conditions/index.ts:11](https://github.com/s809/noisecord/blob/777b7e5/src/conditions/index.ts#L11)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:14](https://github.com/s809/noisecord/blob/5e7fdcd/src/conditions/index.ts#L14)
+[src/conditions/index.ts:14](https://github.com/s809/noisecord/blob/777b7e5/src/conditions/index.ts#L14)
 
 ___
 
@@ -65,4 +65,4 @@ ___
 
 #### Defined in
 
-[src/conditions/index.ts:13](https://github.com/s809/noisecord/blob/5e7fdcd/src/conditions/index.ts#L13)
+[src/conditions/index.ts:13](https://github.com/s809/noisecord/blob/777b7e5/src/conditions/index.ts#L13)

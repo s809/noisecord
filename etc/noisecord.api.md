@@ -747,4 +747,6 @@ export type UnionToIntersectionRecursive<T> = {
     [K in keyof T]: T[K] extends {} ? UnionToIntersection<T[K]> : UnionToIntersectionRecursive<T[K]>;
 };
 
+// (No @packageDocumentation comment for this package)
+
 ```
