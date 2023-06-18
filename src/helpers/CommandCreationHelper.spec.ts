@@ -14,7 +14,7 @@ describe("CommandCreationHelper", () => {
                 "ru": "test2"
             }),
             fallbackLocale: "en-US"
-        } as TranslatorManager);
+        } as TranslatorManager, true);
     });
 
     describe("no errors", () => {
@@ -139,11 +139,58 @@ describe("CommandCreationHelper", () => {
                             }
                         },
                         fallbackLocale: "en-US"
-                    } as TranslatorManager);
+                    } as TranslatorManager, true);
 
                     commandCreationHelper.fillTranslations({ path: "path/to/command" }, "commands.path_to_command");
 
                     expect(() => commandCreationHelper.throwIfErrors()).throws(inputs.check);
+                });
+            }
+
+            for (const inputs of [
+                {
+                    title: "No matching name",
+                    name: {
+                        "en-US": "test"
+                    },
+                    description: {
+                        "en-US": "test",
+                        "ru": "test2"
+                    }
+                },
+                {
+                    title: "No matching description",
+                    name: {
+                        "en-US": "test",
+                        "ru": "test2"
+                    },
+                    description: {
+                        "en-US": "test"
+                    }
+                },
+                {
+                    title: "Default locale is missing",
+                    name: {},
+                    description: {}
+                }
+            ] as const) {
+                it(inputs.title, () => {
+                    const commandCreationHelper = new CommandCreationHelper({
+                        getLocalizations: translationPath => {
+                            switch (translationPath) {
+                                case "commands.path_to_command.name":
+                                    return inputs.name;
+                                case "commands.path_to_command.description":
+                                    return inputs.description;
+                                default:
+                                    return {};
+                            }
+                        },
+                        fallbackLocale: "en-US"
+                    } as TranslatorManager, false);
+
+                    commandCreationHelper.fillTranslations({ path: "path/to/command" }, "commands.path_to_command");
+                    commandCreationHelper.throwIfErrors();
                 });
             }
         });
@@ -206,7 +253,7 @@ describe("CommandCreationHelper", () => {
                                 && { "en-US": "test" }
                         }),
                         fallbackLocale: "en-US"
-                    } as TranslatorManager);
+                    } as TranslatorManager, true);
 
                     const argsFiller = {
                         key: "argKey",

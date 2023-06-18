@@ -21,9 +21,7 @@ describe("CommandRegistry", () => {
 
     it("normal", () => commandRegistry.createCommands());
 
-    it("errors", async function () {
-        this.timeout(5000);
-
+    describe("errors", async function () {
         const translatorManager = await new TranslatorManager({
             translationFileDirectory: "./src/testData/translations/normal",
             defaultLocale: "en-US",
@@ -31,12 +29,29 @@ describe("CommandRegistry", () => {
             getGuildLocale: async () => "ru",
         }).init();
 
-        const promise = new CommandRegistry({
-            commandModuleDirectory: "./src/testData/commands/errors",
-            contextMenuModuleDirectory: "./src/testData/contextMenuCommands/normal"
-        }, translatorManager).createCommands();
 
-        await expect(promise).rejectedWith("Errors generated: 7");
+        it("Don't require command translations", async function () {
+            this.timeout(5000);
+
+            const promise = new CommandRegistry({
+                commandModuleDirectory: "./src/testData/commands/errors",
+                contextMenuModuleDirectory: "./src/testData/contextMenuCommands/normal"
+            }, translatorManager).createCommands();
+
+            await expect(promise).rejectedWith("Errors generated: 4");
+        })
+
+        it("Require command translations", async function () {
+            this.timeout(5000);
+
+            const promise = new CommandRegistry({
+                commandModuleDirectory: "./src/testData/commands/errors",
+                contextMenuModuleDirectory: "./src/testData/contextMenuCommands/normal",
+                requireCommandTranslations: true
+            }, translatorManager).createCommands();
+
+            await expect(promise).rejectedWith("Errors generated: 7");
+        })
     });
 
     describe("Context menu command creation", () => {

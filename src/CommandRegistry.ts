@@ -15,6 +15,7 @@ import { ContextMenuCommand, ContextMenuCommandDefinition } from "./interfaces/C
 export interface CommandRegistryOptions {
     commandModuleDirectory?: string;
     contextMenuModuleDirectory?: string;
+    requireCommandTranslations?: boolean;
 }
 
 /** 
@@ -56,7 +57,7 @@ export class CommandRegistry {
             );
             return chain;
         }
-        const commandCreationHelper = new CommandCreationHelper(this.translatorManager);
+        const commandCreationHelper = new CommandCreationHelper(this.translatorManager, this.options.requireCommandTranslations ?? false);
 
         // Create and add commands to tree
         for (const [filePath, definition] of queue) {
@@ -139,7 +140,7 @@ export class CommandRegistry {
             commandCreationHelper.setHeader(0, `Context menu: ${definition.key}`);
 
             const nameLocalizations = this.translatorManager.getLocalizations(`${this.getCommandTranslationPath(definition.key, true)}.name`);
-            if (!nameLocalizations[this.translatorManager.fallbackLocale])
+            if (!nameLocalizations[this.translatorManager.fallbackLocale] && this.options.requireCommandTranslations)
                 commandCreationHelper.addError(`Context menu command ${definition.key} has no name in default locale (${this.translatorManager.fallbackLocale}).`);
 
             this.contextMenuCommands.push({
@@ -148,7 +149,7 @@ export class CommandRegistry {
                 appCommandId: null,
                 appCommandData: {
                     type: definition.type,
-                    name: nameLocalizations[this.translatorManager.fallbackLocale]!,
+                    name: nameLocalizations[this.translatorManager.fallbackLocale] ?? definition.key,
                     nameLocalizations,
                     dmPermission: definition.allowDMs ?? true
                 }

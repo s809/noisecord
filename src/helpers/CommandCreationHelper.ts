@@ -19,7 +19,7 @@ export namespace CommandCreationHelper {
 }
 
 export class CommandCreationHelper extends ErrorCollector {
-    constructor(private translatorManager: TranslatorManager) {
+    constructor(private translatorManager: TranslatorManager, private requireTranslations: boolean) {
         super("while creating commands");
     }
 
@@ -48,17 +48,25 @@ export class CommandCreationHelper extends ErrorCollector {
         };
     }
 
-    private checkLocalizations(a: any, b: any, name: string, name2?: string) {
+    private checkLocalizations(a: any, b: any, context: string, name: string, name2?: string) {
         for (const key of Object.keys(b)) {
             if (!a[key]) {
-                this.addError(`Missing ${name} in locale ${key}`);
-                a[key] = "_MISSING";
+                if (this.requireTranslations) {
+                    this.addError(`Missing ${name} in locale ${key}`);
+                    a[key] = "_MISSING";
+                } else {
+                    a[key] = `${context}_${name.replaceAll(" ", "_")}_${key}`;
+                }
             }
         }
         for (const key of Object.keys(a)) {
             if (!b[key]) {
-                this.addError(`Missing ${name2 ?? name} in locale ${key}`);
-                b[key] = "_MISSING";
+                if (this.requireTranslations) {
+                    this.addError(`Missing ${name2 ?? name} in locale ${key}`);
+                    b[key] = "_MISSING";
+                } else {
+                    b[key] = `${context}_${(name2 ?? name).replaceAll(" ", "_")}_${key}`;
+                }
             }
         }
     };
@@ -104,12 +112,17 @@ export class CommandCreationHelper extends ErrorCollector {
         const nameTranslations = this.translatorManager.getLocalizations(`${translationPath}.name`);
         const descriptionTranslations = this.translatorManager.getLocalizations(`${translationPath}.description`);
         
-        if (!nameTranslations[this.translatorManager.fallbackLocale] && !descriptionTranslations[this.translatorManager.fallbackLocale]) {
-            this.addError(`Command is missing a name and description in default locale (${this.translatorManager.fallbackLocale}).`);
-            nameTranslations[this.translatorManager.fallbackLocale] = "_MISSING";
-            descriptionTranslations[this.translatorManager.fallbackLocale] = "_MISSING";
+        if (!nameTranslations[this.translatorManager.fallbackLocale] || !descriptionTranslations[this.translatorManager.fallbackLocale]) {
+            if (this.requireTranslations) {
+                this.addError(`Command is missing a name and description in default locale (${this.translatorManager.fallbackLocale}).`);
+                nameTranslations[this.translatorManager.fallbackLocale] = "_MISSING";
+                descriptionTranslations[this.translatorManager.fallbackLocale] = "_MISSING";
+            } else {
+                nameTranslations[this.translatorManager.fallbackLocale] = partialCommand.key;
+                descriptionTranslations[this.translatorManager.fallbackLocale] = "No description available";
+            }
         }
-        this.checkLocalizations(nameTranslations, descriptionTranslations, "command name", "command description");
+        this.checkLocalizations(nameTranslations, descriptionTranslations, partialCommand.key!, "command name", "command description");
 
         let nextLevel = this.groupChainLength;
         this.setHeader(nextLevel++, "Name translations");
@@ -143,8 +156,8 @@ export class CommandCreationHelper extends ErrorCollector {
             // Make sure that argument's translation is consistent with command's translation.
             const nameLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.name`);
             const descriptionLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.description`);
-            this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "argument name");
-            this.checkLocalizations(partialCommand.nameTranslations, descriptionLocalizations, "argument description");
+            this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, arg.key, "argument name");
+            this.checkLocalizations(partialCommand.nameTranslations, descriptionLocalizations, arg.key, "argument description");
 
             if (arg.required === false)
                 optionalArgsStarted = true; // If an optional argument is found, all following arguments are optional.
@@ -188,7 +201,7 @@ export class CommandCreationHelper extends ErrorCollector {
                     this.setHeader(nextLevel + 1, `Choice: ${choice.key}`);
 
                     const nameLocalizations = this.translatorManager.getLocalizations(`${argTranslationPath}.choices.${choice.key}.name`);
-                    this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, "choice name");
+                    this.checkLocalizations(partialCommand.nameTranslations, nameLocalizations, choice.key, "choice name");
 
                     return {
                         name: nameLocalizations[this.translatorManager.fallbackLocale],
