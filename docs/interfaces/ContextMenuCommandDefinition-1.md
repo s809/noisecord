@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:9](https://github.com/s809/noisecord/blob/777b7e5/src/interfaces/ContextMenuCommand.ts#L9)
+[src/interfaces/ContextMenuCommand.ts:9](https://github.com/s809/noisecord/blob/acabd79/src/interfaces/ContextMenuCommand.ts#L9)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:10](https://github.com/s809/noisecord/blob/777b7e5/src/interfaces/ContextMenuCommand.ts#L10)
+[src/interfaces/ContextMenuCommand.ts:10](https://github.com/s809/noisecord/blob/acabd79/src/interfaces/ContextMenuCommand.ts#L10)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:7](https://github.com/s809/noisecord/blob/777b7e5/src/interfaces/ContextMenuCommand.ts#L7)
+[src/interfaces/ContextMenuCommand.ts:7](https://github.com/s809/noisecord/blob/acabd79/src/interfaces/ContextMenuCommand.ts#L7)
 
 ___
 
@@ -70,4 +70,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:8](https://github.com/s809/noisecord/blob/777b7e5/src/interfaces/ContextMenuCommand.ts#L8)
+[src/interfaces/ContextMenuCommand.ts:8](https://github.com/s809/noisecord/blob/acabd79/src/interfaces/ContextMenuCommand.ts#L8)

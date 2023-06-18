@@ -35,7 +35,7 @@ index 1 - positive values (e.g. "true").
 
 #### Defined in
 
-[src/translations/Translator.ts:31](https://github.com/s809/noisecord/blob/777b7e5/src/translations/Translator.ts#L31)
+[src/translations/Translator.ts:31](https://github.com/s809/noisecord/blob/acabd79/src/translations/Translator.ts#L31)
 
 ___
 
@@ -47,7 +47,7 @@ Contains locale to which everything will be translated to
 
 #### Defined in
 
-[src/translations/Translator.ts:21](https://github.com/s809/noisecord/blob/777b7e5/src/translations/Translator.ts#L21)
+[src/translations/Translator.ts:21](https://github.com/s809/noisecord/blob/acabd79/src/translations/Translator.ts#L21)
 
 ___
 
@@ -59,7 +59,7 @@ Translator of same locale without prefix.
 
 #### Defined in
 
-[src/translations/Translator.ts:37](https://github.com/s809/noisecord/blob/777b7e5/src/translations/Translator.ts#L37)
+[src/translations/Translator.ts:37](https://github.com/s809/noisecord/blob/acabd79/src/translations/Translator.ts#L37)
 
 ___
 
@@ -71,7 +71,7 @@ RegExp for setting locale of specified locale
 
 #### Defined in
 
-[src/translations/Translator.ts:25](https://github.com/s809/noisecord/blob/777b7e5/src/translations/Translator.ts#L25)
+[src/translations/Translator.ts:25](https://github.com/s809/noisecord/blob/acabd79/src/translations/Translator.ts#L25)
 
 ## Accessors
 
@@ -87,7 +87,7 @@ Translator of fallback locale with same prefix.
 
 #### Defined in
 
-[src/translations/Translator.ts:39](https://github.com/s809/noisecord/blob/777b7e5/src/translations/Translator.ts#L39)
+[src/translations/Translator.ts:39](https://github.com/s809/noisecord/blob/acabd79/src/translations/Translator.ts#L39)
 
 ## Methods
 
@@ -112,7 +112,7 @@ Value from object or undefined.
 
 #### Defined in
 
-[src/translations/Translator.ts:120](https://github.com/s809/noisecord/blob/777b7e5/src/translations/Translator.ts#L120)
+[src/translations/Translator.ts:120](https://github.com/s809/noisecord/blob/acabd79/src/translations/Translator.ts#L120)
 
 ___
 
@@ -137,7 +137,7 @@ String with translation or passed path, if it was not found.
 
 #### Defined in
 
-[src/translations/Translator.ts:90](https://github.com/s809/noisecord/blob/777b7e5/src/translations/Translator.ts#L90)
+[src/translations/Translator.ts:90](https://github.com/s809/noisecord/blob/acabd79/src/translations/Translator.ts#L90)
 
 ___
 
@@ -162,4 +162,4 @@ String with translation or null, if it was not found.
 
 #### Defined in
 
-[src/translations/Translator.ts:108](https://github.com/s809/noisecord/blob/777b7e5/src/translations/Translator.ts#L108)
+[src/translations/Translator.ts:108](https://github.com/s809/noisecord/blob/acabd79/src/translations/Translator.ts#L108)

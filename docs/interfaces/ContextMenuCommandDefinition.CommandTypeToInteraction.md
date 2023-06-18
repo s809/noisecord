@@ -25,7 +25,7 @@
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:23](https://github.com/s809/noisecord/blob/777b7e5/src/interfaces/ContextMenuCommand.ts#L23)
+[src/interfaces/ContextMenuCommand.ts:23](https://github.com/s809/noisecord/blob/acabd79/src/interfaces/ContextMenuCommand.ts#L23)
 
 ___
 
@@ -35,4 +35,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:24](https://github.com/s809/noisecord/blob/777b7e5/src/interfaces/ContextMenuCommand.ts#L24)
+[src/interfaces/ContextMenuCommand.ts:24](https://github.com/s809/noisecord/blob/acabd79/src/interfaces/ContextMenuCommand.ts#L24)
