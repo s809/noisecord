@@ -1,11 +1,21 @@
 /**
  * Command framework.
  * 
+ * ## Installing
+ * Create `.npmrc` in your project root with following contents:
+ * ```npmrc
+ * @s809:registry=https://npm.pkg.github.com/
+ * ```
+ * Then you can run:
+ * ```shell
+ * npm install @s809/noisecord
+ * ```
+ * 
  * @example
  * To create a simple bot, use the following code:
  * 
  * - index.ts:
- * ```
+ * ```ts
  * import { CommandFramework } from "@s809/noisecord";
  * 
  * const commandFramework = CommandFramework.create(client, {
@@ -36,7 +46,7 @@
  * ```
  * 
  * - commands/mycommand.ts
- * ```
+ * ```ts
  * import { defineCommand } from "@s809/noisecord";
  * 
  * export default defineCommand({

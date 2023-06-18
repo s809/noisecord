@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/translations/TranslatorManager.ts:13](https://github.com/s809/noisecord/blob/37daa76/src/translations/TranslatorManager.ts#L13)
+[src/translations/TranslatorManager.ts:13](https://github.com/s809/noisecord/blob/5e7fdcd/src/translations/TranslatorManager.ts#L13)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[src/translations/TranslatorManager.ts:16](https://github.com/s809/noisecord/blob/37daa76/src/translations/TranslatorManager.ts#L16)
+[src/translations/TranslatorManager.ts:16](https://github.com/s809/noisecord/blob/5e7fdcd/src/translations/TranslatorManager.ts#L16)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[src/translations/TranslatorManager.ts:15](https://github.com/s809/noisecord/blob/37daa76/src/translations/TranslatorManager.ts#L15)
+[src/translations/TranslatorManager.ts:15](https://github.com/s809/noisecord/blob/5e7fdcd/src/translations/TranslatorManager.ts#L15)
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[src/translations/TranslatorManager.ts:12](https://github.com/s809/noisecord/blob/37daa76/src/translations/TranslatorManager.ts#L12)
+[src/translations/TranslatorManager.ts:12](https://github.com/s809/noisecord/blob/5e7fdcd/src/translations/TranslatorManager.ts#L12)
 
 ___
 
@@ -88,4 +88,4 @@ ___
 
 #### Defined in
 
-[src/translations/TranslatorManager.ts:14](https://github.com/s809/noisecord/blob/37daa76/src/translations/TranslatorManager.ts#L14)
+[src/translations/TranslatorManager.ts:14](https://github.com/s809/noisecord/blob/5e7fdcd/src/translations/TranslatorManager.ts#L14)

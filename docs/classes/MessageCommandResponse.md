@@ -40,7 +40,7 @@ CommandResponse.content
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:22](https://github.com/s809/noisecord/blob/37daa76/src/handlers/CommandResponse.ts#L22)
+[src/handlers/CommandResponse.ts:22](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/CommandResponse.ts#L22)
 
 ___
 
@@ -60,7 +60,7 @@ CommandResponse.embeds
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:27](https://github.com/s809/noisecord/blob/37daa76/src/handlers/CommandResponse.ts#L27)
+[src/handlers/CommandResponse.ts:27](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/CommandResponse.ts#L27)
 
 ___
 
@@ -80,7 +80,7 @@ CommandResponse.flags
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:32](https://github.com/s809/noisecord/blob/37daa76/src/handlers/CommandResponse.ts#L32)
+[src/handlers/CommandResponse.ts:32](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/CommandResponse.ts#L32)
 
 ## Methods
 
@@ -112,7 +112,7 @@ Creates collector of message components.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandResponse.ts:32](https://github.com/s809/noisecord/blob/37daa76/src/handlers/Message/MessageCommandResponse.ts#L32)
+[src/handlers/Message/MessageCommandResponse.ts:32](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/Message/MessageCommandResponse.ts#L32)
 
 ___
 
@@ -132,7 +132,7 @@ Deletes the message, if possible.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandResponse.ts:27](https://github.com/s809/noisecord/blob/37daa76/src/handlers/Message/MessageCommandResponse.ts#L27)
+[src/handlers/Message/MessageCommandResponse.ts:27](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/Message/MessageCommandResponse.ts#L27)
 
 ___
 
@@ -158,4 +158,4 @@ Edits the message, if possible.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandResponse.ts:14](https://github.com/s809/noisecord/blob/37daa76/src/handlers/Message/MessageCommandResponse.ts#L14)
+[src/handlers/Message/MessageCommandResponse.ts:14](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/Message/MessageCommandResponse.ts#L14)

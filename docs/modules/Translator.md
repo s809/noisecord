@@ -16,4 +16,4 @@
 
 #### Defined in
 
-[src/translations/Translator.ts:10](https://github.com/s809/noisecord/blob/37daa76/src/translations/Translator.ts#L10)
+[src/translations/Translator.ts:10](https://github.com/s809/noisecord/blob/5e7fdcd/src/translations/Translator.ts#L10)

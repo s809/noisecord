@@ -26,7 +26,7 @@ Applies T from any inherited/modified `*Options` to a clean [EventHandlerOptions
 
 #### Defined in
 
-[src/handlers/EventHandler.ts:22](https://github.com/s809/noisecord/blob/37daa76/src/handlers/EventHandler.ts#L22)
+[src/handlers/EventHandler.ts:22](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/EventHandler.ts#L22)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-[src/handlers/EventHandler.ts:25](https://github.com/s809/noisecord/blob/37daa76/src/handlers/EventHandler.ts#L25)
+[src/handlers/EventHandler.ts:25](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/EventHandler.ts#L25)
 
 ___
 
@@ -52,4 +52,4 @@ ___
 
 #### Defined in
 
-[src/handlers/EventHandler.ts:16](https://github.com/s809/noisecord/blob/37daa76/src/handlers/EventHandler.ts#L16)
+[src/handlers/EventHandler.ts:16](https://github.com/s809/noisecord/blob/5e7fdcd/src/handlers/EventHandler.ts#L16)

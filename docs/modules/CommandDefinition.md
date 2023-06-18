@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[src/interfaces/Command.ts:32](https://github.com/s809/noisecord/blob/37daa76/src/interfaces/Command.ts#L32)
+[src/interfaces/Command.ts:32](https://github.com/s809/noisecord/blob/5e7fdcd/src/interfaces/Command.ts#L32)
 
 ___
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:42](https://github.com/s809/noisecord/blob/37daa76/src/interfaces/Command.ts#L42)
+[src/interfaces/Command.ts:42](https://github.com/s809/noisecord/blob/5e7fdcd/src/interfaces/Command.ts#L42)

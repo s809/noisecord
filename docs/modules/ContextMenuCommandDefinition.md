@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[src/interfaces/ContextMenuCommand.ts:19](https://github.com/s809/noisecord/blob/37daa76/src/interfaces/ContextMenuCommand.ts#L19)
+[src/interfaces/ContextMenuCommand.ts:19](https://github.com/s809/noisecord/blob/5e7fdcd/src/interfaces/ContextMenuCommand.ts#L19)
