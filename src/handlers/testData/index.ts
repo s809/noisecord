@@ -230,12 +230,30 @@ export function createHandler<T>(
                     name: "last-arg",
                     type: ApplicationCommandOptionType.String
                 }],
-                lastArgAsExtras: true
+                lastArgumentType: "extras"
             },
             handler: (_: any, {
                 firstArg,
                 lastArg
             }: any) => `${firstArg} ${lastArg.join(",")}`
+        }],
+        ["last-arg-as-raw", {
+            args: {
+                list: [{
+                    key: "firstArg",
+                    name: "first-arg",
+                    type: ApplicationCommandOptionType.String
+                }, {
+                    key: "lastArg",
+                    name: "last-arg",
+                    type: ApplicationCommandOptionType.String
+                }],
+                lastArgumentType: "raw"
+            },
+            handler: (_: any, {
+                firstArg,
+                lastArg
+            }: any) => `${firstArg} !!!${lastArg}!!!`
         }],
         ["slow", {
             handler: async () => {
@@ -345,7 +363,7 @@ export function createHandler<T>(
         conditions: [],
         args: {
             min: overrides.args?.list?.length ?? 0,
-            max: overrides.args?.lastArgAsExtras
+            max: overrides.args?.lastArgumentType
                 ? Infinity
                 : overrides.args?.list?.length ?? 0,
             stringTranslations: {},
@@ -362,7 +380,7 @@ export function createHandler<T>(
                     ...choice
                 })),
             })) ?? [],
-            lastArgAsExtras: false
+            lastArgumentType: null
         },
         subcommands: new Map()
     }, overrides));

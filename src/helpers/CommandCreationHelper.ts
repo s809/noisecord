@@ -142,7 +142,7 @@ export class CommandCreationHelper extends ErrorCollector {
         args: CommandDefinition["args"]) {        
         let minArgs = 0;
         let maxArgs = 0;
-        let lastArgAsExtras = false;
+        let lastArgumentType: Command["args"]["lastArgumentType"] = null;
         let optionalArgsStarted = false;
 
         const argStringTranslations = {} as Record<LocaleString, string>;
@@ -167,22 +167,23 @@ export class CommandCreationHelper extends ErrorCollector {
                 minArgs++;
             maxArgs++;
 
-            if (lastArgAsExtras)
-                this.addError("Extras argument must be the last argument.");
-            if (arg.isExtras) {
+            if (lastArgumentType)
+                this.addError("Extras/Raw argument must be the last argument.");
+            
+            if (arg.extras || arg.raw) {
                 if (arg.type !== ApplicationCommandOptionType.String)
-                    this.addError("Extras argument must be of a string type.");
-                if (arg.required === false)
-                    this.addError("Extras argument cannot be optional.");
+                    this.addError("Extras/Raw argument must be of a string type.");
+                if (arg.extras && arg.raw)
+                    this.addError("Argument cannot be both extras and raw.");
 
-                lastArgAsExtras = true;
+                lastArgumentType = arg.extras ? "extras" : "raw";
                 maxArgs = Infinity;
             }
 
             for (const [locale, translation] of Object.entries(nameLocalizations)) {
                 const argString = arg.required !== false
-                    ? `<${translation}${arg.isExtras ? "..." : ""}>`
-                    : `[${translation}]`;
+                    ? `<${translation}${arg.extras || arg.raw ? "..." : ""}>`
+                    : `[${translation}${arg.extras || arg.raw ? "..." : ""}]`;
 
                 if (!argStringTranslations[locale as LocaleString])
                     argStringTranslations[locale as LocaleString] = argString;
@@ -218,7 +219,7 @@ export class CommandCreationHelper extends ErrorCollector {
             min: minArgs,
             max: maxArgs,
             stringTranslations: argStringTranslations,
-            lastArgAsExtras
+            lastArgumentType
         };
     }
 }

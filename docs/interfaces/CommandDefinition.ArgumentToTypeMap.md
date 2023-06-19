@@ -1,6 +1,6 @@
 [@s809/noisecord](../README.md) / [Exports](../modules.md) / [CommandDefinition](../modules/CommandDefinition.md) / ArgumentToTypeMap
 
-# Interface: ArgumentToTypeMap<IsExtras\>
+# Interface: ArgumentToTypeMap<Extras\>
 
 [CommandDefinition](../modules/CommandDefinition.md).ArgumentToTypeMap
 
@@ -8,7 +8,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `IsExtras` | extends `boolean` \| `undefined` |
+| `Extras` | extends `boolean` \| `undefined` |
 
 ## Table of contents
 
@@ -30,17 +30,17 @@
 
 #### Defined in
 
-[src/interfaces/Command.ts:53](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L53)
+[src/interfaces/Command.ts:54](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L54)
 
 ___
 
 ### 3
 
- **3**: `IsExtras` extends ``true`` ? `string`[] : `string`
+ **3**: `Extras` extends ``true`` ? `string`[] : `string`
 
 #### Defined in
 
-[src/interfaces/Command.ts:52](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L52)
+[src/interfaces/Command.ts:53](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L53)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:54](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L54)
+[src/interfaces/Command.ts:55](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L55)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:55](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L55)
+[src/interfaces/Command.ts:56](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L56)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:57](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L57)
+[src/interfaces/Command.ts:58](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L58)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:56](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L56)
+[src/interfaces/Command.ts:57](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L57)
 
 ___
 
@@ -90,4 +90,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:58](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L58)
+[src/interfaces/Command.ts:59](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L59)

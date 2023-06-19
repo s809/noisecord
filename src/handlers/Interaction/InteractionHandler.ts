@@ -153,9 +153,14 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
             argsObj[arg.key] = getter.bind(interactionOptions)(arg.name)!;
         }
 
-        if (command.args.lastArgAsExtras) {
-            const key = command.args.list[command.args.list.length - 1].key;
-            argsObj[key] = this.splitByWhitespace(argsObj[key] as string);
+        const lastArg = command.args.list[command.args.list.length - 1];
+        switch (command.args.lastArgumentType) {
+            case "extras":
+                argsObj[lastArg.key] = this.splitByWhitespace(argsObj[lastArg.key] as string);
+                break;
+            case "raw":
+                // Has no logic since all arguments can only be passed individually
+                break;
         }
 
         return argsObj;

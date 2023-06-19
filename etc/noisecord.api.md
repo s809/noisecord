@@ -190,7 +190,7 @@ export namespace Command {
     // (undocumented)
     export interface ArgumentData {
         // (undocumented)
-        lastArgAsExtras: boolean;
+        lastArgumentType: "extras" | "raw" | null;
         // (undocumented)
         list: Simplify<(IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
             key: string;
@@ -252,14 +252,15 @@ export namespace CommandDefinition {
             key: string;
             value: string | number;
         }[];
-        isExtras?: boolean;
+        extras?: boolean;
+        raw?: boolean;
     })>;
     // (undocumented)
-    export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
+    export interface ArgumentToTypeMap<Extras extends boolean | undefined> {
         // (undocumented)
         [ApplicationCommandOptionType.Number]: number;
         // (undocumented)
-        [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
+        [ApplicationCommandOptionType.String]: Extras extends true ? string[] : string;
         // (undocumented)
         [ApplicationCommandOptionType.Integer]: number;
         // (undocumented)
@@ -273,7 +274,7 @@ export namespace CommandDefinition {
     }
     // (undocumented)
     export type HandlerArguments<Args extends readonly Argument[]> = {
-        [Item in Args[number] as Item["key"]]: Item["type"] extends keyof ArgumentToTypeMap<Item["isExtras"]> ? Item["choices"] extends readonly any[] ? Item["choices"][number]["value"] : ArgumentToTypeMap<Item["isExtras"]>[Item["type"]] | (Item["required"] extends false ? undefined : never) : never;
+        [Item in Args[number] as Item["key"]]: Item["type"] extends keyof ArgumentToTypeMap<Item["extras"]> ? Item["choices"] extends readonly any[] ? Item["choices"][number]["value"] : ArgumentToTypeMap<Item["extras"]>[Item["type"]] | (Item["required"] extends false ? undefined : never) : never;
     };
 }
 
@@ -644,6 +645,9 @@ export function parseRoleMention(text: string): string | null;
 
 // @public
 export function parseUserMention(text: string): string | null;
+
+// @internal
+export function _skipStringParts(text: string, ...parts: string[]): string;
 
 // @public
 export const successEmoji = "\u2705";

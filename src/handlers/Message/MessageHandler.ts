@@ -4,7 +4,7 @@ import { _checkConditions } from "../../conditions/index.js";
 import { Command } from "../../interfaces/Command.js";
 import { MessageCommandRequest } from "./MessageCommandRequest.js";
 import { Translator } from "../../translations/Translator.js";
-import { parseChannelMention, parseRoleMention, parseUserMention } from "../../util.js";
+import { parseChannelMention, parseRoleMention, parseUserMention, _skipStringParts } from "../../util.js";
 import { ArgumentParseError } from "../errors/ArgumentParseError.js";
 import { CommandResultError } from "../errors/CommandResultError.js";
 import { EventHandlerOptions } from "../EventHandlerOptions.js";
@@ -120,7 +120,6 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
         const parts = this.splitByWhitespace(msg.content.slice(prefix.length));
         const command = this.commandRegistry.resolveCommandByLocalizedPath(parts, translator);
         if (!command || !command.handler) return;
-        parts.splice(0, command.path.split("/").length);
 
         if (!(await this.checkCommandPermissions(msg, command)))
             return;
@@ -138,7 +137,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
         // Parse arguments
         let argsObj: Command.HandlerArguments;
         try {
-            argsObj = await this.parseArguments(parts, command, msg.guild, translator);
+            argsObj = await this.parseArguments(msg, parts, command, translator);
         } catch (e) {
             if (!(e instanceof ArgumentParseError))
                 throw e;
@@ -208,7 +207,9 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
         return allowed || this.options.shouldIgnoreAllPermissions(msg, command);
     }
 
-    private async parseArguments(parts: string[], command: Command, guild: Guild | null, translator: Translator): Promise<Command.HandlerArguments> {
+    private async parseArguments(msg: Message, parts: string[], command: Command, translator: Translator): Promise<Command.HandlerArguments> {
+        const partsToSkip = parts.splice(0, command.path.split("/").length);
+
         const argCount = parts.length;
         const minArgs = command.args.min, maxArgs = command.args.max;
         if (argCount < minArgs) {
@@ -281,7 +282,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
                 });
             }],
             [ApplicationCommandOptionType.Channel, (key, value, arg) => {
-                const resolvedChannel: GuildChannel = this.parseResolvableValue(key, value, parseChannelMention, guild?.channels, "invalid_channel");
+                const resolvedChannel: GuildChannel = this.parseResolvableValue(key, value, parseChannelMention, msg.guild?.channels, "invalid_channel");
                 const fits = (arg as ApplicationCommandChannelOptionData).channelTypes?.some(type => resolvedChannel.type === type) ?? true;
                 if (fits)
                     return resolvedChannel;
@@ -291,12 +292,13 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
                     argValue: resolvedChannel.toString()
                 });
             }],
-            [ApplicationCommandOptionType.User, (key, value) => this.parseResolvableValue(key, value, parseUserMention, guild?.members, "invalid_user")],
-            [ApplicationCommandOptionType.Role, (key, value) => this.parseResolvableValue(key, value, parseRoleMention, guild?.roles, "invalid_role")],
+            [ApplicationCommandOptionType.User, (key, value) => this.parseResolvableValue(key, value, parseUserMention, msg.guild?.members, "invalid_user")],
+            [ApplicationCommandOptionType.Role, (key, value) => this.parseResolvableValue(key, value, parseRoleMention, msg.guild?.roles, "invalid_role")],
         ]);
 
-        for (const arg of command.args.list) {
+        for (const arg of command.args.lastArgumentType ? command.args.list.slice(0, -1) : command.args.list) {
             const argValue = parts.shift()!;
+            partsToSkip.push(argValue);
 
             const getter = argToGetter.get(arg.type);
             if (!getter) {
@@ -312,11 +314,15 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
             argsObj[arg.key] = getter(arg.key, argValue, arg);
         }
 
-        // Append remaining arguments to extras argument
-        if (command.args.lastArgAsExtras) {
-            const lastArg = command.args.list[command.args.list.length - 1];
-            parts.unshift(argsObj[lastArg.key] as string ?? "");
-            argsObj[lastArg.key] = parts;
+        // Append remaining arguments to extras/raw argument
+        const lastArg = command.args.list[command.args.list.length - 1];
+        switch (command.args.lastArgumentType) {
+            case "extras":
+                argsObj[lastArg.key] = parts;
+                break;
+            case "raw":
+                argsObj[lastArg.key] = _skipStringParts(msg.content, ...partsToSkip);
+                break;
         }
 
         return argsObj;

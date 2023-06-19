@@ -656,6 +656,7 @@ command_processor: strings.command_usage {"usage":"<usage:args-channel-types>"}`
         });
 
         it("Last arg as extras", () => shouldFail(`!last-arg-as-extras "1 2" 3 4 "5 6"`, `last_arg_as_extras: errors.1 2 3,4,5 6`));
+        it("Last arg as raw", () => shouldFail(`!last-arg-as-raw "1 2" 3 4 "5 6"`, `last_arg_as_raw: errors.1 2 !!!3 4 "5 6"!!!`));
     });
 
     describe("Execute command", () => {

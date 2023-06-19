@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:90](https://github.com/s809/noisecord/blob/master/src/util.ts#L90)
+[src/util.ts:106](https://github.com/s809/noisecord/blob/master/src/util.ts#L106)
 
 ___
 
@@ -138,7 +138,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:85](https://github.com/s809/noisecord/blob/master/src/util.ts#L85)
+[src/util.ts:101](https://github.com/s809/noisecord/blob/master/src/util.ts#L101)
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:93](https://github.com/s809/noisecord/blob/master/src/util.ts#L93)
+[src/util.ts:109](https://github.com/s809/noisecord/blob/master/src/util.ts#L109)
 
 ## Variables
 
@@ -275,7 +275,7 @@ export default defineCommand({
    }, {
        key: "extras",
        type: ApplicationCommandOptionType.String,
-       isExtras: true,
+       extras: true,
    }],
 
    handler: async (req, { num, extras }) => {
@@ -304,7 +304,7 @@ export default defineCommand({
 
 #### Defined in
 
-[src/interfaces/Command.ts:142](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L142)
+[src/interfaces/Command.ts:143](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L143)
 
 ___
 

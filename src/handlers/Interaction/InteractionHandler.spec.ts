@@ -276,6 +276,19 @@ describe(_InteractionHandler.name, () => {
                         fetchReply: true
                     })
                 });
+
+                it("Last arg as raw", async () => {
+                    const interaction = await handleChatInteraction("last-arg-as-raw", {
+                        options: {
+                            getString: (name: string) => name === "first-arg" ? "1 2" : `3 4 "5 6"`
+                        }
+                    });
+                    expect(interaction.reply).calledOnceWithExactly({
+                        content: "last_arg_as_raw: errors.1 2 !!!3 4 \"5 6\"!!!",
+                        ephemeral: true,
+                        fetchReply: true
+                    });
+                });
             });
 
             describe("Execute command", () => {

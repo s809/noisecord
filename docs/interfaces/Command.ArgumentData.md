@@ -8,7 +8,7 @@
 
 ### Properties
 
-- [lastArgAsExtras](Command.ArgumentData.md#lastargasextras)
+- [lastArgumentType](Command.ArgumentData.md#lastargumenttype)
 - [list](Command.ArgumentData.md#list)
 - [max](Command.ArgumentData.md#max)
 - [min](Command.ArgumentData.md#min)
@@ -16,13 +16,13 @@
 
 ## Properties
 
-### lastArgAsExtras
+### lastArgumentType
 
- **lastArgAsExtras**: `boolean`
+ **lastArgumentType**: ``null`` \| ``"raw"`` \| ``"extras"``
 
 #### Defined in
 
-[src/interfaces/Command.ts:95](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L95)
+[src/interfaces/Command.ts:96](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L96)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:92](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L92)
+[src/interfaces/Command.ts:93](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L93)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:90](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L90)
+[src/interfaces/Command.ts:91](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L91)
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:89](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L89)
+[src/interfaces/Command.ts:90](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L90)
 
 ___
 
@@ -62,4 +62,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:91](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L91)
+[src/interfaces/Command.ts:92](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L92)

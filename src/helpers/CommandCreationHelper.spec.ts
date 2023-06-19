@@ -224,7 +224,7 @@ describe("CommandCreationHelper", () => {
                 {
                     title: "Extras arg is not last",
                     args: [{
-                        isExtras: true
+                        extras: true
                     }, {
                     }],
                     check: /must be the last/s
@@ -233,18 +233,26 @@ describe("CommandCreationHelper", () => {
                     title: "Extras argument not of a string type",
                     args: [{
                         type: ApplicationCommandOptionType.Number,
-                        isExtras: true
+                        extras: true
                     }],
                     check: /must be of a string type/s
                 },
                 {
-                    title: "Extras argument is optional",
+                    title: "Raw arg is not last",
                     args: [{
-                        isExtras: true,
-                        required: false
+                        raw: true
+                    }, {
                     }],
-                    check: /cannot be optional/s
+                    check: /must be the last/s
                 },
+                {
+                    title: "Raw argument not of a string type",
+                    args: [{
+                        type: ApplicationCommandOptionType.Number,
+                        raw: true
+                    }],
+                    check: /must be of a string type/s
+                }
             ] as const) {
                 it(inputs.title, () => {
                     const commandCreationHelper = new CommandCreationHelper({

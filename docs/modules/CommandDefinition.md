@@ -17,7 +17,7 @@
 
 ### Argument
 
- **Argument**: `Simplify`<[`DistributiveOmit`](../modules.md#distributiveomit)<`IterableElement`<`NonNullable`<`ApplicationCommandSubCommandData`[``"options"``]\>\>, ``"name"`` \| ``"nameLocalizations"`` \| ``"description"`` \| ``"descriptionLocalizations"`` \| ``"choices"``\> & { `choices?`: readonly { `key`: `string` ; `value`: `string` \| `number`  }[] ; `isExtras?`: `boolean` ; `key`: `string`  }\>
+ **Argument**: `Simplify`<[`DistributiveOmit`](../modules.md#distributiveomit)<`IterableElement`<`NonNullable`<`ApplicationCommandSubCommandData`[``"options"``]\>\>, ``"name"`` \| ``"nameLocalizations"`` \| ``"description"`` \| ``"descriptionLocalizations"`` \| ``"choices"``\> & { `choices?`: readonly { `key`: `string` ; `value`: `string` \| `number`  }[] ; `extras?`: `boolean` ; `key`: `string` ; `raw?`: `boolean`  }\>
 
 #### Defined in
 
@@ -27,7 +27,7 @@ ___
 
 ### HandlerArguments
 
- **HandlerArguments**<`Args`\>: { [Item in Args[number] as Item["key"]]: Item["type"] extends keyof ArgumentToTypeMap<Item["isExtras"]\> ? Item["choices"] extends readonly any[] ? Item["choices"][number]["value"] : ArgumentToTypeMap<Item["isExtras"]\>[Item["type"]] \| (Item["required"] extends false ? undefined : never) : never }
+ **HandlerArguments**<`Args`\>: { [Item in Args[number] as Item["key"]]: Item["type"] extends keyof ArgumentToTypeMap<Item["extras"]\> ? Item["choices"] extends readonly any[] ? Item["choices"][number]["value"] : ArgumentToTypeMap<Item["extras"]\>[Item["type"]] \| (Item["required"] extends false ? undefined : never) : never }
 
 #### Type parameters
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:42](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L42)
+[src/interfaces/Command.ts:43](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L43)

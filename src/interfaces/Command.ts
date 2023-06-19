@@ -6,7 +6,7 @@ import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitab
 import { DistributiveOmit } from "../util.js";
 import { CommandCondition } from "../conditions/index.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
-import { IterableElement, Simplify } from "type-fest";
+import { IterableElement, RequireExactlyOne, Simplify } from "type-fest";
 import { MessageCommandRequest } from "../handlers/Message/MessageCommandRequest.js";
 import { AllowDMsInGuild } from "./common.js";
 
@@ -35,21 +35,22 @@ export namespace CommandDefinition {
             key: string;
             value: string | number;
         }[];
-        isExtras?: boolean;
+        extras?: boolean;
+        raw?: boolean;
     })>;
 
     /** @public */
     export type HandlerArguments<Args extends readonly Argument[]> = {
-        [Item in Args[number] as Item["key"]]: Item["type"] extends keyof ArgumentToTypeMap<Item["isExtras"]>
+        [Item in Args[number] as Item["key"]]: Item["type"] extends keyof ArgumentToTypeMap<Item["extras"]>
             ? Item["choices"] extends readonly any[]
                 ? Item["choices"][number]["value"]
-                : ArgumentToTypeMap<Item["isExtras"]>[Item["type"]] | (Item["required"] extends false ? undefined : never)
+                : ArgumentToTypeMap<Item["extras"]>[Item["type"]] | (Item["required"] extends false ? undefined : never)
             : never;
     };
 
     /** @public */
-    export interface ArgumentToTypeMap<IsExtras extends boolean | undefined> {
-        [ApplicationCommandOptionType.String]: IsExtras extends true ? string[] : string;
+    export interface ArgumentToTypeMap<Extras extends boolean | undefined> {
+        [ApplicationCommandOptionType.String]: Extras extends true ? string[] : string;
         [ApplicationCommandOptionType.Number]: number;
         [ApplicationCommandOptionType.Integer]: number;
         [ApplicationCommandOptionType.Boolean]: boolean;
@@ -92,7 +93,7 @@ export namespace Command {
         list: Simplify<(IterableElement<NonNullable<ApplicationCommandSubCommandData["options"]>> & {
             key: string;
         })>[];
-        lastArgAsExtras: boolean;
+        lastArgumentType: "extras" | "raw" | null;
     };
     
     /** @public */
@@ -130,7 +131,7 @@ export namespace Command {
  *    }, {
  *        key: "extras",
  *        type: ApplicationCommandOptionType.String,
- *        isExtras: true,
+ *        extras: true,
  *    }],
  * 
  *    handler: async (req, { num, extras }) => {
