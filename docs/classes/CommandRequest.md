@@ -49,7 +49,7 @@ Abstract instance of command related data.
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:13](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L13)
+[src/handlers/CommandRequest.ts:13](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L13)
 
 ___
 
@@ -61,7 +61,7 @@ Response object, which is filled when a command request is replied.
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:15](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L15)
+[src/handlers/CommandRequest.ts:15](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L15)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:12](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L12)
+[src/handlers/CommandRequest.ts:12](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L12)
 
 ## Accessors
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:37](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L37)
+[src/handlers/CommandRequest.ts:37](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L37)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:23](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L23)
+[src/handlers/CommandRequest.ts:23](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L23)
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:25](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L25)
+[src/handlers/CommandRequest.ts:25](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L25)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:29](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L29)
+[src/handlers/CommandRequest.ts:29](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L29)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:31](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L31)
+[src/handlers/CommandRequest.ts:31](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L31)
 
 ___
 
@@ -155,7 +155,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:35](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L35)
+[src/handlers/CommandRequest.ts:35](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L35)
 
 ## Methods
 
@@ -169,7 +169,7 @@ this is CommandRequest<true, Response\>
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:21](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L21)
+[src/handlers/CommandRequest.ts:21](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L21)
 
 ___
 
@@ -191,4 +191,4 @@ Replies to the command request.
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:19](https://github.com/s809/noisecord/blob/acabd79/src/handlers/CommandRequest.ts#L19)
+[src/handlers/CommandRequest.ts:19](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L19)

@@ -32,7 +32,7 @@
 
 #### Defined in
 
-[src/handlers/EventHandler.ts:33](https://github.com/s809/noisecord/blob/acabd79/src/handlers/EventHandler.ts#L33)
+[src/handlers/EventHandler.ts:33](https://github.com/s809/noisecord/blob/master/src/handlers/EventHandler.ts#L33)
 
 ___
 
@@ -42,4 +42,4 @@ ___
 
 #### Defined in
 
-[src/handlers/EventHandler.ts:32](https://github.com/s809/noisecord/blob/acabd79/src/handlers/EventHandler.ts#L32)
+[src/handlers/EventHandler.ts:32](https://github.com/s809/noisecord/blob/master/src/handlers/EventHandler.ts#L32)
