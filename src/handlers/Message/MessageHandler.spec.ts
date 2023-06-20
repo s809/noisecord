@@ -3,7 +3,7 @@ import { ChannelType, Guild, GuildBasedChannel, GuildMember, Message, Role } fro
 import { merge } from "lodash-es";
 import sinon from "sinon";
 import { Merge, PartialDeep } from "type-fest";
-import { loadingEmoji, _MessageHandler, MessageHandlerOptions, successEmoji } from "./MessageHandler.js";
+import { _MessageHandler, MessageHandlerOptions } from "./MessageHandler.js";
 import { createHandler, IdConstants } from "../testData/index.js";
 
 describe(_MessageHandler.name, () => {
@@ -85,7 +85,7 @@ describe(_MessageHandler.name, () => {
     async function shouldSucceed(contentOrOverrides: string | MessageOverrides) {
         const message = await handleCommand(contentOrOverrides);
         expect(message.channel.send).not.called;
-        expect(message.react).calledOnceWith(successEmoji);
+        expect(message.react).calledOnceWith(_MessageHandler.successEmoji);
     }
 
     async function shouldIgnore(contentOrOverrides: string | MessageOverrides) {
@@ -667,8 +667,8 @@ command_processor: strings.command_usage {"usage":"<usage:args-channel-types>"}`
 
             const message = await handleCommand("!slow");
             expect(message.channel.send).not.called;
-            expect(message.react.getCall(0)).calledWith(loadingEmoji);
-            expect(message.react.getCall(1)).calledWith(successEmoji);
+            expect(message.react.getCall(0)).calledWith(_MessageHandler.loadingEmoji);
+            expect(message.react.getCall(1)).calledWith(_MessageHandler.successEmoji);
         });
 
         it("Manually replied", async () => {
