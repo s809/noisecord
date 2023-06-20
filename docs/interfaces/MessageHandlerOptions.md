@@ -34,7 +34,7 @@ Allows specific users to execute any commands (including owner-only) regardless 
 
 #### Defined in
 
-[src/handlers/Message/MessageHandler.ts:49](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L49)
+[src/handlers/Message/MessageHandler.ts:31](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L31)
 
 ___
 
@@ -46,7 +46,7 @@ Allows specific users to execute owner-only commands.
 
 #### Defined in
 
-[src/handlers/Message/MessageHandler.ts:54](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L54)
+[src/handlers/Message/MessageHandler.ts:36](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L36)
 
 ___
 
@@ -223,7 +223,7 @@ When it's a map:
 
 #### Defined in
 
-[src/handlers/Message/MessageHandler.ts:44](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L44)
+[src/handlers/Message/MessageHandler.ts:26](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L26)
 
 ___
 

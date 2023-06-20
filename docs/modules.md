@@ -61,9 +61,6 @@
 ### Variables
 
 - [BuiltInCommandConditions](modules.md#builtincommandconditions)
-- [failureEmoji](modules.md#failureemoji)
-- [loadingEmoji](modules.md#loadingemoji)
-- [successEmoji](modules.md#successemoji)
 - [textChannels](modules.md#textchannels)
 
 ### Functions
@@ -204,42 +201,6 @@ ___
 #### Defined in
 
 [src/conditions/index.ts:18](https://github.com/s809/noisecord/blob/master/src/conditions/index.ts#L18)
-
-___
-
-### failureEmoji
-
- `Const` **failureEmoji**: ``"❌"``
-
-Default emote for failure state on a message command.
-
-#### Defined in
-
-[src/handlers/Message/MessageHandler.ts:30](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L30)
-
-___
-
-### loadingEmoji
-
- `Const` **loadingEmoji**: ``"🔄"``
-
-Default emote for loading state on a message command.
-
-#### Defined in
-
-[src/handlers/Message/MessageHandler.ts:18](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L18)
-
-___
-
-### successEmoji
-
- `Const` **successEmoji**: ``"✅"``
-
-Default emote for success state on a message command.
-
-#### Defined in
-
-[src/handlers/Message/MessageHandler.ts:24](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageHandler.ts#L24)
 
 ___
 

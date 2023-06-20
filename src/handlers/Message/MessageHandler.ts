@@ -12,24 +12,6 @@ import { EventHandler } from "../EventHandler.js";
 import { IterableElement } from "type-fest";
 
 /** 
- * Default emote for loading state on a message command.
- * @public 
- */
-export const loadingEmoji = "🔄";
-
-/** 
- * Default emote for success state on a message command.
- * @public 
- */
-export const successEmoji = "✅";
-
-/** 
- * Default emote for failure state on a message command.
- * @public 
- */
-export const failureEmoji = "❌";
-
-/** 
  * Options for setting up a message handler.
  * @public 
  */
@@ -63,6 +45,24 @@ export interface _MessageHandlerConvertedOptions extends EventHandlerOptions<Mes
 
 /** @internal */
 export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOptions, "messageCreate"> {
+    /** 
+     * Default emote for loading state on a message command.
+     * @public 
+     */
+    static readonly loadingEmoji = "🔄";
+
+    /** 
+     * Default emote for success state on a message command.
+     * @public 
+     */
+    static readonly successEmoji = "✅";
+
+    /** 
+     * Default emote for failure state on a message command.
+     * @public 
+     */
+    static readonly failureEmoji = "❌";
+
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions) {
         const shouldIgnore = (option?: Snowflake | Snowflake[] | ((msg: Message, command: Command) => Awaitable<boolean>)) => {
             return (msg: Message, command: Command) => {
@@ -89,18 +89,18 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
             shouldIgnoreOwnerOnly: shouldIgnore(options.ignoreOwnerOnlyFor)
         }, {
             async onSlowCommand(req) {
-                await req.message.react(loadingEmoji).catch(() => { });
+                await req.message.react(_MessageHandler.loadingEmoji).catch(() => { });
             },
             async onSuccess(req) {
                 await Promise.allSettled([
-                    req.message.reactions.resolve(loadingEmoji)?.users.remove(),
-                    req.message.react(successEmoji)
+                    req.message.reactions.resolve(_MessageHandler.loadingEmoji)?.users.remove(),
+                    req.message.react(_MessageHandler.successEmoji)
                 ]);
             },
             async onFailure(req, e) {
                 await Promise.allSettled([
-                    req.message.reactions.resolve(loadingEmoji)?.users.remove(),
-                    req.message.react(failureEmoji),
+                    req.message.reactions.resolve(_MessageHandler.loadingEmoji)?.users.remove(),
+                    req.message.react(_MessageHandler.failureEmoji),
                     req.replyOrEdit(e instanceof CommandResultError
                         ? e.message
                         : String(e.stack))

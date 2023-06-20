@@ -505,9 +505,6 @@ export interface EventHandlerOptions<TCommandRequest = CommandRequest> {
     slowCommandDelayMs: number;
 }
 
-// @public
-export const failureEmoji = "\u274C";
-
 // @internal (undocumented)
 export function _getValueOrThrowInitError<T>(value: T | undefined, instance: {
     init: Function;
@@ -576,9 +573,6 @@ export interface InteractionHandlerOptions extends Partial<EventHandlerOptions<I
 export type InteractionInGuild<T extends CommandInteraction> = T extends CommandInteraction<InGuildCacheType> ? true : false;
 
 // @public
-export const loadingEmoji = "\uD83D\uDD04";
-
-// @public
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, MessageCommandResponse> {
     // @internal
     constructor(command: Command, translator: Translator, message: Message, prefix: string);
@@ -613,8 +607,14 @@ export class MessageCommandResponse extends CommandResponse {
 // @internal (undocumented)
 export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOptions, "messageCreate"> {
     constructor(client: Client, commandRegistry: CommandRegistry, options: MessageHandlerOptions);
+    // @public
+    static readonly failureEmoji = "\u274C";
     // (undocumented)
     handle(msg: Message): Promise<void>;
+    // @public
+    static readonly loadingEmoji = "\uD83D\uDD04";
+    // @public
+    static readonly successEmoji = "\u2705";
 }
 
 // @internal (undocumented)
@@ -645,9 +645,6 @@ export function parseRoleMention(text: string): string | null;
 
 // @public
 export function parseUserMention(text: string): string | null;
-
-// @public
-export const successEmoji = "\u2705";
 
 // @public (undocumented)
 export const textChannels: (ChannelType.GuildText | ChannelType.GuildAnnouncement | ChannelType.AnnouncementThread | ChannelType.PublicThread | ChannelType.PrivateThread)[];
