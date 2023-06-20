@@ -81,22 +81,6 @@ export function _getValueOrThrowInitError<T>(value: T | undefined, instance: { i
     return value;
 }
 
-/**
- * Skips string past specified parts and removes leading whitespace.
- * 
- * @param text - String to skip in.
- * @param parts - Parts to skip.
- * @returns String with skipped parts.
- * 
- * @internal
- */
-export function _skipStringParts(text: string, ...parts: string[]) {
-    for (let part of parts)
-        text = text.slice(text.indexOf(part) + part.length + 1 /* possible quote symbol */).trimStart();
-
-    return text;
-}
-
 /** @public */
 export type DistributiveOmit<T, K extends keyof any> = T extends any
     ? Omit<T, K>

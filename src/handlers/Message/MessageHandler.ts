@@ -4,7 +4,7 @@ import { _checkConditions } from "../../conditions/index.js";
 import { Command } from "../../interfaces/Command.js";
 import { MessageCommandRequest } from "./MessageCommandRequest.js";
 import { Translator } from "../../translations/Translator.js";
-import { parseChannelMention, parseRoleMention, parseUserMention, _skipStringParts } from "../../util.js";
+import { parseChannelMention, parseRoleMention, parseUserMention } from "../../util.js";
 import { ArgumentParseError } from "../errors/ArgumentParseError.js";
 import { CommandResultError } from "../errors/CommandResultError.js";
 import { EventHandlerOptions } from "../EventHandlerOptions.js";
@@ -321,7 +321,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
                 argsObj[lastArg.key] = parts;
                 break;
             case "raw":
-                argsObj[lastArg.key] = _skipStringParts(msg.content, ...partsToSkip);
+                argsObj[lastArg.key] = this.skipStringParts(msg.content, ...partsToSkip);
                 break;
         }
 
@@ -401,5 +401,14 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
         }
 
         return result;
+    }
+
+    private skipStringParts(text: string, ...parts: string[]) {
+        for (let part of parts) {
+            part = part.replaceAll("\\", "\\\\").replaceAll("\"", "\\\"");
+            text = text.slice(text.indexOf(part) + part.length + 1 /* possible quote symbol */);
+        }
+    
+        return text.trimStart();
     }
 }

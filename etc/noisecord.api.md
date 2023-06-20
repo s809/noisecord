@@ -646,9 +646,6 @@ export function parseRoleMention(text: string): string | null;
 // @public
 export function parseUserMention(text: string): string | null;
 
-// @internal
-export function _skipStringParts(text: string, ...parts: string[]): string;
-
 // @public
 export const successEmoji = "\u2705";
 

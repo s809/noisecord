@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:106](https://github.com/s809/noisecord/blob/master/src/util.ts#L106)
+[src/util.ts:90](https://github.com/s809/noisecord/blob/master/src/util.ts#L90)
 
 ___
 
@@ -138,7 +138,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:101](https://github.com/s809/noisecord/blob/master/src/util.ts#L101)
+[src/util.ts:85](https://github.com/s809/noisecord/blob/master/src/util.ts#L85)
 
 ___
 
@@ -186,7 +186,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:109](https://github.com/s809/noisecord/blob/master/src/util.ts#L109)
+[src/util.ts:93](https://github.com/s809/noisecord/blob/master/src/util.ts#L93)
 
 ## Variables
 
