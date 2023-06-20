@@ -140,6 +140,6 @@ export namespace Command {
  * });
  * ```
  */
-export function defineCommand<OwnerOnly extends boolean = false, AllowDMs extends boolean = true, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>) {
+export function defineCommand<const OwnerOnly extends boolean = false, const AllowDMs extends boolean = true, const Args extends readonly CommandDefinition.Argument[] = never[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>) {
     return definition;
 }

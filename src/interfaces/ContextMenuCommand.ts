@@ -48,6 +48,6 @@ export interface ContextMenuCommand extends Required<ContextMenuCommandDefinitio
  * });
  * ```
  */
-export function defineContextMenuCommand<InteractionType extends ContextMenuCommandDefinition.InteractionTypes, AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>) {
+export function defineContextMenuCommand<const InteractionType extends ContextMenuCommandDefinition.InteractionTypes, const AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>) {
     return definition;
 }

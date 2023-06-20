@@ -290,7 +290,7 @@ export default defineCommand({
 | :------ | :------ |
 | `OwnerOnly` | extends `boolean` = ``false`` |
 | `AllowDMs` | extends `boolean` = ``true`` |
-| `Args` | extends readonly [`Argument`](modules/CommandDefinition.md#argument)[] = readonly [`Argument`](modules/CommandDefinition.md#argument)[] |
+| `Args` | extends readonly [`Argument`](modules/CommandDefinition.md#argument)[] = `never`[] |
 
 #### Parameters
 
