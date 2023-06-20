@@ -11,13 +11,13 @@
     "./dist/tsdoc-metadata.json"
   ],
   "scripts": {
+    "api": "npm run build && api-extractor run --local && ! grep -w Warning ./etc/noisecord.api.md && typedoc",
     "build": "tsc",
+    "checkall": "clear && npm test && npm run api && madge --circular ./src/index.ts",
     "clean": "rimraf ./dist",
     "prepack": "npm run build && api-extractor run",
     "test": "mocha",
-    "test:cov": "c8 npm test",
-    "api": "npm run build && api-extractor run --local && ! grep -w Warning ./etc/noisecord.api.md && typedoc",
-    "checkall": "clear && npm test && npm run api && madge --circular ./src/index.ts"
+    "test:cov": "c8 npm test"
   },
   "c8": {
     "all": true,
@@ -37,13 +37,13 @@
     ]
   },
   "dependencies": {
+    "@types/lodash-es": "^4.17.7",
+    "@types/node": "^20.3.1",
+    "@types/string-format": "^2.0.0",
     "discord.js": "^14.11.0",
     "lodash-es": "^4.17.21",
-    "rimraf": "^5.0.1",
     "string-format": "^2.0.0",
     "type-fest": "github:sindresorhus/type-fest",
-    "typedoc": "^0.24.8",
-    "typedoc-plugin-markdown": "^3.15.3",
     "typescript": "^5.1.3"
   },
   "devDependencies": {
@@ -52,12 +52,9 @@
     "@types/chai": "^4.3.5",
     "@types/chai-as-promised": "^7.1.5",
     "@types/chai-subset": "^1.3.3",
-    "@types/lodash-es": "^4.17.7",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^20.3.1",
     "@types/sinon": "^10.0.15",
     "@types/sinon-chai": "^3.2.9",
-    "@types/string-format": "^2.0.0",
     "c8": "^7.14.0",
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
@@ -65,10 +62,13 @@
     "chai-subset": "^1.6.0",
     "madge": "^6.1.0",
     "mocha": "^10.2.0",
+    "rimraf": "^5.0.1",
     "sinon": "^15.1.2",
     "sinon-chai": "^3.7.0",
     "source-map-support": "^0.5.21",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.24.8",
+    "typedoc-plugin-markdown": "^3.15.3"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
