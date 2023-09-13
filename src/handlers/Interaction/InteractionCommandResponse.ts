@@ -34,13 +34,15 @@ export class InteractionCommandResponse extends CommandResponse {
 
     /** Replies to interaction or edits it. */
     async replyOrEdit(options: string | InteractionReplyOptions | InteractionEditReplyOptions) {
+        options = this.translateReplyContent(options);
+
         const fixedOptions = {
             // if this is a first message, [ephemeral] will be set to what value it was deferred with
             // for second and further, it is true by default
             ephemeral: this.ephemeral || this._repliedFully,
             ...typeof options === "string" ? { content: options } : options as InteractionReplyOptions
         } as const;
-        
+
         if (!this._deferredOrReplied) {
             this._deferredOrReplied = true;
             this._repliedFully = true;
@@ -63,14 +65,16 @@ export class InteractionCommandResponse extends CommandResponse {
         return this;
     }
 
-    /** 
+    /**
      * Sends a follow up message.
      * If interaction is not replied to fully, throws an error.
      */
     async followUpForce(options: string | InteractionReplyOptions) {
+        options = this.translateReplyContent(options);
+
         if (!this._repliedFully)
             throw new Error("Request must receive a full response before sending follow ups.")
-        
+
         const fixedOptions = {
             ephemeral: true,
             ...typeof options === "string" ? { content: options } : options as InteractionReplyOptions
@@ -83,7 +87,7 @@ export class InteractionCommandResponse extends CommandResponse {
     async delete() {
         if (!this._deferredOrReplied)
             await this.defer();
-        
+
         if (!this._message) return;
         this._message = undefined;
 

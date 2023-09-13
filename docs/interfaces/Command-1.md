@@ -19,6 +19,7 @@
 - [path](Command-1.md#path)
 - [subcommands](Command-1.md#subcommands)
 - [translationPath](Command-1.md#translationpath)
+- [translations](Command-1.md#translations)
 - [usageTranslations](Command-1.md#usagetranslations)
 
 ## Properties
@@ -29,7 +30,7 @@
 
 #### Defined in
 
-[src/interfaces/Command.ts:75](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L75)
+[src/interfaces/Command.ts:90](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L90)
 
 ___
 
@@ -39,7 +40,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:80](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L80)
+[src/interfaces/Command.ts:95](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L95)
 
 ___
 
@@ -49,7 +50,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:76](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L76)
+[src/interfaces/Command.ts:91](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L91)
 
 ___
 
@@ -59,7 +60,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:74](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L74)
+[src/interfaces/Command.ts:89](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L89)
 
 ___
 
@@ -69,17 +70,17 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:70](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L70)
+[src/interfaces/Command.ts:84](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L84)
 
 ___
 
 ### handler
 
- **handler**: ``null`` \| [`Handler`](../modules/Command.md#handler)<`boolean`, `boolean`, [`HandlerArguments`](../modules/Command.md#handlerarguments)\>
+ **handler**: ``null`` \| [`Handler`](../modules/Command.md#handler)<`boolean`, `boolean`, [`HandlerArguments`](../modules/Command.md#handlerarguments), `Record`<`string`, `boolean`\>\>
 
 #### Defined in
 
-[src/interfaces/Command.ts:81](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L81)
+[src/interfaces/Command.ts:96](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L96)
 
 ___
 
@@ -89,7 +90,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:78](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L78)
+[src/interfaces/Command.ts:93](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L93)
 
 ___
 
@@ -99,7 +100,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:66](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L66)
+[src/interfaces/Command.ts:80](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L80)
 
 ___
 
@@ -109,7 +110,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:69](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L69)
+[src/interfaces/Command.ts:83](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L83)
 
 ___
 
@@ -119,7 +120,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:73](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L73)
+[src/interfaces/Command.ts:88](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L88)
 
 ___
 
@@ -129,7 +130,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:65](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L65)
+[src/interfaces/Command.ts:79](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L79)
 
 ___
 
@@ -139,7 +140,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:83](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L83)
+[src/interfaces/Command.ts:98](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L98)
 
 ___
 
@@ -149,7 +150,17 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:67](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L67)
+[src/interfaces/Command.ts:81](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L81)
+
+___
+
+### translations
+
+ **translations**: `string`[]
+
+#### Defined in
+
+[src/interfaces/Command.ts:86](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L86)
 
 ___
 
@@ -159,4 +170,4 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:71](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L71)
+[src/interfaces/Command.ts:85](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L85)

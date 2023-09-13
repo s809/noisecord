@@ -8,7 +8,7 @@ import { TranslationChecker } from "./translations/TranslationChecker.js";
 import { EventHandler } from "./handlers/EventHandler.js";
 import { isUndefined, omitBy } from "lodash-es";
 
-/** 
+/**
  * Options used to initialize {@link CommandFramework}.
  * @public
  */
@@ -20,9 +20,9 @@ export interface CommandFrameworkOptions {
     commonHandlerOptions?: EventHandler.CommonHandlerOptions;
 }
 
-/** 
+/**
  * Entry point for using a command framework.
- * @public 
+ * @public
  */
 export class CommandFramework {
     /**
@@ -31,13 +31,13 @@ export class CommandFramework {
     get commands() {
         return _getValueOrThrowInitError(this._commandRegistry?.commands, this);
     }
-    
+
     /** @see CommandRegistry */
     get commandRegistry() {
         return _getValueOrThrowInitError(this._commandRegistry, this);
     }
     private _commandRegistry?: CommandRegistry;
-    
+
     /** @see TranslatorManager */
     get translatorManager() {
         return _getValueOrThrowInitError(this._translatorManager, this);
@@ -53,10 +53,10 @@ export class CommandFramework {
     /**
      * Creates a new instance of the {@link CommandFramework} class.
      * This is a shortcut for constructing and initializing an instance if your instance will reside in the main file.
-     * 
+     *
      * @remarks
      * Translation checking is not possible using the returned instance, as it uses a window between construction and initialization of an instance.
-     * See constructor and {@link CommandFramework.init | init()} 
+     * See constructor and {@link CommandFramework.init | init()}
      * for the case when construction and initialization need to be split.
      */
     static async create(client: Client, options: CommandFrameworkOptions) {
@@ -67,7 +67,7 @@ export class CommandFramework {
     async init() {
         this._translatorManager = await new TranslatorManager(this.options.translationOptions).init();
         this._commandRegistry = new CommandRegistry(this.options.commandRegistryOptions, this._translatorManager);
-        await this._commandRegistry.createCommands();
+        await this._commandRegistry.createCommands(this.translationChecker);
         this.translationChecker.runChecks(this._translatorManager);
 
         if (this.client.isReady())

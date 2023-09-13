@@ -11,20 +11,20 @@ import { EventHandlerOptions } from "../EventHandlerOptions.js";
 import { EventHandler } from "../EventHandler.js";
 import { IterableElement } from "type-fest";
 
-/** 
+/**
  * Options for setting up a message handler.
- * @public 
+ * @public
  */
 export interface MessageHandlerOptions extends Partial<EventHandlerOptions> {
     /**
      * Sets a prefix.
-     * 
+     *
      * When it's a map:
      * - Its key must be a guild ID, or `null` for default prefix;
      * - If `null` key is not present, commands outside specified guilds will be ignored.
      */
     prefix: string | Map<Snowflake | null, string> | ((msg: Message) => Awaitable<string | null>);
-    
+
     /**
      * Allows specific users to execute any commands (including owner-only) regardless of any permissions.
      */
@@ -45,21 +45,21 @@ export interface _MessageHandlerConvertedOptions extends EventHandlerOptions<Mes
 
 /** @internal */
 export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOptions, "messageCreate"> {
-    /** 
+    /**
      * Default emote for loading state on a message command.
-     * @public 
+     * @public
      */
     static readonly loadingEmoji = "🔄";
 
-    /** 
+    /**
      * Default emote for success state on a message command.
-     * @public 
+     * @public
      */
     static readonly successEmoji = "✅";
 
-    /** 
+    /**
      * Default emote for failure state on a message command.
-     * @public 
+     * @public
      */
     static readonly failureEmoji = "❌";
 
@@ -74,7 +74,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
                 return false;
             };
         };
-        
+
         super(client, "messageCreate", commandRegistry, {
             ...options,
             getPrefix(msg) {
@@ -141,12 +141,15 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
         } catch (e) {
             if (!(e instanceof ArgumentParseError))
                 throw e;
-            
+
             await this.replyInvalidArguments(commandRequest, command, e, translator);
             return;
         }
 
-        await this.executeCommand(commandRequest, () => command.handler!(commandRequest, argsObj), commandTranslator);
+        // Create translation object
+        const translations = this.prepareTranslationObject(command, commandTranslator);
+
+        await this.executeCommand(commandRequest, () => command.handler!(commandRequest, argsObj, translations), commandTranslator);
     }
 
     private async checkCommandPermissions(msg: Message, command: Command): Promise<boolean> {
@@ -408,7 +411,7 @@ export class _MessageHandler extends EventHandler<_MessageHandlerConvertedOption
             part = part.replaceAll("\\", "\\\\").replaceAll("\"", "\\\"");
             text = text.slice(text.indexOf(part) + part.length + 1 /* possible quote symbol */);
         }
-    
+
         return text.trimStart();
     }
 }

@@ -7,10 +7,11 @@ import { Translator } from "./translations/Translator.js";
 import { TranslatorManager } from "./translations/TranslatorManager.js";
 import { DeeplyNestedMap, _traverseTree } from "./util.js";
 import { ContextMenuCommand, ContextMenuCommandDefinition } from "./interfaces/ContextMenuCommand.js";
+import { TranslationChecker } from "./index.js";
 
-/** 
+/**
  * Options used to initialize {@link CommandRegistry}
- * @public 
+ * @public
  */
 export interface CommandRegistryOptions {
     commandModuleDirectory?: string;
@@ -18,9 +19,9 @@ export interface CommandRegistryOptions {
     requireCommandTranslations?: boolean;
 }
 
-/** 
+/**
  * Contains the data/functions for working with commands.
- * @public 
+ * @public
  */
 export class CommandRegistry {
     readonly commands: Map<string, Command> = new Map();
@@ -32,11 +33,11 @@ export class CommandRegistry {
     constructor(private options: CommandRegistryOptions, readonly translatorManager: TranslatorManager) { }
 
     /** @internal */
-    async createCommands() {
+    async createCommands(translationChecker: TranslationChecker) {
         if (!this.options.commandModuleDirectory) return this;
 
         const queue = await importModules<CommandDefinition>(this.options.commandModuleDirectory);
-        
+
         // Add modules from directory recursively
         for (let i = 0; i < queue.length; i++) {
             const modulePath = queue[i][0];
@@ -66,7 +67,7 @@ export class CommandRegistry {
 
             const parentChain = getParentChain(commandPath);
             const lastParent = parentChain[parentChain.length - 1];
-            
+
             const inheritedOptions = lastParent
                 ? {
                     path: lastParent.path,
@@ -89,6 +90,8 @@ export class CommandRegistry {
 
             commandCreationHelper.setHeader(1, "Command translations");
             commandCreationHelper.fillTranslations(partialCommand, this.getCommandTranslationPath(partialCommand.path!));
+            if (definition.translations)
+                translationChecker.checkTranslations(definition.translations, partialCommand.translationPath);
 
             commandCreationHelper.setHeader(1, "Command arguments");
             commandCreationHelper.fillArguments(partialCommand, definition.args);
@@ -96,7 +99,7 @@ export class CommandRegistry {
             const command = partialCommand as Command;
             (lastParent?.subcommands ?? this.commands).set(command.key, command);
         }
-        
+
         for (const command of this.iterateCommands()) {
             commandCreationHelper.setHeader(0, command.path);
             commandCreationHelper.checkTreeValidity(command);
@@ -135,7 +138,7 @@ export class CommandRegistry {
             return;
 
         const definitions = await importModules<ContextMenuCommandDefinition>(this.options.contextMenuModuleDirectory);
-        
+
         for (const [, definition] of definitions) {
             commandCreationHelper.setHeader(0, `Context menu: ${definition.key}`);
 

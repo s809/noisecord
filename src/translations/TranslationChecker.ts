@@ -13,7 +13,7 @@ export class DefaultLocalePathTranslator {
 
     /** @internal */
     constructor(readonly path: string) { }
-    
+
     getTranslation(args?: Translator.FormatParameters) {
         return this.translatorManager!.fallbackTranslator.translate(this.path, args);
     }
@@ -48,15 +48,15 @@ export namespace TranslationChecker {
     /** @public */
     export type PathTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
         [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]:
-        K extends `${string}.${infer Rest}`
-        ? PathTranslators<{ [K2 in Rest]: Input[K] }>
-        : K extends string
-        ? IsLiteral<Input[K]> extends true
-        ? Input[K] extends true
-        ? AllLocalesPathTranslator
-        : DefaultLocalePathTranslator
-        : never
-        : never;
+            K extends `${string}.${infer Rest}`
+                ? PathTranslators<{ [K2 in Rest]: Input[K] }>
+                : K extends string
+                    ? IsLiteral<Input[K]> extends true
+                        ? Input[K] extends true
+                            ? AllLocalesPathTranslator
+                            : DefaultLocalePathTranslator
+                        : never
+                    : never;
     }>, PathTranslatorTypes>;
 
     /** @public */

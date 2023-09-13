@@ -1,14 +1,30 @@
 import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, InteractionCollector, MappedInteractionTypes, InteractionEditReplyOptions } from 'discord.js';
+import { PreparedTranslation } from '../index.js';
+import mapObject from 'map-obj';
 
-/** 
+/**
  * Abstract instance of response-to-command related data.
- * @public 
+ * @public
  */
 export abstract class CommandResponse {
     protected _message?: Message;
-    
+
     /** Edits the message, if possible. */
     abstract replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
+
+    protected translateReplyContent<T extends string | object>(options: T) {
+        if (typeof options === 'string')
+            return options;
+
+        if (options instanceof PreparedTranslation)
+            return options.translate();
+
+        return mapObject(
+            options,
+            (k, v) => [k, v instanceof PreparedTranslation ? v.translate() : v],
+            { deep: true }
+        ) as T;
+    }
 
     /** Deletes the message, if possible.*/
     abstract delete(): Promise<void>;

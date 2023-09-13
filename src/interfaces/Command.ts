@@ -3,18 +3,25 @@
  */
 
 import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitable, GuildTextBasedChannel, LocalizationMap, PermissionResolvable, Role, Snowflake, User } from "discord.js";
-import { DistributiveOmit } from "../util.js";
+import { DistributiveOmit, UnionToIntersectionRecursive } from "../util.js";
 import { CommandCondition } from "../conditions/index.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
-import { IterableElement, RequireExactlyOne, Simplify } from "type-fest";
+import { IsLiteral, IterableElement, Simplify } from "type-fest";
 import { MessageCommandRequest } from "../handlers/Message/MessageCommandRequest.js";
 import { AllowDMsInGuild } from "./common.js";
+import { PreparedTranslation } from "../translations/PreparedTranslation.js";
+import { ConditionalSimplifyDeep } from "type-fest/source/conditional-simplify.js";
 
-/** 
+/**
  * Definition for a command.
  * @public
  */
-export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]> {
+export interface CommandDefinition<
+    OwnerOnly extends boolean = boolean,
+    AllowDMs extends boolean = boolean,
+    Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[],
+    Translations extends Record<string, boolean> = Record<string, boolean>
+> {
     key: string;
 
     ownerOnly?: OwnerOnly;
@@ -22,8 +29,15 @@ export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs
     allowDMs?: AllowDMs;
     conditions?: CommandCondition | CommandCondition[];
 
+    translations?: Translations;
+
     args?: Args;
-    handler?: Command.Handler<OwnerOnly, AllowDMs, CommandDefinition.HandlerArguments<Args>>;
+    handler?: Command.Handler<
+        OwnerOnly,
+        AllowDMs,
+        CommandDefinition.HandlerArguments<Args>,
+        Translations
+    >;
 }
 
 /** @public */
@@ -69,6 +83,7 @@ export interface Command {
     nameTranslations: LocalizationMap;
     descriptionTranslations: LocalizationMap;
     usageTranslations: LocalizationMap;
+    translations: string[];
 
     ownerOnly: boolean;
     defaultMemberPermissions: PermissionResolvable;
@@ -95,17 +110,35 @@ export namespace Command {
         })>[];
         lastArgumentType: "extras" | "raw" | null;
     };
-    
+
     /** @public */
     export type HandlerArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
 
     /** @public */
-    export type Handler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends HandlerArguments = HandlerArguments> = (
+    export type PreparedTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
+        [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]:
+            K extends `${string}.${infer Rest}`
+                ? PreparedTranslators<{ [K2 in Rest]: Input[K] }>
+                : K extends string
+                    ? IsLiteral<Input[K]> extends true
+                        ? PreparedTranslation
+                        : never
+                    : never;
+    }>, PreparedTranslation>;
+
+    /** @public */
+    export type Handler<
+        OwnerOnly extends boolean = boolean,
+        AllowDMs extends boolean = boolean,
+        Args extends HandlerArguments = HandlerArguments,
+        Translations extends Record<string, boolean> = Record<string, boolean>
+    > = (
         req: OwnerOnly extends true
             ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>>
             : CommandRequest<AllowDMsInGuild<AllowDMs>>,
-        args: Args
-    ) => Awaitable<string | void>;
+        args: Args,
+        translations?: PreparedTranslators<Translations>
+    ) => Awaitable<string | PreparedTranslation | void>;
 
     /** @public */
     export interface InteractionCommandData {
@@ -120,11 +153,11 @@ export namespace Command {
  * ```
  * export default defineCommand({
  *    key: "mycommand",
- * 
+ *
  *    ownerOnly: true,
  *    defaultMemberPermissions: PermissionFlagsBits.Administrator,
  *    conditions: InVoiceChannel,
- * 
+ *
  *    args: [{
  *        key: "num",
  *        type: ApplicationCommandOptionType.Number,
@@ -133,13 +166,18 @@ export namespace Command {
  *        type: ApplicationCommandOptionType.String,
  *        extras: true,
  *    }],
- * 
+ *
  *    handler: async (req, { num, extras }) => {
  *        // implementation of mycommand goes here
  *    },
  * });
  * ```
  */
-export function defineCommand<const OwnerOnly extends boolean = false, const AllowDMs extends boolean = true, const Args extends readonly CommandDefinition.Argument[] = never[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>) {
+export function defineCommand<
+    const OwnerOnly extends boolean = false,
+    const AllowDMs extends boolean = true,
+    const Args extends readonly CommandDefinition.Argument[] = never[],
+    const Translations extends Record<string, boolean> = never
+>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args, Translations>) {
     return definition;
 }

@@ -1,12 +1,13 @@
 import { expect } from "chai";
 import { CommandRegistry } from "./CommandRegistry.js";
 import { TranslatorManager } from "./translations/TranslatorManager.js";
+import { TranslationChecker } from "./translations/TranslationChecker.js";
 
 describe("CommandRegistry", () => {
     let translatorManager: TranslatorManager;
     let commandRegistry: CommandRegistry;
 
-    beforeEach(async () => { 
+    beforeEach(async () => {
         translatorManager = await new TranslatorManager({
             translationFileDirectory: "./src/testData/translations/normal",
             defaultLocale: "en-US",
@@ -16,10 +17,10 @@ describe("CommandRegistry", () => {
         commandRegistry = await new CommandRegistry({
             commandModuleDirectory: "./src/testData/commands/normal",
             contextMenuModuleDirectory: "./src/testData/contextMenuCommands/normal"
-        }, translatorManager).createCommands();
+        }, translatorManager).createCommands({} as TranslationChecker);
     });
 
-    it("normal", () => commandRegistry.createCommands());
+    it("normal", () => commandRegistry.createCommands({} as TranslationChecker));
 
     describe("errors", async function () {
         const translatorManager = await new TranslatorManager({
@@ -36,7 +37,7 @@ describe("CommandRegistry", () => {
             const promise = new CommandRegistry({
                 commandModuleDirectory: "./src/testData/commands/errors",
                 contextMenuModuleDirectory: "./src/testData/contextMenuCommands/normal"
-            }, translatorManager).createCommands();
+            }, translatorManager).createCommands({} as TranslationChecker);
 
             await expect(promise).rejectedWith("Errors generated: 4");
         })
@@ -48,7 +49,7 @@ describe("CommandRegistry", () => {
                 commandModuleDirectory: "./src/testData/commands/errors",
                 contextMenuModuleDirectory: "./src/testData/contextMenuCommands/normal",
                 requireCommandTranslations: true
-            }, translatorManager).createCommands();
+            }, translatorManager).createCommands({} as TranslationChecker);
 
             await expect(promise).rejectedWith("Errors generated: 7");
         })

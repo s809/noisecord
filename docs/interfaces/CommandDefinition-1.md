@@ -1,6 +1,6 @@
 [@s809/noisecord](../README.md) / [Exports](../modules.md) / CommandDefinition
 
-# Interface: CommandDefinition<OwnerOnly, AllowDMs, Args\>
+# Interface: CommandDefinition<OwnerOnly, AllowDMs, Args, Translations\>
 
 Definition for a command.
 
@@ -11,6 +11,7 @@ Definition for a command.
 | `OwnerOnly` | extends `boolean` = `boolean` |
 | `AllowDMs` | extends `boolean` = `boolean` |
 | `Args` | extends readonly [`Argument`](../modules/CommandDefinition.md#argument)[] = readonly [`Argument`](../modules/CommandDefinition.md#argument)[] |
+| `Translations` | extends `Record`<`string`, `boolean`\> = `Record`<`string`, `boolean`\> |
 
 ## Table of contents
 
@@ -23,6 +24,7 @@ Definition for a command.
 - [handler](CommandDefinition-1.md#handler)
 - [key](CommandDefinition-1.md#key)
 - [ownerOnly](CommandDefinition-1.md#owneronly)
+- [translations](CommandDefinition-1.md#translations)
 
 ## Properties
 
@@ -32,7 +34,7 @@ Definition for a command.
 
 #### Defined in
 
-[src/interfaces/Command.ts:22](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L22)
+[src/interfaces/Command.ts:29](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L29)
 
 ___
 
@@ -42,7 +44,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:25](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L25)
+[src/interfaces/Command.ts:34](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L34)
 
 ___
 
@@ -52,7 +54,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:23](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L23)
+[src/interfaces/Command.ts:30](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L30)
 
 ___
 
@@ -62,17 +64,17 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:21](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L21)
+[src/interfaces/Command.ts:28](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L28)
 
 ___
 
 ### handler
 
- `Optional` **handler**: [`Handler`](../modules/Command.md#handler)<`OwnerOnly`, `AllowDMs`, [`HandlerArguments`](../modules/CommandDefinition.md#handlerarguments)<`Args`\>\>
+ `Optional` **handler**: [`Handler`](../modules/Command.md#handler)<`OwnerOnly`, `AllowDMs`, [`HandlerArguments`](../modules/CommandDefinition.md#handlerarguments)<`Args`\>, `Translations`\>
 
 #### Defined in
 
-[src/interfaces/Command.ts:26](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L26)
+[src/interfaces/Command.ts:35](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L35)
 
 ___
 
@@ -82,7 +84,7 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:18](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L18)
+[src/interfaces/Command.ts:25](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L25)
 
 ___
 
@@ -92,4 +94,14 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:20](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L20)
+[src/interfaces/Command.ts:27](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L27)
+
+___
+
+### translations
+
+ `Optional` **translations**: `Translations`
+
+#### Defined in
+
+[src/interfaces/Command.ts:32](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L32)

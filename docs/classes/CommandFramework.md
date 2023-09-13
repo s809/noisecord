@@ -132,7 +132,7 @@ This is a shortcut for constructing and initializing an instance if your instanc
 **`Remarks`**
 
 Translation checking is not possible using the returned instance, as it uses a window between construction and initialization of an instance.
-See constructor and [init()](CommandFramework.md#init) 
+See constructor and [init()](CommandFramework.md#init)
 for the case when construction and initialization need to be split.
 
 #### Parameters

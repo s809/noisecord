@@ -13,12 +13,13 @@
 
 - [Handler](Command.md#handler)
 - [HandlerArguments](Command.md#handlerarguments)
+- [PreparedTranslators](Command.md#preparedtranslators)
 
 ## Type Aliases
 
 ### Handler
 
- **Handler**<`OwnerOnly`, `AllowDMs`, `Args`\>: (`req`: `OwnerOnly` extends ``true`` ? [`MessageCommandRequest`](../classes/MessageCommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> : [`CommandRequest`](../classes/CommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\>, `args`: `Args`) => `Awaitable`<`string` \| `void`\>
+ **Handler**<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>: (`req`: `OwnerOnly` extends ``true`` ? [`MessageCommandRequest`](../classes/MessageCommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> : [`CommandRequest`](../classes/CommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\>, `args`: `Args`, `translations?`: [`PreparedTranslators`](Command.md#preparedtranslators)<`Translations`\>) => `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
 
 #### Type parameters
 
@@ -27,10 +28,11 @@
 | `OwnerOnly` | extends `boolean` = `boolean` |
 | `AllowDMs` | extends `boolean` = `boolean` |
 | `Args` | extends [`HandlerArguments`](Command.md#handlerarguments) = [`HandlerArguments`](Command.md#handlerarguments) |
+| `Translations` | extends `Record`<`string`, `boolean`\> = `Record`<`string`, `boolean`\> |
 
 #### Type declaration
 
-(`req`, `args`): `Awaitable`<`string` \| `void`\>
+(`req`, `args`, `translations?`): `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
 
 ##### Parameters
 
@@ -38,14 +40,15 @@
 | :------ | :------ |
 | `req` | `OwnerOnly` extends ``true`` ? [`MessageCommandRequest`](../classes/MessageCommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> : [`CommandRequest`](../classes/CommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> |
 | `args` | `Args` |
+| `translations?` | [`PreparedTranslators`](Command.md#preparedtranslators)<`Translations`\> |
 
 ##### Returns
 
-`Awaitable`<`string` \| `void`\>
+`Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
 
 #### Defined in
 
-[src/interfaces/Command.ts:103](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L103)
+[src/interfaces/Command.ts:130](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L130)
 
 ___
 
@@ -55,4 +58,20 @@ ___
 
 #### Defined in
 
-[src/interfaces/Command.ts:100](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L100)
+[src/interfaces/Command.ts:115](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L115)
+
+___
+
+### PreparedTranslators
+
+ **PreparedTranslators**<`Input`\>: `ConditionalSimplifyDeep`<[`UnionToIntersectionRecursive`](../modules.md#uniontointersectionrecursive)<{ [K in keyof Input as K extends \`${infer Head}.${any}\` ? Head : K]: K extends \`${string}.${infer Rest}\` ? PreparedTranslators<{ [K2 in Rest]: Input[K] }\> : K extends string ? IsLiteral<Input[K]\> extends true ? PreparedTranslation : never : never }\>, [`PreparedTranslation`](../classes/PreparedTranslation.md)\>
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `Input` | extends `Record`<`string`, `boolean`\> |
+
+#### Defined in
+
+[src/interfaces/Command.ts:118](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L118)

@@ -28,7 +28,7 @@ export function _traverseTree<T>(path: string[],
 
 /**
  * Extracts ID from mention.
- * 
+ *
  * @param text - Text containing mention.
  * @returns Extracted ID.
  * @public
@@ -43,7 +43,7 @@ export function parseMention(text: string, prefix: string): string | null {
 
 /**
  * Extracts channel ID from mention.
- * 
+ *
  * @param text - Text containing mention.
  * @returns Extracted ID.
  * @public
@@ -54,7 +54,7 @@ export function parseChannelMention(text: string) {
 
 /**
  * Extracts user ID from mention.
- * 
+ *
  * @param text - Text containing mention.
  * @returns Extracted ID.
  * @public
@@ -65,7 +65,7 @@ export function parseUserMention(text: string) {
 
 /**
  * Extracts role ID from mention.
- * 
+ *
  * @param text - Text containing mention.
  * @returns Extracted ID.
  * @public

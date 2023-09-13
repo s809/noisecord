@@ -361,6 +361,7 @@ export function createHandler<T>(
         defaultMemberPermissions: [],
         interactionCommand: null,
         conditions: [],
+        translations: [],
         args: {
             min: overrides.args?.list?.length ?? 0,
             max: overrides.args?.lastArgumentType
@@ -392,7 +393,7 @@ export function createHandler<T>(
                 commands: {
                     set: (commands: ApplicationCommandDataResolvable[]) =>
                         commands.map((command, i) => ({ ...command, id: i.toString() })),
-                    
+
                     permissions: {
                         fetch: async (
                             { guild: { id: guildId }, command: commandId }:
@@ -400,7 +401,7 @@ export function createHandler<T>(
                             switch (commandId) {
                                 case IdConstants.PermissionOverridesNone:
                                     throw new Error();
-                                
+
                                 case IdConstants.PermissionOverridesRoleBasic:
                                     return [{
                                         type: ApplicationCommandPermissionType.Role,
@@ -417,7 +418,7 @@ export function createHandler<T>(
                                         id: IdConstants.Role2,
                                         permission: false
                                     }];
-                                
+
                                 case IdConstants.PermissionOverridesUserBasic:
                                     return [{
                                         type: ApplicationCommandPermissionType.User,
@@ -434,7 +435,7 @@ export function createHandler<T>(
                                         id: IdConstants.User1,
                                         permission: false
                                     }];
-                                
+
                                 case IdConstants.PermissionOverridesChannelBasic:
                                     return [{
                                         type: ApplicationCommandPermissionType.Channel,
@@ -477,7 +478,7 @@ export function createHandler<T>(
                                         id: IdConstants.Channel1,
                                         permission: false
                                     }];
-                                
+
                                 case IdConstants.PermissionOverridesAllowOwner:
                                     return [{
                                         type: ApplicationCommandPermissionType.Role,
@@ -492,7 +493,7 @@ export function createHandler<T>(
                                         id: IdConstants.Channel1,
                                         permission: false
                                     }];
-                                
+
                                 default:
                                     throw new Error();
                             }

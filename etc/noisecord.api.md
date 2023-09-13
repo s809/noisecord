@@ -182,6 +182,8 @@ export interface Command {
     // (undocumented)
     translationPath: string;
     // (undocumented)
+    translations: string[];
+    // (undocumented)
     usageTranslations: LocalizationMap;
 }
 
@@ -203,7 +205,7 @@ export namespace Command {
         stringTranslations: LocalizationMap;
     }
     // (undocumented)
-    export type Handler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends HandlerArguments = HandlerArguments> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>> : CommandRequest<AllowDMsInGuild<AllowDMs>>, args: Args) => Awaitable<string | void>;
+    export type Handler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends HandlerArguments = HandlerArguments, Translations extends Record<string, boolean> = Record<string, boolean>> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>> : CommandRequest<AllowDMsInGuild<AllowDMs>>, args: Args, translations?: PreparedTranslators<Translations>) => Awaitable<string | PreparedTranslation | void>;
     // (undocumented)
     export type HandlerArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
     // (undocumented)
@@ -211,6 +213,12 @@ export namespace Command {
         // (undocumented)
         id: Snowflake | null;
     }
+    // (undocumented)
+    export type PreparedTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
+        [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]: K extends `${string}.${infer Rest}` ? PreparedTranslators<{
+            [K2 in Rest]: Input[K];
+        }> : K extends string ? IsLiteral<Input[K]> extends true ? PreparedTranslation : never : never;
+    }>, PreparedTranslation>;
 }
 
 // @public
@@ -226,7 +234,7 @@ export interface CommandCondition {
 }
 
 // @public
-export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[]> {
+export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[], Translations extends Record<string, boolean> = Record<string, boolean>> {
     // (undocumented)
     allowDMs?: AllowDMs;
     // (undocumented)
@@ -236,11 +244,13 @@ export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs
     // (undocumented)
     defaultMemberPermissions?: PermissionResolvable | null;
     // (undocumented)
-    handler?: Command.Handler<OwnerOnly, AllowDMs, CommandDefinition.HandlerArguments<Args>>;
+    handler?: Command.Handler<OwnerOnly, AllowDMs, CommandDefinition.HandlerArguments<Args>, Translations>;
     // (undocumented)
     key: string;
     // (undocumented)
     ownerOnly?: OwnerOnly;
+    // (undocumented)
+    translations?: Translations;
 }
 
 // @public (undocumented)
@@ -319,7 +329,7 @@ export class CommandRegistry {
     // (undocumented)
     readonly contextMenuCommands: ContextMenuCommand[];
     // @internal (undocumented)
-    createCommands(): Promise<this>;
+    createCommands(translationChecker: TranslationChecker): Promise<this>;
     // (undocumented)
     getCommandTranslationPath(path: string): string;
     // (undocumented)
@@ -380,6 +390,8 @@ export abstract class CommandResponse {
     // (undocumented)
     protected _message?: Message;
     abstract replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
+    // (undocumented)
+    protected translateReplyContent<T extends string | object>(options: T): string | T;
 }
 
 // @public (undocumented)
@@ -431,7 +443,7 @@ export class DefaultLocalePathTranslator {
 }
 
 // @public
-export function defineCommand<const OwnerOnly extends boolean = false, const AllowDMs extends boolean = true, const Args extends readonly CommandDefinition.Argument[] = never[]>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args>): CommandDefinition<OwnerOnly, AllowDMs, Args>;
+export function defineCommand<const OwnerOnly extends boolean = false, const AllowDMs extends boolean = true, const Args extends readonly CommandDefinition.Argument[] = never[], const Translations extends Record<string, boolean> = never>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args, Translations>): CommandDefinition<OwnerOnly, AllowDMs, Args, Translations>;
 
 // @public
 export function defineContextMenuCommand<const InteractionType extends ContextMenuCommandDefinition.InteractionTypes, const AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>): ContextMenuCommandDefinition<InteractionType, AllowDMs>;
@@ -479,11 +491,15 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
     // (undocumented)
     protected readonly eventName: EventName;
     // (undocumented)
-    protected executeCommand(commandRequest: EventHandler.HandlerOptionsCommandRequest<Options>, execute: () => Awaitable<string | void>, translator: Translator): Promise<void>;
+    protected executeCommand(commandRequest: EventHandler.HandlerOptionsCommandRequest<Options>, execute: () => Awaitable<string | PreparedTranslation | void>, translator: Translator): Promise<void>;
     // (undocumented)
     protected abstract handle(...args: ClientEvents[EventName]): Promise<void>;
     // (undocumented)
     protected readonly options: Required<Options>;
+    // (undocumented)
+    protected prepareTranslationObject(command: Command, translator: Translator): {
+        [x: string]: {};
+    } | undefined;
     // (undocumented)
     protected replyConditionsUnsatisfied(commandRequest: CommandRequest, key: string, translator: Translator): Promise<void>;
     // (undocumented)
@@ -645,6 +661,14 @@ export function parseRoleMention(text: string): string | null;
 
 // @public
 export function parseUserMention(text: string): string | null;
+
+// @public
+export class PreparedTranslation {
+    // @internal
+    constructor(translator: Translator, path: string, args?: Translator.FormatParameters | undefined);
+    translate(): string;
+    withArgs(args: Translator.FormatParameters): PreparedTranslation;
+}
 
 // @public (undocumented)
 export const textChannels: (ChannelType.GuildText | ChannelType.GuildAnnouncement | ChannelType.AnnouncementThread | ChannelType.PublicThread | ChannelType.PrivateThread)[];

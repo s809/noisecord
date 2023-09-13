@@ -40,7 +40,7 @@ CommandResponse.content
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:22](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L22)
+[src/handlers/CommandResponse.ts:38](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L38)
 
 ___
 
@@ -60,7 +60,7 @@ CommandResponse.embeds
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:27](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L27)
+[src/handlers/CommandResponse.ts:43](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L43)
 
 ___
 
@@ -80,7 +80,7 @@ CommandResponse.flags
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:32](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L32)
+[src/handlers/CommandResponse.ts:48](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L48)
 
 ## Methods
 
@@ -112,7 +112,7 @@ Creates collector of message components.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandResponse.ts:32](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L32)
+[src/handlers/Message/MessageCommandResponse.ts:34](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L34)
 
 ___
 
@@ -132,7 +132,7 @@ Deletes the message, if possible.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandResponse.ts:27](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L27)
+[src/handlers/Message/MessageCommandResponse.ts:29](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L29)
 
 ___
 

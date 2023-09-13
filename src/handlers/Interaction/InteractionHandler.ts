@@ -11,9 +11,9 @@ import assert from "assert";
 import { ContextMenuCommand } from "../../interfaces/ContextMenuCommand.js";
 import { _checkConditions } from "../../conditions/index.js";
 
-/** 
+/**
  * Options for setting up an interaction handler.
- * @public 
+ * @public
  */
 export interface InteractionHandlerOptions extends Partial<EventHandlerOptions<InteractionCommandRequest<any, any>>> {
     registerApplicationCommands?: boolean;
@@ -26,7 +26,7 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
 
         if (options.registerApplicationCommands ??= true)
             await handler.registerApplicationCommands();
-        
+
         return handler;
     }
 
@@ -113,12 +113,15 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
             return;
         }
 
-        await this.executeCommand(commandRequest, () => command.handler!(commandRequest, argsObj), commandTranslator);
+        // Create translation object
+        const translations = this.prepareTranslationObject(command, commandTranslator);
+
+        await this.executeCommand(commandRequest, () => command.handler!(commandRequest, argsObj, translations), commandTranslator);
     }
 
     private async handleContextMenuInteraction(interaction: ContextMenuCommandInteraction) {
         const translator = await this.translatorManager.getTranslator(interaction, "command_processor");
-        
+
         const command = this.commandRegistry.commandsById.get(interaction.command!.id) as ContextMenuCommand;
         if (!command || !command.handler)
             return this.replyUnknownCommand(interaction, translator);

@@ -20,7 +20,7 @@ Options used to initialize [CommandRegistry](../classes/CommandRegistry.md)
 
 #### Defined in
 
-[src/CommandRegistry.ts:16](https://github.com/s809/noisecord/blob/master/src/CommandRegistry.ts#L16)
+[src/CommandRegistry.ts:17](https://github.com/s809/noisecord/blob/master/src/CommandRegistry.ts#L17)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[src/CommandRegistry.ts:17](https://github.com/s809/noisecord/blob/master/src/CommandRegistry.ts#L17)
+[src/CommandRegistry.ts:18](https://github.com/s809/noisecord/blob/master/src/CommandRegistry.ts#L18)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[src/CommandRegistry.ts:18](https://github.com/s809/noisecord/blob/master/src/CommandRegistry.ts#L18)
+[src/CommandRegistry.ts:19](https://github.com/s809/noisecord/blob/master/src/CommandRegistry.ts#L19)

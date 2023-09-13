@@ -58,7 +58,7 @@ CommandResponse.content
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:22](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L22)
+[src/handlers/CommandResponse.ts:38](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L38)
 
 ___
 
@@ -92,7 +92,7 @@ CommandResponse.embeds
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:27](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L27)
+[src/handlers/CommandResponse.ts:43](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L43)
 
 ___
 
@@ -112,7 +112,7 @@ CommandResponse.flags
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:32](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L32)
+[src/handlers/CommandResponse.ts:48](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L48)
 
 ___
 
@@ -158,7 +158,7 @@ Creates collector of message components.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:94](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L94)
+[src/handlers/Interaction/InteractionCommandResponse.ts:98](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L98)
 
 ___
 
@@ -198,7 +198,7 @@ Deletes the message, if possible.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:83](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L83)
+[src/handlers/Interaction/InteractionCommandResponse.ts:87](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L87)
 
 ___
 
@@ -221,7 +221,7 @@ If interaction is not replied to fully, throws an error.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:70](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L70)
+[src/handlers/Interaction/InteractionCommandResponse.ts:72](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L72)
 
 ___
 

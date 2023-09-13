@@ -6,6 +6,7 @@ import { TranslatorManager } from "../translations/TranslatorManager.js";
 import { castArray } from "lodash-es";
 import { ErrorCollector } from "./ErrorCollector.js";
 import assert from "assert";
+import { TranslationChecker } from "../translations/TranslationChecker.js";
 
 export namespace CommandCreationHelper {
     export interface InheritableOptions {
@@ -28,6 +29,8 @@ export class CommandCreationHelper extends ErrorCollector {
             // Specific to this command
             key: definition.key,
 
+            translations: Object.keys(definition.translations ?? []),
+
             handler: definition.handler ?? null,
 
             conditions: definition.conditions
@@ -44,7 +47,7 @@ export class CommandCreationHelper extends ErrorCollector {
                 : null,
             defaultMemberPermissions: definition.defaultMemberPermissions!,
             allowDMs: definition.allowDMs,
-            ownerOnly: definition.ownerOnly
+            ownerOnly: definition.ownerOnly,
         };
     }
 
@@ -111,7 +114,7 @@ export class CommandCreationHelper extends ErrorCollector {
 
         const nameTranslations = this.translatorManager.getLocalizations(`${translationPath}.name`);
         const descriptionTranslations = this.translatorManager.getLocalizations(`${translationPath}.description`);
-        
+
         if (!nameTranslations[this.translatorManager.fallbackLocale] || !descriptionTranslations[this.translatorManager.fallbackLocale]) {
             if (this.requireTranslations) {
                 this.addError(`Command is missing a name and description in default locale (${this.translatorManager.fallbackLocale}).`);
@@ -139,7 +142,7 @@ export class CommandCreationHelper extends ErrorCollector {
     }
 
     fillArguments(partialCommand: Partial<Command>,
-        args: CommandDefinition["args"]) {        
+        args: CommandDefinition["args"]) {
         let minArgs = 0;
         let maxArgs = 0;
         let lastArgumentType: Command["args"]["lastArgumentType"] = null;
@@ -169,7 +172,7 @@ export class CommandCreationHelper extends ErrorCollector {
 
             if (lastArgumentType)
                 this.addError("Extras/Raw argument must be the last argument.");
-            
+
             if (arg.extras || arg.raw) {
                 if (arg.type !== ApplicationCommandOptionType.String)
                     this.addError("Extras/Raw argument must be of a string type.");

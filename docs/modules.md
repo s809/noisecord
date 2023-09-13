@@ -30,6 +30,7 @@
 - [InteractionCommandResponse](classes/InteractionCommandResponse.md)
 - [MessageCommandRequest](classes/MessageCommandRequest.md)
 - [MessageCommandResponse](classes/MessageCommandResponse.md)
+- [PreparedTranslation](classes/PreparedTranslation.md)
 - [TranslationChecker](classes/TranslationChecker-1.md)
 - [Translator](classes/Translator-1.md)
 - [TranslatorManager](classes/TranslatorManager-1.md)
@@ -216,7 +217,7 @@ ___
 
 ### defineCommand
 
-**defineCommand**<`OwnerOnly`, `AllowDMs`, `Args`\>(`definition`): [`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`\>
+**defineCommand**<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>(`definition`): [`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>
 
 Allows to type check a command definition.
 
@@ -252,20 +253,21 @@ export default defineCommand({
 | `OwnerOnly` | extends `boolean` = ``false`` |
 | `AllowDMs` | extends `boolean` = ``true`` |
 | `Args` | extends readonly [`Argument`](modules/CommandDefinition.md#argument)[] = `never`[] |
+| `Translations` | extends `Record`<`string`, `boolean`\> = `never` |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `definition` | [`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`\> |
+| `definition` | [`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\> |
 
 #### Returns
 
-[`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`\>
+[`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>
 
 #### Defined in
 
-[src/interfaces/Command.ts:143](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L143)
+[src/interfaces/Command.ts:176](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L176)
 
 ___
 
