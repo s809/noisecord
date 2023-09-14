@@ -1,5 +1,14 @@
 import { Translator } from "./Translator.js";
 
+/** @public */
+export type Translatable<T extends string | object> = T extends string
+    ? string | PreparedTranslation
+    : {
+        [K in keyof T]: T[K] extends string | object
+            ? Translatable<T[K]>
+            : T[K];
+    };
+
 /**
  * Represents context-specific translator, for a specific translation path.
  *

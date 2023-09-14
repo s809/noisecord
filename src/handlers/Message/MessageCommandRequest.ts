@@ -1,12 +1,13 @@
-import { Message, MessageReplyOptions, TextBasedChannel } from 'discord.js';
+import { InteractionEditReplyOptions, InteractionReplyOptions, Message, MessageCreateOptions, MessageEditOptions, MessageReplyOptions, TextBasedChannel } from 'discord.js';
 import { Translator } from "../../translations/Translator.js";
 import { Command } from "../../interfaces/Command.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
+import { Translatable } from '../../index.js';
 
-/** 
+/**
  * Command request data from a message.
- * @public 
+ * @public
  */
 export class MessageCommandRequest<InGuild extends boolean = boolean> extends CommandRequest<InGuild, MessageCommandResponse> {
     /** @internal */
@@ -15,7 +16,7 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     }
 
     /** Replies to the command. */
-    async replyOrEdit(options: string | MessageReplyOptions) {
+    async replyOrEdit(options: Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>) {
         return this.response.replyOrEdit(options);
     }
 

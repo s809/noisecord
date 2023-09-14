@@ -116,12 +116,13 @@ export namespace Command {
 
     /** @public */
     export type PreparedTranslations<Input extends DeeplyNestedObject<boolean> = DeeplyNestedObject<boolean>> = {
-        [K in keyof Input]: Input[K] extends boolean
-            ? PreparedTranslation
-            : ConditionalSimplifyDeep<
-                PreparedTranslations<Exclude<Input[K], boolean>>,
-                PreparedTranslation
-            >;
+        [K in keyof Input]: K extends `${string}.${string}`
+            ? never
+            : Input[K] extends boolean
+                ? PreparedTranslation
+                : ConditionalSimplifyDeep<
+                    PreparedTranslations<Exclude<Input[K], boolean>>,
+                    PreparedTranslation>;
     };
 
     /** @public */

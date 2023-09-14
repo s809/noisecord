@@ -49,11 +49,13 @@ export class AllLocalesPathTranslator {
 export namespace TranslationChecker {
     /** @public */
     export type PathTranslators<Input extends DeeplyNestedObject<boolean>> = ConditionalSimplifyDeep<{
-        [K in keyof Input]: Input[K] extends boolean
-            ? Input[K] extends true
-                ? AllLocalesPathTranslator
-                : DefaultLocalePathTranslator
-        : PathTranslators<Exclude<Input[K], boolean>>;
+        [K in keyof Input]: K extends `${string}.${string}`
+            ? never
+            : Input[K] extends boolean
+                ? Input[K] extends true
+                    ? AllLocalesPathTranslator
+                    : DefaultLocalePathTranslator
+                : PathTranslators<Exclude<Input[K], boolean>>;
     }, PathTranslatorTypes>;
 
     /** @public */

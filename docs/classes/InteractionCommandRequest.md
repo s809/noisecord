@@ -51,7 +51,7 @@ Command request data from an interaction.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:21](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L21)
+[src/handlers/Interaction/InteractionCommandRequest.ts:22](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L22)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:21](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L21)
+[src/handlers/Interaction/InteractionCommandRequest.ts:22](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L22)
 
 ___
 
@@ -123,7 +123,7 @@ CommandRequest.author
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:60](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L60)
+[src/handlers/Interaction/InteractionCommandRequest.ts:61](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L61)
 
 ___
 
@@ -141,7 +141,7 @@ CommandRequest.channel
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:48](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L48)
+[src/handlers/Interaction/InteractionCommandRequest.ts:49](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L49)
 
 ___
 
@@ -177,7 +177,7 @@ CommandRequest.guild
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:52](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L52)
+[src/handlers/Interaction/InteractionCommandRequest.ts:53](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L53)
 
 ___
 
@@ -213,7 +213,7 @@ CommandRequest.member
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:56](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L56)
+[src/handlers/Interaction/InteractionCommandRequest.ts:57](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L57)
 
 ## Methods
 
@@ -235,7 +235,7 @@ Defers the reply, if possible.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:27](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L27)
+[src/handlers/Interaction/InteractionCommandRequest.ts:28](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L28)
 
 ___
 
@@ -250,7 +250,7 @@ If interaction is not replied to fully, throws an error.
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `string` \| `InteractionReplyOptions` |
+| `options` | [`Translatable`](../modules.md#translatable)<`string` \| `InteractionReplyOptions`\> |
 
 #### Returns
 
@@ -258,7 +258,7 @@ If interaction is not replied to fully, throws an error.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:40](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L40)
+[src/handlers/Interaction/InteractionCommandRequest.ts:41](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L41)
 
 ___
 
@@ -276,7 +276,7 @@ this is InteractionCommandRequest<CommandType, CommandInteraction<"cached" \| "r
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:44](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L44)
+[src/handlers/Interaction/InteractionCommandRequest.ts:45](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L45)
 
 ___
 
@@ -290,7 +290,7 @@ Replies to the command.
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `string` \| `InteractionReplyOptions` |
+| `options` | [`Translatable`](../modules.md#translatable)<`string` \| `InteractionEditReplyOptions` \| `InteractionReplyOptions`\> |
 
 #### Returns
 
@@ -302,4 +302,4 @@ Replies to the command.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandRequest.ts:32](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L32)
+[src/handlers/Interaction/InteractionCommandRequest.ts:33](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandRequest.ts#L33)

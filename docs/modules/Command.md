@@ -48,7 +48,7 @@
 
 #### Defined in
 
-[src/interfaces/Command.ts:128](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L128)
+[src/interfaces/Command.ts:129](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L129)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 ### PreparedTranslations
 
- **PreparedTranslations**<`Input`\>: { [K in keyof Input]: Input[K] extends boolean ? PreparedTranslation : ConditionalSimplifyDeep<PreparedTranslations<Exclude<Input[K], boolean\>\>, PreparedTranslation\> }
+ **PreparedTranslations**<`Input`\>: { [K in keyof Input]: K extends \`${string}.${string}\` ? never : Input[K] extends boolean ? PreparedTranslation : ConditionalSimplifyDeep<PreparedTranslations<Exclude<Input[K], boolean\>\>, PreparedTranslation\> }
 
 #### Type parameters
 

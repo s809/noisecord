@@ -215,7 +215,7 @@ export namespace Command {
     }
     // (undocumented)
     export type PreparedTranslations<Input extends DeeplyNestedObject<boolean> = DeeplyNestedObject<boolean>> = {
-        [K in keyof Input]: Input[K] extends boolean ? PreparedTranslation : ConditionalSimplifyDeep<PreparedTranslations<Exclude<Input[K], boolean>>, PreparedTranslation>;
+        [K in keyof Input]: K extends `${string}.${string}` ? never : Input[K] extends boolean ? PreparedTranslation : ConditionalSimplifyDeep<PreparedTranslations<Exclude<Input[K], boolean>>, PreparedTranslation>;
     };
 }
 
@@ -389,7 +389,7 @@ export abstract class CommandResponse {
     protected _message?: Message;
     abstract replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
     // (undocumented)
-    protected translateReplyContent<T extends string | object>(options: T): string | T;
+    protected translateReplyContent<T extends string | object>(options: Translatable<T>): T;
 }
 
 // @public (undocumented)
@@ -541,7 +541,7 @@ export class InteractionCommandRequest<CommandType extends Command | ContextMenu
     // (undocumented)
     readonly command: CommandType;
     deferReply(ephemeral?: boolean): Promise<InteractionCommandResponse>;
-    followUpForce(options: string | InteractionReplyOptions): Promise<Message<InteractionInGuild<InteractionType>>>;
+    followUpForce(options: Translatable<string | InteractionReplyOptions>): Promise<Message<InteractionInGuild<InteractionType>>>;
     // (undocumented)
     get guild(): CommandRequest<InteractionInGuild<InteractionType>>["guild"];
     // (undocumented)
@@ -550,7 +550,7 @@ export class InteractionCommandRequest<CommandType extends Command | ContextMenu
     readonly interaction: InteractionType;
     // (undocumented)
     get member(): CommandRequest<InteractionInGuild<InteractionType>>["member"];
-    replyOrEdit(options: string | InteractionReplyOptions): Promise<InteractionCommandResponse>;
+    replyOrEdit(options: Translatable<string | InteractionReplyOptions | InteractionEditReplyOptions>): Promise<InteractionCommandResponse>;
 }
 
 // @public (undocumented)
@@ -563,12 +563,12 @@ export class InteractionCommandResponse extends CommandResponse {
     // (undocumented)
     get deferredOrReplied(): boolean;
     delete(): Promise<void>;
-    followUpForce(options: string | InteractionReplyOptions): Promise<Message<boolean>>;
+    followUpForce(options: Translatable<string | InteractionReplyOptions>): Promise<Message<boolean>>;
     // (undocumented)
     readonly interaction: CommandInteraction;
     // (undocumented)
     get repliedFully(): boolean;
-    replyOrEdit(options: string | InteractionReplyOptions | InteractionEditReplyOptions): Promise<this>;
+    replyOrEdit(options: Translatable<string | InteractionReplyOptions | InteractionEditReplyOptions>): Promise<this>;
 }
 
 // @internal (undocumented)
@@ -609,7 +609,7 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     get member(): CommandRequest<InGuild>["member"];
     // (undocumented)
     readonly message: Message;
-    replyOrEdit(options: string | MessageReplyOptions): Promise<MessageCommandResponse>;
+    replyOrEdit(options: Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<MessageCommandResponse>;
 }
 
 // @public (undocumented)
@@ -618,7 +618,7 @@ export class MessageCommandResponse extends CommandResponse {
     constructor(channel: TextBasedChannel);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
     delete(): Promise<void>;
-    replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
+    replyOrEdit(options: Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
 }
 
 // @internal (undocumented)
@@ -675,10 +675,15 @@ export class PreparedTranslation {
 export const textChannels: (ChannelType.GuildText | ChannelType.GuildAnnouncement | ChannelType.AnnouncementThread | ChannelType.PublicThread | ChannelType.PrivateThread)[];
 
 // @public (undocumented)
+export type Translatable<T extends string | object> = T extends string ? string | PreparedTranslation : {
+    [K in keyof T]: T[K] extends string | object ? Translatable<T[K]> : T[K];
+};
+
+// @public (undocumented)
 export namespace TranslationChecker {
     // (undocumented)
     export type PathTranslators<Input extends DeeplyNestedObject<boolean>> = ConditionalSimplifyDeep<{
-        [K in keyof Input]: Input[K] extends boolean ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : PathTranslators<Exclude<Input[K], boolean>>;
+        [K in keyof Input]: K extends `${string}.${string}` ? never : Input[K] extends boolean ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : PathTranslators<Exclude<Input[K], boolean>>;
     }, PathTranslatorTypes>;
     // (undocumented)
     export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTranslator;

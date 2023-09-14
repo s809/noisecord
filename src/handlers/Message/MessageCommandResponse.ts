@@ -1,5 +1,6 @@
 import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, TextBasedChannel, MessageCreateOptions, InteractionEditReplyOptions } from 'discord.js';
 import { CommandResponse } from "../CommandResponse.js";
+import { Translatable } from '../../index.js';
 
 /** @public */
 export class MessageCommandResponse extends CommandResponse {
@@ -11,17 +12,17 @@ export class MessageCommandResponse extends CommandResponse {
     }
 
     /** Edits the message, if possible. */
-    async replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions) {
-        options = this.translateReplyContent(options);
+    async replyOrEdit(options: Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>) {
+        const translatedOptions = this.translateReplyContent(options);
 
         if (!this.messagePromise) {
-            this.messagePromise = this.channel.send(options as MessageCreateOptions);
+            this.messagePromise = this.channel.send(translatedOptions as MessageCreateOptions);
             this._message = await this.messagePromise;
             return this;
         }
 
         await this.messagePromise;
-        this._message = await this._message!.edit(options as MessageEditOptions);
+        this._message = await this._message!.edit(translatedOptions as MessageEditOptions);
         return this;
     }
 

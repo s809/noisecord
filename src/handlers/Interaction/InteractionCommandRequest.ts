@@ -1,14 +1,15 @@
-import { CommandInteraction, InteractionReplyOptions, Message } from 'discord.js';
+import { CommandInteraction, InteractionEditReplyOptions, InteractionReplyOptions, Message } from 'discord.js';
 import { Translator } from "../../translations/Translator.js";
 import { Command } from "../../interfaces/Command.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 import { ContextMenuCommand } from '../../interfaces/ContextMenuCommand.js';
 import { InGuildCacheType, InteractionInGuild } from '../../interfaces/common.js';
+import { PreparedTranslation, Translatable } from '../../translations/PreparedTranslation.js';
 
-/** 
+/**
  * Command request data from an interaction.
- * @public 
+ * @public
  */
 export class InteractionCommandRequest<
     CommandType extends Command | ContextMenuCommand,
@@ -29,15 +30,15 @@ export class InteractionCommandRequest<
     }
 
     /** Replies to the command. */
-    async replyOrEdit(options: string | InteractionReplyOptions) {
+    async replyOrEdit(options: Translatable<string | InteractionReplyOptions | InteractionEditReplyOptions>) {
         return this.response?.replyOrEdit(options);
     }
 
-    /** 
+    /**
      * Sends a follow up message.
      * If interaction is not replied to fully, throws an error.
      */
-    async followUpForce(options: string | InteractionReplyOptions) {
+    async followUpForce(options: Translatable<string | InteractionReplyOptions>) {
         return await this.response.followUpForce(options) as Message<InteractionInGuild<InteractionType>>;
     }
 

@@ -17,13 +17,13 @@
 
 #### Defined in
 
-[src/translations/TranslationChecker.ts:60](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L60)
+[src/translations/TranslationChecker.ts:62](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L62)
 
 ___
 
 ### PathTranslators
 
- **PathTranslators**<`Input`\>: `ConditionalSimplifyDeep`<{ [K in keyof Input]: Input[K] extends boolean ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : PathTranslators<Exclude<Input[K], boolean\>\> }, [`PathTranslatorTypes`](TranslationChecker.md#pathtranslatortypes)\>
+ **PathTranslators**<`Input`\>: `ConditionalSimplifyDeep`<{ [K in keyof Input]: K extends \`${string}.${string}\` ? never : Input[K] extends boolean ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : PathTranslators<Exclude<Input[K], boolean\>\> }, [`PathTranslatorTypes`](TranslationChecker.md#pathtranslatortypes)\>
 
 #### Type parameters
 

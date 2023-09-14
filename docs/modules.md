@@ -58,6 +58,7 @@
 - [DistributiveOmit](modules.md#distributiveomit)
 - [InGuildCacheType](modules.md#inguildcachetype)
 - [InteractionInGuild](modules.md#interactioninguild)
+- [Translatable](modules.md#translatable)
 - [UnionToIntersectionRecursive](modules.md#uniontointersectionrecursive)
 
 ### Variables
@@ -193,6 +194,22 @@ ___
 
 ___
 
+### Translatable
+
+ **Translatable**<`T`\>: `T` extends `string` ? `string` \| [`PreparedTranslation`](classes/PreparedTranslation.md) : { [K in keyof T]: T[K] extends string \| object ? Translatable<T[K]\> : T[K] }
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends `string` \| `object` |
+
+#### Defined in
+
+[src/translations/PreparedTranslation.ts:4](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L4)
+
+___
+
 ### UnionToIntersectionRecursive
 
  **UnionToIntersectionRecursive**<`T`\>: { [K in keyof T]: T[K] extends Object ? UnionToIntersection<T[K]\> : UnionToIntersectionRecursive<T[K]\> }
@@ -288,7 +305,7 @@ export default defineCommand({
 
 #### Defined in
 
-[src/interfaces/Command.ts:174](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L174)
+[src/interfaces/Command.ts:175](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L175)
 
 ___
 

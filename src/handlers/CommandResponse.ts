@@ -1,5 +1,5 @@
 import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, InteractionCollector, MappedInteractionTypes, InteractionEditReplyOptions } from 'discord.js';
-import { PreparedTranslation } from '../index.js';
+import { PreparedTranslation, Translatable } from '../index.js';
 import mapObject from 'map-obj';
 
 /**
@@ -12,12 +12,12 @@ export abstract class CommandResponse {
     /** Edits the message, if possible. */
     abstract replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
 
-    protected translateReplyContent<T extends string | object>(options: T) {
+    protected translateReplyContent<T extends string | object>(options: Translatable<T>): T {
         if (typeof options === 'string')
-            return options;
+            return options as T;
 
         if (options instanceof PreparedTranslation)
-            return options.translate();
+            return options.translate() as T;
 
         return mapObject(
             options,

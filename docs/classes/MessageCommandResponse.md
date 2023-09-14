@@ -112,7 +112,7 @@ Creates collector of message components.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandResponse.ts:34](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L34)
+[src/handlers/Message/MessageCommandResponse.ts:35](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L35)
 
 ___
 
@@ -132,7 +132,7 @@ Deletes the message, if possible.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandResponse.ts:29](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L29)
+[src/handlers/Message/MessageCommandResponse.ts:30](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L30)
 
 ___
 
@@ -146,7 +146,7 @@ Edits the message, if possible.
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `string` \| `MessageCreateOptions` \| `MessageEditOptions` \| `InteractionEditReplyOptions` \| `InteractionReplyOptions` |
+| `options` | [`Translatable`](../modules.md#translatable)<`string` \| `MessageCreateOptions` \| `MessageEditOptions` \| `InteractionEditReplyOptions` \| `InteractionReplyOptions`\> |
 
 #### Returns
 
@@ -158,4 +158,4 @@ Edits the message, if possible.
 
 #### Defined in
 
-[src/handlers/Message/MessageCommandResponse.ts:14](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L14)
+[src/handlers/Message/MessageCommandResponse.ts:15](https://github.com/s809/noisecord/blob/master/src/handlers/Message/MessageCommandResponse.ts#L15)

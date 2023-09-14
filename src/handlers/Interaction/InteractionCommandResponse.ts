@@ -1,5 +1,6 @@
 import { CommandInteraction, InteractionReplyOptions, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, MessageFlags, InteractionEditReplyOptions } from 'discord.js';
 import { CommandResponse } from "../CommandResponse.js";
+import { Translatable } from '../../index.js';
 
 /** @public */
 export class InteractionCommandResponse extends CommandResponse {
@@ -33,14 +34,14 @@ export class InteractionCommandResponse extends CommandResponse {
     }
 
     /** Replies to interaction or edits it. */
-    async replyOrEdit(options: string | InteractionReplyOptions | InteractionEditReplyOptions) {
-        options = this.translateReplyContent(options);
+    async replyOrEdit(options: Translatable<string | InteractionReplyOptions | InteractionEditReplyOptions>) {
+        const translatedOptions = this.translateReplyContent(options);
 
         const fixedOptions = {
             // if this is a first message, [ephemeral] will be set to what value it was deferred with
             // for second and further, it is true by default
             ephemeral: this.ephemeral || this._repliedFully,
-            ...typeof options === "string" ? { content: options } : options as InteractionReplyOptions
+            ...typeof translatedOptions === "string" ? { content: translatedOptions } : translatedOptions as InteractionReplyOptions
         } as const;
 
         if (!this._deferredOrReplied) {
@@ -69,15 +70,15 @@ export class InteractionCommandResponse extends CommandResponse {
      * Sends a follow up message.
      * If interaction is not replied to fully, throws an error.
      */
-    async followUpForce(options: string | InteractionReplyOptions) {
-        options = this.translateReplyContent(options);
+    async followUpForce(options: Translatable<string | InteractionReplyOptions>) {
+        const translatedOptions = this.translateReplyContent(options);
 
         if (!this._repliedFully)
             throw new Error("Request must receive a full response before sending follow ups.")
 
         const fixedOptions = {
             ephemeral: true,
-            ...typeof options === "string" ? { content: options } : options as InteractionReplyOptions
+            ...typeof translatedOptions === "string" ? { content: translatedOptions } : translatedOptions as InteractionReplyOptions
         } as const;
 
         return this.interaction.followUp(fixedOptions);

@@ -67,7 +67,7 @@ ___
 
 ### checkTranslations
 
-**checkTranslations**<`Paths`\>(`data`, `prefix?`): `ConditionalSimplifyDeep`<{ [K in string \| number \| symbol]: Paths[K] extends boolean ? any[any] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<({ [K in keyof Exclude<Paths[K], boolean\>]: Exclude<Paths[K], boolean\>[K] extends boolean ? Exclude<Paths[K], boolean\>[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<...\>; }), PathTranslatorTypes, unknown\> }, [`PathTranslatorTypes`](../modules/TranslationChecker.md#pathtranslatortypes), `unknown`\>
+**checkTranslations**<`Paths`\>(`data`, `prefix?`): `ConditionalSimplifyDeep`<{ [K in string \| number \| symbol]: K extends \`${string}.${string}\` ? never : Paths[K] extends boolean ? any[any] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<({ [K in keyof Exclude<Paths[K], boolean\>]: K extends \`${string}.${string}\` ? never : Exclude<Paths[K], boolean\>[K] extends boolean ? Exclude<Paths[K], boolean\>[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<...\>; }), PathTranslatorTypes, unknown\> }, [`PathTranslatorTypes`](../modules/TranslationChecker.md#pathtranslatortypes), `unknown`\>
 
 Converts provided object key paths into an easier to use object, and schedules them to be checked in later part of the initialization.
 
@@ -86,13 +86,13 @@ Converts provided object key paths into an easier to use object, and schedules t
 
 #### Returns
 
-`ConditionalSimplifyDeep`<{ [K in string \| number \| symbol]: Paths[K] extends boolean ? any[any] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<({ [K in keyof Exclude<Paths[K], boolean\>]: Exclude<Paths[K], boolean\>[K] extends boolean ? Exclude<Paths[K], boolean\>[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<...\>; }), PathTranslatorTypes, unknown\> }, [`PathTranslatorTypes`](../modules/TranslationChecker.md#pathtranslatortypes), `unknown`\>
+`ConditionalSimplifyDeep`<{ [K in string \| number \| symbol]: K extends \`${string}.${string}\` ? never : Paths[K] extends boolean ? any[any] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<({ [K in keyof Exclude<Paths[K], boolean\>]: K extends \`${string}.${string}\` ? never : Exclude<Paths[K], boolean\>[K] extends boolean ? Exclude<Paths[K], boolean\>[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<...\>; }), PathTranslatorTypes, unknown\> }, [`PathTranslatorTypes`](../modules/TranslationChecker.md#pathtranslatortypes), `unknown`\>
 
 Converted object.
 
 #### Defined in
 
-[src/translations/TranslationChecker.ts:80](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L80)
+[src/translations/TranslationChecker.ts:82](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L82)
 
 ___
 

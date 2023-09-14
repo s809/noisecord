@@ -38,7 +38,7 @@
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:19](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L19)
+[src/handlers/Interaction/InteractionCommandResponse.ts:20](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L20)
 
 ## Accessors
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:9](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L9)
+[src/handlers/Interaction/InteractionCommandResponse.ts:10](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L10)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:14](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L14)
+[src/handlers/Interaction/InteractionCommandResponse.ts:15](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L15)
 
 ## Methods
 
@@ -158,7 +158,7 @@ Creates collector of message components.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:98](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L98)
+[src/handlers/Interaction/InteractionCommandResponse.ts:99](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L99)
 
 ___
 
@@ -178,7 +178,7 @@ ___
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:23](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L23)
+[src/handlers/Interaction/InteractionCommandResponse.ts:24](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L24)
 
 ___
 
@@ -198,7 +198,7 @@ Deletes the message, if possible.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:87](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L87)
+[src/handlers/Interaction/InteractionCommandResponse.ts:88](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L88)
 
 ___
 
@@ -213,7 +213,7 @@ If interaction is not replied to fully, throws an error.
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `string` \| `InteractionReplyOptions` |
+| `options` | [`Translatable`](../modules.md#translatable)<`string` \| `InteractionReplyOptions`\> |
 
 #### Returns
 
@@ -221,7 +221,7 @@ If interaction is not replied to fully, throws an error.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:72](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L72)
+[src/handlers/Interaction/InteractionCommandResponse.ts:73](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L73)
 
 ___
 
@@ -235,7 +235,7 @@ Replies to interaction or edits it.
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `string` \| `InteractionEditReplyOptions` \| `InteractionReplyOptions` |
+| `options` | [`Translatable`](../modules.md#translatable)<`string` \| `InteractionEditReplyOptions` \| `InteractionReplyOptions`\> |
 
 #### Returns
 
@@ -247,4 +247,4 @@ Replies to interaction or edits it.
 
 #### Defined in
 
-[src/handlers/Interaction/InteractionCommandResponse.ts:36](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L36)
+[src/handlers/Interaction/InteractionCommandResponse.ts:37](https://github.com/s809/noisecord/blob/master/src/handlers/Interaction/InteractionCommandResponse.ts#L37)
