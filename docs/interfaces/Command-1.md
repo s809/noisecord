@@ -76,7 +76,7 @@ ___
 
 ### handler
 
- **handler**: ``null`` \| [`Handler`](../modules/Command.md#handler)<`boolean`, `boolean`, [`HandlerArguments`](../modules/Command.md#handlerarguments), `Record`<`string`, `boolean`\>\>
+ **handler**: ``null`` \| [`Handler`](../modules/Command.md#handler)<`boolean`, `boolean`, [`HandlerArguments`](../modules/Command.md#handlerarguments), [`DeeplyNestedObject`](../modules.md#deeplynestedobject)<`boolean`\>\>
 
 #### Defined in
 

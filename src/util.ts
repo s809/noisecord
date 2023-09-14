@@ -90,6 +90,11 @@ export type DistributiveOmit<T, K extends keyof any> = T extends any
 export type DeeplyNestedMap<V> = Map<string, V | DeeplyNestedMap<V>>;
 
 /** @public */
+export type DeeplyNestedObject<V> = {
+    [K: string]: V | DeeplyNestedObject<V>;
+}
+
+/** @public */
 export type UnionToIntersectionRecursive<T> = {
     [K in keyof T]: T[K] extends {} ? UnionToIntersection<T[K]> : UnionToIntersectionRecursive<T[K]>;
 }

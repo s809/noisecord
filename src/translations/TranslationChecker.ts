@@ -1,10 +1,12 @@
-import { IsLiteral } from "type-fest";
 import { ConditionalSimplifyDeep } from "type-fest/source/conditional-simplify.js";
 import { Translator } from "../translations/Translator.js";
 import { TranslatorManager } from "../translations/TranslatorManager.js";
-import { UnionToIntersectionRecursive } from "../util.js";
+import { DeeplyNestedObject } from "../util.js";
 import { ErrorCollector } from "../helpers/ErrorCollector.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
+import flat from "flat";
+const { flatten, unflatten } = flat;
+import assert from "assert";
 
 /** @public */
 export class DefaultLocalePathTranslator {
@@ -46,18 +48,13 @@ export class AllLocalesPathTranslator {
 /** @public */
 export namespace TranslationChecker {
     /** @public */
-    export type PathTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
-        [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]:
-            K extends `${string}.${infer Rest}`
-                ? PathTranslators<{ [K2 in Rest]: Input[K] }>
-                : K extends string
-                    ? IsLiteral<Input[K]> extends true
-                        ? Input[K] extends true
-                            ? AllLocalesPathTranslator
-                            : DefaultLocalePathTranslator
-                        : never
-                    : never;
-    }>, PathTranslatorTypes>;
+    export type PathTranslators<Input extends DeeplyNestedObject<boolean>> = ConditionalSimplifyDeep<{
+        [K in keyof Input]: Input[K] extends boolean
+            ? Input[K] extends true
+                ? AllLocalesPathTranslator
+                : DefaultLocalePathTranslator
+        : PathTranslators<Exclude<Input[K], boolean>>;
+    }, PathTranslatorTypes>;
 
     /** @public */
     export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTranslator;
@@ -80,41 +77,41 @@ export class TranslationChecker extends ErrorCollector {
      * @param prefix - Prefix to use.
      * @returns Converted object.
      */
-    checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): TranslationChecker.PathTranslators<Paths> {
-        const result: any = {};
+    checkTranslations<Paths extends DeeplyNestedObject<boolean>>(data: Paths, prefix?: string): TranslationChecker.PathTranslators<Paths> {
+        // Dots in keys are not supported
+        const flattened = flatten<Paths, Record<string, boolean>>(data, {
+            transformKey: key => {
+                if (key.includes("."))
+                    throw new Error(`Translation path keys cannot include dots: ${key}`);
+                return key;
+            }
+        });
 
-        for (const [key, value] of Object.entries(data)) {
+        const entries = Object.entries(flattened).map(([key, value]) => {
             if (!key.length)
                 throw new Error("Path cannot be empty.");
 
-            const parts = key.split(".");
-            let resultPart = result;
-
-            while (parts.length > 1) {
-                const part = parts.shift()!;
-
-                if (!resultPart[part])
-                    resultPart[part] = {};
-                resultPart = resultPart[part];
-            }
-
             const fullPath = prefix ? `${prefix}.${key}` : key;
+
+            let newValue;
             if (value) {
-                resultPart[parts[0]] = new AllLocalesPathTranslator(fullPath);
+                newValue = new AllLocalesPathTranslator(fullPath);
                 this.toCheck[fullPath] = true;
             } else {
-                resultPart[parts[0]] = new DefaultLocalePathTranslator(fullPath);
+                newValue = new DefaultLocalePathTranslator(fullPath);
                 this.toCheck[fullPath] ??= false;
             }
 
             const list = this.pathTranslatorsToPrepare.get(fullPath);
             if (list)
-                list.push(resultPart[parts[0]]);
+                list.push(newValue);
             else
-                this.pathTranslatorsToPrepare.set(fullPath, [resultPart[parts[0]]]);
-        }
+                this.pathTranslatorsToPrepare.set(fullPath, [newValue]);
 
-        return result as TranslationChecker.PathTranslators<Paths>;
+            return [key, newValue] as const;
+        });
+
+        return unflatten(Object.fromEntries(entries)) as TranslationChecker.PathTranslators<Paths>;
     }
 
     /** @internal */

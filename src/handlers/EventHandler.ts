@@ -75,10 +75,7 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
     }
 
     protected prepareTranslationObject(command: Command, translator: Translator) {
-        if (!command.translations)
-            return undefined;
-
-        const translationObject: Command.PreparedTranslators<any> = {};
+        const translationObject: Command.PreparedTranslations = {};
 
         for (const key of command.translations)
             set(translationObject, key, new PreparedTranslation(translator, `${command.translationPath}.${key}`));

@@ -67,7 +67,7 @@ ___
 
 ### checkTranslations
 
-**checkTranslations**<`Paths`\>(`data`, `prefix?`): `ConditionalSimplifyDeep`<[`UnionToIntersectionRecursive`](../modules.md#uniontointersectionrecursive)<{ [K in string \| number \| symbol as K extends \`${Head}.${any}\` ? Head : K]: K extends \`${string}.${Rest}\` ? ConditionalSimplifyDeep<UnionToIntersectionRecursive<({ [K in keyof { [K2 in Rest]: Paths[K]; } as K extends \`${infer Head}.${any}\` ? Head : K]: K extends \`${string}.${infer Rest}\` ? ConditionalSimplifyDeep<UnionToIntersectionRecursive<{ [K in keyof { [K2 in Rest]: { [K2 in Rest]: Paths[K]; }[K]; } as K extends \`${infer Head}.${any}\` ? Head : K]: K extends \`${string}.$...)\>, PathTranslatorTypes, unknown\> : K extends string ? IsNotFalse<IsLiteralUnion<Paths[K]\>\> extends true ? Paths[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : never : never }\>, [`PathTranslatorTypes`](../modules/TranslationChecker.md#pathtranslatortypes), `unknown`\>
+**checkTranslations**<`Paths`\>(`data`, `prefix?`): `ConditionalSimplifyDeep`<{ [K in string \| number \| symbol]: Paths[K] extends boolean ? any[any] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<({ [K in keyof Exclude<Paths[K], boolean\>]: Exclude<Paths[K], boolean\>[K] extends boolean ? Exclude<Paths[K], boolean\>[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<...\>; }), PathTranslatorTypes, unknown\> }, [`PathTranslatorTypes`](../modules/TranslationChecker.md#pathtranslatortypes), `unknown`\>
 
 Converts provided object key paths into an easier to use object, and schedules them to be checked in later part of the initialization.
 
@@ -75,7 +75,7 @@ Converts provided object key paths into an easier to use object, and schedules t
 
 | Name | Type |
 | :------ | :------ |
-| `Paths` | extends `Record`<`string`, `boolean`\> |
+| `Paths` | extends [`DeeplyNestedObject`](../modules.md#deeplynestedobject)<`boolean`\> |
 
 #### Parameters
 
@@ -86,13 +86,13 @@ Converts provided object key paths into an easier to use object, and schedules t
 
 #### Returns
 
-`ConditionalSimplifyDeep`<[`UnionToIntersectionRecursive`](../modules.md#uniontointersectionrecursive)<{ [K in string \| number \| symbol as K extends \`${Head}.${any}\` ? Head : K]: K extends \`${string}.${Rest}\` ? ConditionalSimplifyDeep<UnionToIntersectionRecursive<({ [K in keyof { [K2 in Rest]: Paths[K]; } as K extends \`${infer Head}.${any}\` ? Head : K]: K extends \`${string}.${infer Rest}\` ? ConditionalSimplifyDeep<UnionToIntersectionRecursive<{ [K in keyof { [K2 in Rest]: { [K2 in Rest]: Paths[K]; }[K]; } as K extends \`${infer Head}.${any}\` ? Head : K]: K extends \`${string}.$...)\>, PathTranslatorTypes, unknown\> : K extends string ? IsNotFalse<IsLiteralUnion<Paths[K]\>\> extends true ? Paths[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : never : never }\>, [`PathTranslatorTypes`](../modules/TranslationChecker.md#pathtranslatortypes), `unknown`\>
+`ConditionalSimplifyDeep`<{ [K in string \| number \| symbol]: Paths[K] extends boolean ? any[any] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<({ [K in keyof Exclude<Paths[K], boolean\>]: Exclude<Paths[K], boolean\>[K] extends boolean ? Exclude<Paths[K], boolean\>[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : ConditionalSimplifyDeep<...\>; }), PathTranslatorTypes, unknown\> }, [`PathTranslatorTypes`](../modules/TranslationChecker.md#pathtranslatortypes), `unknown`\>
 
 Converted object.
 
 #### Defined in
 
-[src/translations/TranslationChecker.ts:83](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L83)
+[src/translations/TranslationChecker.ts:80](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L80)
 
 ___
 

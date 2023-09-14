@@ -18,6 +18,7 @@ import { CommandInteraction } from 'discord.js';
 import { CommandResponse as CommandResponse_2 } from './CommandResponse.js';
 import { ConditionalSimplifyDeep } from 'type-fest/source/conditional-simplify.js';
 import { ContextMenuCommandInteraction } from 'discord.js';
+import { DeeplyNestedObject as DeeplyNestedObject_2 } from '../util.js';
 import { Embed } from 'discord.js';
 import { Guild } from 'discord.js';
 import { GuildMember } from 'discord.js';
@@ -28,7 +29,6 @@ import { Interaction } from 'discord.js';
 import { InteractionCollector } from 'discord.js';
 import { InteractionEditReplyOptions } from 'discord.js';
 import { InteractionReplyOptions } from 'discord.js';
-import { IsLiteral } from 'type-fest';
 import { IterableElement } from 'type-fest';
 import { LocaleString } from 'discord.js';
 import { LocalizationMap } from 'discord.js';
@@ -205,7 +205,7 @@ export namespace Command {
         stringTranslations: LocalizationMap;
     }
     // (undocumented)
-    export type Handler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends HandlerArguments = HandlerArguments, Translations extends Record<string, boolean> = Record<string, boolean>> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>> : CommandRequest<AllowDMsInGuild<AllowDMs>>, args: Args, translations?: PreparedTranslators<Translations>) => Awaitable<string | PreparedTranslation | void>;
+    export type Handler<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends HandlerArguments = HandlerArguments, Translations extends DeeplyNestedObject<boolean> = DeeplyNestedObject<boolean>> = (req: OwnerOnly extends true ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>> : CommandRequest<AllowDMsInGuild<AllowDMs>>, args: Args, translations: PreparedTranslations<Translations>) => Awaitable<string | PreparedTranslation | void>;
     // (undocumented)
     export type HandlerArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
     // (undocumented)
@@ -214,11 +214,9 @@ export namespace Command {
         id: Snowflake | null;
     }
     // (undocumented)
-    export type PreparedTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
-        [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]: K extends `${string}.${infer Rest}` ? PreparedTranslators<{
-            [K2 in Rest]: Input[K];
-        }> : K extends string ? IsLiteral<Input[K]> extends true ? PreparedTranslation : never : never;
-    }>, PreparedTranslation>;
+    export type PreparedTranslations<Input extends DeeplyNestedObject<boolean> = DeeplyNestedObject<boolean>> = {
+        [K in keyof Input]: Input[K] extends boolean ? PreparedTranslation : ConditionalSimplifyDeep<PreparedTranslations<Exclude<Input[K], boolean>>, PreparedTranslation>;
+    };
 }
 
 // @public
@@ -234,7 +232,7 @@ export interface CommandCondition {
 }
 
 // @public
-export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[], Translations extends Record<string, boolean> = Record<string, boolean>> {
+export interface CommandDefinition<OwnerOnly extends boolean = boolean, AllowDMs extends boolean = boolean, Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[], Translations extends DeeplyNestedObject<boolean> = DeeplyNestedObject<boolean>> {
     // (undocumented)
     allowDMs?: AllowDMs;
     // (undocumented)
@@ -431,6 +429,11 @@ export namespace ContextMenuCommandDefinition {
 export type DeeplyNestedMap<V> = Map<string, V | DeeplyNestedMap<V>>;
 
 // @public (undocumented)
+export type DeeplyNestedObject<V> = {
+    [K: string]: V | DeeplyNestedObject<V>;
+};
+
+// @public (undocumented)
 export class DefaultLocalePathTranslator {
     // @internal
     constructor(path: string);
@@ -443,7 +446,7 @@ export class DefaultLocalePathTranslator {
 }
 
 // @public
-export function defineCommand<const OwnerOnly extends boolean = false, const AllowDMs extends boolean = true, const Args extends readonly CommandDefinition.Argument[] = never[], const Translations extends Record<string, boolean> = never>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args, Translations>): CommandDefinition<OwnerOnly, AllowDMs, Args, Translations>;
+export function defineCommand<const OwnerOnly extends boolean = false, const AllowDMs extends boolean = true, const Args extends readonly CommandDefinition.Argument[] = never[], const Translations extends DeeplyNestedObject<boolean> = never>(definition: CommandDefinition<OwnerOnly, AllowDMs, Args, Translations>): CommandDefinition<OwnerOnly, AllowDMs, Args, Translations>;
 
 // @public
 export function defineContextMenuCommand<const InteractionType extends ContextMenuCommandDefinition.InteractionTypes, const AllowDMs extends boolean = true>(definition: ContextMenuCommandDefinition<InteractionType, AllowDMs>): ContextMenuCommandDefinition<InteractionType, AllowDMs>;
@@ -497,9 +500,7 @@ export abstract class EventHandler<Options extends EventHandlerOptions = EventHa
     // (undocumented)
     protected readonly options: Required<Options>;
     // (undocumented)
-    protected prepareTranslationObject(command: Command, translator: Translator): {
-        [x: string]: {};
-    } | undefined;
+    protected prepareTranslationObject(command: Command, translator: Translator): Command.PreparedTranslations<DeeplyNestedObject_2<boolean>>;
     // (undocumented)
     protected replyConditionsUnsatisfied(commandRequest: CommandRequest, key: string, translator: Translator): Promise<void>;
     // (undocumented)
@@ -676,11 +677,9 @@ export const textChannels: (ChannelType.GuildText | ChannelType.GuildAnnouncemen
 // @public (undocumented)
 export namespace TranslationChecker {
     // (undocumented)
-    export type PathTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
-        [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]: K extends `${string}.${infer Rest}` ? PathTranslators<{
-            [K2 in Rest]: Input[K];
-        }> : K extends string ? IsLiteral<Input[K]> extends true ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : never : never;
-    }>, PathTranslatorTypes>;
+    export type PathTranslators<Input extends DeeplyNestedObject<boolean>> = ConditionalSimplifyDeep<{
+        [K in keyof Input]: Input[K] extends boolean ? Input[K] extends true ? AllLocalesPathTranslator : DefaultLocalePathTranslator : PathTranslators<Exclude<Input[K], boolean>>;
+    }, PathTranslatorTypes>;
     // (undocumented)
     export type PathTranslatorTypes = DefaultLocalePathTranslator | AllLocalesPathTranslator;
 }
@@ -689,7 +688,7 @@ export namespace TranslationChecker {
 export class TranslationChecker extends ErrorCollector {
     // @internal
     constructor();
-    checkTranslations<Paths extends Record<string, boolean>>(data: Paths, prefix?: string): TranslationChecker.PathTranslators<Paths>;
+    checkTranslations<Paths extends DeeplyNestedObject<boolean>>(data: Paths, prefix?: string): TranslationChecker.PathTranslators<Paths>;
     // @internal (undocumented)
     runChecks(translatorManager: TranslatorManager): void;
 }

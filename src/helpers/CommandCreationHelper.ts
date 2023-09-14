@@ -6,7 +6,8 @@ import { TranslatorManager } from "../translations/TranslatorManager.js";
 import { castArray } from "lodash-es";
 import { ErrorCollector } from "./ErrorCollector.js";
 import assert from "assert";
-import { TranslationChecker } from "../translations/TranslationChecker.js";
+import flat from "flat";
+const { flatten } = flat;
 
 export namespace CommandCreationHelper {
     export interface InheritableOptions {
@@ -29,7 +30,7 @@ export class CommandCreationHelper extends ErrorCollector {
             // Specific to this command
             key: definition.key,
 
-            translations: Object.keys(definition.translations ?? []),
+            translations: Object.keys(flatten(definition.translations ?? {})),
 
             handler: definition.handler ?? null,
 

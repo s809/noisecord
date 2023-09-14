@@ -3,10 +3,10 @@
  */
 
 import { ApplicationCommandOptionType, ApplicationCommandSubCommandData, Awaitable, GuildTextBasedChannel, LocalizationMap, PermissionResolvable, Role, Snowflake, User } from "discord.js";
-import { DistributiveOmit, UnionToIntersectionRecursive } from "../util.js";
+import { DeeplyNestedObject, DistributiveOmit } from "../util.js";
 import { CommandCondition } from "../conditions/index.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
-import { IsLiteral, IterableElement, Simplify } from "type-fest";
+import { IterableElement, Simplify } from "type-fest";
 import { MessageCommandRequest } from "../handlers/Message/MessageCommandRequest.js";
 import { AllowDMsInGuild } from "./common.js";
 import { PreparedTranslation } from "../translations/PreparedTranslation.js";
@@ -20,7 +20,7 @@ export interface CommandDefinition<
     OwnerOnly extends boolean = boolean,
     AllowDMs extends boolean = boolean,
     Args extends readonly CommandDefinition.Argument[] = readonly CommandDefinition.Argument[],
-    Translations extends Record<string, boolean> = Record<string, boolean>
+    Translations extends DeeplyNestedObject<boolean> = DeeplyNestedObject<boolean>
 > {
     key: string;
 
@@ -115,29 +115,27 @@ export namespace Command {
     export type HandlerArguments = Record<string, string | string[] | number | boolean | User | GuildTextBasedChannel | Role | undefined>;
 
     /** @public */
-    export type PreparedTranslators<Input extends Record<string, boolean>> = ConditionalSimplifyDeep<UnionToIntersectionRecursive<{
-        [K in keyof Input as K extends `${infer Head}.${any}` ? Head : K]:
-            K extends `${string}.${infer Rest}`
-                ? PreparedTranslators<{ [K2 in Rest]: Input[K] }>
-                : K extends string
-                    ? IsLiteral<Input[K]> extends true
-                        ? PreparedTranslation
-                        : never
-                    : never;
-    }>, PreparedTranslation>;
+    export type PreparedTranslations<Input extends DeeplyNestedObject<boolean> = DeeplyNestedObject<boolean>> = {
+        [K in keyof Input]: Input[K] extends boolean
+            ? PreparedTranslation
+            : ConditionalSimplifyDeep<
+                PreparedTranslations<Exclude<Input[K], boolean>>,
+                PreparedTranslation
+            >;
+    };
 
     /** @public */
     export type Handler<
         OwnerOnly extends boolean = boolean,
         AllowDMs extends boolean = boolean,
         Args extends HandlerArguments = HandlerArguments,
-        Translations extends Record<string, boolean> = Record<string, boolean>
+        Translations extends DeeplyNestedObject<boolean> = DeeplyNestedObject<boolean>
     > = (
         req: OwnerOnly extends true
             ? MessageCommandRequest<AllowDMsInGuild<AllowDMs>>
             : CommandRequest<AllowDMsInGuild<AllowDMs>>,
         args: Args,
-        translations?: PreparedTranslators<Translations>
+        translations: PreparedTranslations<Translations>
     ) => Awaitable<string | PreparedTranslation | void>;
 
     /** @public */
@@ -177,7 +175,33 @@ export function defineCommand<
     const OwnerOnly extends boolean = false,
     const AllowDMs extends boolean = true,
     const Args extends readonly CommandDefinition.Argument[] = never[],
-    const Translations extends Record<string, boolean> = never
+    const Translations extends DeeplyNestedObject<boolean> = never
 >(definition: CommandDefinition<OwnerOnly, AllowDMs, Args, Translations>) {
     return definition;
 }
+
+const a = defineCommand({
+    key: "mycommand",
+
+    ownerOnly: true,
+
+    args: [{
+        key: "num",
+        type: ApplicationCommandOptionType.Number,
+    }, {
+        key: "extras",
+        type: ApplicationCommandOptionType.String,
+        extras: true,
+        }],
+
+    translations: {
+        test: true,
+        test2: {
+            test3: false
+        }
+    },
+
+    handler: async (req, { num, extras }, translations) => {
+        // implementation of mycommand goes here
+    },
+ });

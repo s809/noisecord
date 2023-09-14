@@ -19,8 +19,12 @@ describe(TranslationChecker.name, () => {
     describe("Return correct structure", () => {
         it("Without prefix", () => {
             expect(translationChecker.checkTranslations({
-                "translation_checker.test.default_only": false,
-                "translation_checker.test.all": true,
+                translation_checker: {
+                    test: {
+                        default_only: false,
+                        all: true
+                    }
+                }
             } as const)).containSubset({
                 translation_checker: {
                     test: {
@@ -36,11 +40,13 @@ describe(TranslationChecker.name, () => {
 
             translationChecker.throwIfErrors();
         });
-        
+
         it("With prefix", () => {
             expect(translationChecker.checkTranslations({
-                "test.default_only": false,
-                "test.all": true,
+                test: {
+                    default_only: false,
+                    all: true
+                }
             } as const, "translation_checker")).containSubset({
                 test: {
                     default_only: {
@@ -62,11 +68,20 @@ describe(TranslationChecker.name, () => {
         } as const)).throw("Path cannot be empty.");
     });
 
-    describe("Add error", () => {
+    it("Throw immediately on path keys with dots", () => {
+        expect(() => translationChecker.checkTranslations({
+            "test.test": false,
+        } as const)).throw("Translation path keys cannot include dots: test.test");
+    });
 
+    describe("Add error", () => {
         it("Default translation is missing", () => {
             translationChecker.checkTranslations({
-                "translation_checker.test.default_only_missing": false,
+                translation_checker: {
+                    test: {
+                        default_only_missing: false
+                    }
+                }
             } as const);
 
             expect(() => translationChecker.runChecks(translationManager)).throw("Translation of translation_checker.test.default_only_missing is missing in default locale (en-US).");
@@ -74,7 +89,11 @@ describe(TranslationChecker.name, () => {
 
         it("Translation is missing with all locales check", () => {
             translationChecker.checkTranslations({
-                "translation_checker.test.default_only": true,
+                translation_checker: {
+                    test: {
+                        default_only: true
+                    }
+                }
             } as const);
 
             expect(() => translationChecker.runChecks(translationManager)).throw("Translation of translation_checker.test.default_only is missing in locales: ru.");

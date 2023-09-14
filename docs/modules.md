@@ -54,6 +54,7 @@
 - [AllowDMsCacheType](modules.md#allowdmscachetype)
 - [AllowDMsInGuild](modules.md#allowdmsinguild)
 - [DeeplyNestedMap](modules.md#deeplynestedmap)
+- [DeeplyNestedObject](modules.md#deeplynestedobject)
 - [DistributiveOmit](modules.md#distributiveomit)
 - [InGuildCacheType](modules.md#inguildcachetype)
 - [InteractionInGuild](modules.md#interactioninguild)
@@ -123,6 +124,26 @@ ___
 
 ___
 
+### DeeplyNestedObject
+
+ **DeeplyNestedObject**<`V`\>: `Object`
+
+#### Type parameters
+
+| Name |
+| :------ |
+| `V` |
+
+#### Index signature
+
+▪ [K: `string`]: `V` \| [`DeeplyNestedObject`](modules.md#deeplynestedobject)<`V`\>
+
+#### Defined in
+
+[src/util.ts:93](https://github.com/s809/noisecord/blob/master/src/util.ts#L93)
+
+___
+
 ### DistributiveOmit
 
  **DistributiveOmit**<`T`, `K`\>: `T` extends `any` ? `Omit`<`T`, `K`\> : `never`
@@ -184,7 +205,7 @@ ___
 
 #### Defined in
 
-[src/util.ts:93](https://github.com/s809/noisecord/blob/master/src/util.ts#L93)
+[src/util.ts:98](https://github.com/s809/noisecord/blob/master/src/util.ts#L98)
 
 ## Variables
 
@@ -253,7 +274,7 @@ export default defineCommand({
 | `OwnerOnly` | extends `boolean` = ``false`` |
 | `AllowDMs` | extends `boolean` = ``true`` |
 | `Args` | extends readonly [`Argument`](modules/CommandDefinition.md#argument)[] = `never`[] |
-| `Translations` | extends `Record`<`string`, `boolean`\> = `never` |
+| `Translations` | extends [`DeeplyNestedObject`](modules.md#deeplynestedobject)<`boolean`\> = `never` |
 
 #### Parameters
 
@@ -267,7 +288,7 @@ export default defineCommand({
 
 #### Defined in
 
-[src/interfaces/Command.ts:176](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L176)
+[src/interfaces/Command.ts:174](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L174)
 
 ___
 

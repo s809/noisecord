@@ -13,13 +13,13 @@
 
 - [Handler](Command.md#handler)
 - [HandlerArguments](Command.md#handlerarguments)
-- [PreparedTranslators](Command.md#preparedtranslators)
+- [PreparedTranslations](Command.md#preparedtranslations)
 
 ## Type Aliases
 
 ### Handler
 
- **Handler**<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>: (`req`: `OwnerOnly` extends ``true`` ? [`MessageCommandRequest`](../classes/MessageCommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> : [`CommandRequest`](../classes/CommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\>, `args`: `Args`, `translations?`: [`PreparedTranslators`](Command.md#preparedtranslators)<`Translations`\>) => `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
+ **Handler**<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>: (`req`: `OwnerOnly` extends ``true`` ? [`MessageCommandRequest`](../classes/MessageCommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> : [`CommandRequest`](../classes/CommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\>, `args`: `Args`, `translations`: [`PreparedTranslations`](Command.md#preparedtranslations)<`Translations`\>) => `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
 
 #### Type parameters
 
@@ -28,11 +28,11 @@
 | `OwnerOnly` | extends `boolean` = `boolean` |
 | `AllowDMs` | extends `boolean` = `boolean` |
 | `Args` | extends [`HandlerArguments`](Command.md#handlerarguments) = [`HandlerArguments`](Command.md#handlerarguments) |
-| `Translations` | extends `Record`<`string`, `boolean`\> = `Record`<`string`, `boolean`\> |
+| `Translations` | extends [`DeeplyNestedObject`](../modules.md#deeplynestedobject)<`boolean`\> = [`DeeplyNestedObject`](../modules.md#deeplynestedobject)<`boolean`\> |
 
 #### Type declaration
 
-(`req`, `args`, `translations?`): `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
+(`req`, `args`, `translations`): `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
 
 ##### Parameters
 
@@ -40,7 +40,7 @@
 | :------ | :------ |
 | `req` | `OwnerOnly` extends ``true`` ? [`MessageCommandRequest`](../classes/MessageCommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> : [`CommandRequest`](../classes/CommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> |
 | `args` | `Args` |
-| `translations?` | [`PreparedTranslators`](Command.md#preparedtranslators)<`Translations`\> |
+| `translations` | [`PreparedTranslations`](Command.md#preparedtranslations)<`Translations`\> |
 
 ##### Returns
 
@@ -48,7 +48,7 @@
 
 #### Defined in
 
-[src/interfaces/Command.ts:130](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L130)
+[src/interfaces/Command.ts:128](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L128)
 
 ___
 
@@ -62,15 +62,15 @@ ___
 
 ___
 
-### PreparedTranslators
+### PreparedTranslations
 
- **PreparedTranslators**<`Input`\>: `ConditionalSimplifyDeep`<[`UnionToIntersectionRecursive`](../modules.md#uniontointersectionrecursive)<{ [K in keyof Input as K extends \`${infer Head}.${any}\` ? Head : K]: K extends \`${string}.${infer Rest}\` ? PreparedTranslators<{ [K2 in Rest]: Input[K] }\> : K extends string ? IsLiteral<Input[K]\> extends true ? PreparedTranslation : never : never }\>, [`PreparedTranslation`](../classes/PreparedTranslation.md)\>
+ **PreparedTranslations**<`Input`\>: { [K in keyof Input]: Input[K] extends boolean ? PreparedTranslation : ConditionalSimplifyDeep<PreparedTranslations<Exclude<Input[K], boolean\>\>, PreparedTranslation\> }
 
 #### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `Input` | extends `Record`<`string`, `boolean`\> |
+| `Input` | extends [`DeeplyNestedObject`](../modules.md#deeplynestedobject)<`boolean`\> = [`DeeplyNestedObject`](../modules.md#deeplynestedobject)<`boolean`\> |
 
 #### Defined in
 

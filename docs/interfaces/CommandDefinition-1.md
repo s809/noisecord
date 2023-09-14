@@ -11,7 +11,7 @@ Definition for a command.
 | `OwnerOnly` | extends `boolean` = `boolean` |
 | `AllowDMs` | extends `boolean` = `boolean` |
 | `Args` | extends readonly [`Argument`](../modules/CommandDefinition.md#argument)[] = readonly [`Argument`](../modules/CommandDefinition.md#argument)[] |
-| `Translations` | extends `Record`<`string`, `boolean`\> = `Record`<`string`, `boolean`\> |
+| `Translations` | extends [`DeeplyNestedObject`](../modules.md#deeplynestedobject)<`boolean`\> = [`DeeplyNestedObject`](../modules.md#deeplynestedobject)<`boolean`\> |
 
 ## Table of contents
 
