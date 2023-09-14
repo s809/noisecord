@@ -372,7 +372,7 @@ export abstract class CommandRequest<InGuild extends boolean = boolean, Response
     abstract get member(): If<InGuild, GuildMember>;
     // (undocumented)
     readonly prefix: string;
-    abstract replyOrEdit(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
+    abstract replyOrEdit(options: Translatable<string | InteractionReplyOptions | MessageReplyOptions>): Promise<Response>;
     readonly response: Response;
     // (undocumented)
     readonly translator: Translator;
@@ -387,7 +387,7 @@ export abstract class CommandResponse {
     get flags(): Readonly<MessageFlagsBitField> | null;
     // (undocumented)
     protected _message?: Message;
-    abstract replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
+    abstract replyOrEdit(options: Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
     // (undocumented)
     protected translateReplyContent<T extends string | object>(options: Translatable<T>): T;
 }

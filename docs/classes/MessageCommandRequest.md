@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:13](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L13)
+[src/handlers/CommandRequest.ts:14](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L14)
 
 ___
 
@@ -89,7 +89,7 @@ Response object, which is filled when a command request is replied.
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:15](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L15)
+[src/handlers/CommandRequest.ts:16](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L16)
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:12](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L12)
+[src/handlers/CommandRequest.ts:13](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L13)
 
 ## Accessors
 
@@ -157,7 +157,7 @@ CommandRequest.channelId
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:25](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L25)
+[src/handlers/CommandRequest.ts:26](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L26)
 
 ___
 
@@ -207,7 +207,7 @@ CommandRequest.guildId
 
 #### Defined in
 
-[src/handlers/CommandRequest.ts:31](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L31)
+[src/handlers/CommandRequest.ts:32](https://github.com/s809/noisecord/blob/master/src/handlers/CommandRequest.ts#L32)
 
 ___
 

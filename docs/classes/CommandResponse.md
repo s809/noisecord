@@ -140,7 +140,7 @@ Edits the message, if possible.
 
 | Name | Type |
 | :------ | :------ |
-| `options` | `string` \| `MessageCreateOptions` \| `MessageEditOptions` \| `InteractionEditReplyOptions` \| `InteractionReplyOptions` |
+| `options` | [`Translatable`](../modules.md#translatable)<`string` \| `MessageCreateOptions` \| `MessageEditOptions` \| `InteractionEditReplyOptions` \| `InteractionReplyOptions`\> |
 
 #### Returns
 

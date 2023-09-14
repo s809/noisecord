@@ -10,7 +10,7 @@ export abstract class CommandResponse {
     protected _message?: Message;
 
     /** Edits the message, if possible. */
-    abstract replyOrEdit(options: string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions): Promise<this>;
+    abstract replyOrEdit(options: Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
 
     protected translateReplyContent<T extends string | object>(options: Translatable<T>): T {
         if (typeof options === 'string')

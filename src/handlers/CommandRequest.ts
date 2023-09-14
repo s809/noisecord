@@ -1,10 +1,11 @@
 import { Guild, GuildMember, If, InteractionReplyOptions, TextBasedChannel, GuildTextBasedChannel, MessageReplyOptions, User, Snowflake } from 'discord.js';
 import { Translator } from "../translations/Translator.js";
 import { CommandResponse } from "./CommandResponse.js";
+import { Translatable } from '../translations/PreparedTranslation.js';
 
-/** 
+/**
  * Abstract instance of command related data.
- * @public 
+ * @public
  */
 export abstract class CommandRequest<InGuild extends boolean = boolean, Response extends CommandResponse = CommandResponse> {
     /** @internal */
@@ -16,7 +17,7 @@ export abstract class CommandRequest<InGuild extends boolean = boolean, Response
     ) { }
 
     /** Replies to the command request. */
-    abstract replyOrEdit(options: string | InteractionReplyOptions | MessageReplyOptions): Promise<Response>;
+    abstract replyOrEdit(options: Translatable<string | InteractionReplyOptions | MessageReplyOptions>): Promise<Response>;
 
     abstract inGuild(): this is CommandRequest<true, Response>;
 
