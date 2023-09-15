@@ -1,5 +1,5 @@
 import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, InteractionCollector, MappedInteractionTypes, InteractionEditReplyOptions } from 'discord.js';
-import { PreparedTranslation, Translatable } from '../index.js';
+import { PreparedTranslation } from '../index.js';
 
 /**
  * Abstract instance of response-to-command related data.
@@ -9,9 +9,9 @@ export abstract class CommandResponse {
     protected _message?: Message;
 
     /** Edits the message, if possible. */
-    abstract replyOrEdit(options: Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
+    abstract replyOrEdit(options: PreparedTranslation.Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
 
-    protected translateReplyContent<T extends string | object>(options: Translatable<T>): T {
+    protected translateReplyContent<T extends string | object>(options: PreparedTranslation.Translatable<T>): T {
         return PreparedTranslation.translate(options);
     }
 

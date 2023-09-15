@@ -3,7 +3,7 @@ import { Translator } from "../../translations/Translator.js";
 import { Command } from "../../interfaces/Command.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
-import { Translatable } from '../../index.js';
+import { PreparedTranslation } from '../../translations/PreparedTranslation.js';
 
 /**
  * Command request data from a message.
@@ -16,7 +16,7 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     }
 
     /** Replies to the command. */
-    async replyOrEdit(options: Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>) {
+    async replyOrEdit(options: PreparedTranslation.Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>) {
         return this.response.replyOrEdit(options);
     }
 

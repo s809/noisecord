@@ -11,6 +11,7 @@
 - [CommandDefinition](modules/CommandDefinition.md)
 - [ContextMenuCommandDefinition](modules/ContextMenuCommandDefinition.md)
 - [EventHandler](modules/EventHandler.md)
+- [PreparedTranslation](modules/PreparedTranslation.md)
 - [TranslationChecker](modules/TranslationChecker.md)
 - [Translator](modules/Translator.md)
 - [TranslatorManager](modules/TranslatorManager.md)
@@ -30,7 +31,7 @@
 - [InteractionCommandResponse](classes/InteractionCommandResponse.md)
 - [MessageCommandRequest](classes/MessageCommandRequest.md)
 - [MessageCommandResponse](classes/MessageCommandResponse.md)
-- [PreparedTranslation](classes/PreparedTranslation.md)
+- [PreparedTranslation](classes/PreparedTranslation-1.md)
 - [TranslationChecker](classes/TranslationChecker-1.md)
 - [Translator](classes/Translator-1.md)
 - [TranslatorManager](classes/TranslatorManager-1.md)
@@ -58,7 +59,6 @@
 - [DistributiveOmit](modules.md#distributiveomit)
 - [InGuildCacheType](modules.md#inguildcachetype)
 - [InteractionInGuild](modules.md#interactioninguild)
-- [Translatable](modules.md#translatable)
 - [UnionToIntersectionRecursive](modules.md#uniontointersectionrecursive)
 
 ### Variables
@@ -191,38 +191,6 @@ ___
 #### Defined in
 
 [src/interfaces/common.ts:10](https://github.com/s809/noisecord/blob/master/src/interfaces/common.ts#L10)
-
-___
-
-### Translatable
-
- **Translatable**<`T`, `TExcluded`\>: `T` extends `string` ? `string` \| [`PreparedTranslation`](classes/PreparedTranslation.md) : `T` extends `TExcluded` ? `T` : `T` extends `object` ? { [K in keyof T]: Translatable<T[K], T\> } : `T`
-
-Represents a translatable type.
-
-**`Remarks`**
-
-This type allows for the translation of strings or objects with translatable properties.
-Strings will be translated directly, while objects will have their properties translated recursively.
-
-**`Typeparam`**
-
-T - The type of the value to translate.
-
-**`Typeparam`**
-
-TExcluded - A type to exclude from translation (avoids infinite recursion).
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | `T` |
-| `TExcluded` | `never` |
-
-#### Defined in
-
-[src/translations/PreparedTranslation.ts:15](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L15)
 
 ___
 
