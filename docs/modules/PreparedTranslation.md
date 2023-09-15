@@ -38,4 +38,4 @@ TExcluded - A type to exclude from translation (avoids infinite recursion).
 
 #### Defined in
 
-[src/translations/PreparedTranslation.ts:16](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L16)
+[src/translations/PreparedTranslation.ts:17](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L17)

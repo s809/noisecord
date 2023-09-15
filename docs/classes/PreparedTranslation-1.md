@@ -28,7 +28,7 @@ The translated text.
 
 #### Defined in
 
-[src/translations/PreparedTranslation.ts:55](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L55)
+[src/translations/PreparedTranslation.ts:56](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L56)
 
 ___
 
@@ -52,7 +52,7 @@ A new PreparedTranslator instance with the specified format parameters.
 
 #### Defined in
 
-[src/translations/PreparedTranslation.ts:46](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L46)
+[src/translations/PreparedTranslation.ts:47](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L47)
 
 ___
 
@@ -87,4 +87,4 @@ or a PreparedTranslation instance.
 
 #### Defined in
 
-[src/translations/PreparedTranslation.ts:69](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L69)
+[src/translations/PreparedTranslation.ts:70](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L70)

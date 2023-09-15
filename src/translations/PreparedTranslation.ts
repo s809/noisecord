@@ -1,6 +1,7 @@
 import mapObject from "map-obj";
 import { Translator } from "./Translator.js";
 
+/** @public */
 export namespace PreparedTranslation {
     /**
      * Represents a translatable type.
