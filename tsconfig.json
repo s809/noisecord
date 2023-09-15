@@ -14,7 +14,7 @@
     "declaration": true,
 
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "NodeNext",
     "lib": [
       "ESNext"
     ]

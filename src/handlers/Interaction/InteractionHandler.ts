@@ -1,4 +1,4 @@
-import { ApplicationCommandDataResolvable, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags } from "discord.js";
+import { ApplicationCommandDataResolvable, ApplicationCommandOptionData, ApplicationCommandOptionType, ApplicationCommandSubGroupData, ApplicationCommandType, Awaitable, CacheType, ChatInputApplicationCommandData, ChatInputCommandInteraction, Client, CommandInteraction, ContextMenuCommandInteraction, Interaction, MessageFlags } from "discord.js";
 import { CommandRegistry } from "../../CommandRegistry.js";
 import { Command } from "../../interfaces/Command.js";
 import { InteractionCommandRequest } from "./InteractionCommandRequest.js";
@@ -252,7 +252,7 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
                     case 2:
                         const c = commands.find(c => c.name === pathParts[0])!;
                         c.options ??= [];
-                        c.options.push({
+                        (c.options as ApplicationCommandOptionData[]).push({
                             ...data,
                             type: ApplicationCommandOptionType.Subcommand,
                         });
@@ -262,7 +262,7 @@ export class _InteractionHandler extends EventHandler<Required<InteractionHandle
                         const s = cc.options!.find(s => s.name === pathParts[1])! as ApplicationCommandSubGroupData;
                         s.type = ApplicationCommandOptionType.SubcommandGroup;
                         s.options ??= [];
-                        s.options.push({
+                        (s.options as ApplicationCommandOptionData[]).push({
                             ...data,
                             type: ApplicationCommandOptionType.Subcommand,
                         });

@@ -674,10 +674,10 @@ export class PreparedTranslation {
 // @public (undocumented)
 export const textChannels: (ChannelType.GuildText | ChannelType.GuildAnnouncement | ChannelType.AnnouncementThread | ChannelType.PublicThread | ChannelType.PrivateThread)[];
 
-// @public (undocumented)
-export type Translatable<T extends string | object> = T extends string ? string | PreparedTranslation : {
-    [K in keyof T]: T[K] extends string | object ? Translatable<T[K]> : T[K];
-};
+// @public
+export type Translatable<T, TExcluded = never> = T extends string ? string | PreparedTranslation : T extends TExcluded ? T : T extends object ? {
+    [K in keyof T]: Translatable<T[K], T>;
+} : T;
 
 // @public (undocumented)
 export namespace TranslationChecker {

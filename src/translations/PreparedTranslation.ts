@@ -1,13 +1,25 @@
 import { Translator } from "./Translator.js";
 
-/** @public */
-export type Translatable<T extends string | object> = T extends string
+/**
+ * Represents a translatable type.
+ *
+ * @remarks
+ * This type allows for the translation of strings or objects with translatable properties.
+ * Strings will be translated directly, while objects will have their properties translated recursively.
+ *
+ * @public
+ * @typeparam T - The type of the value to translate.
+ * @typeparam TExcluded - A type to exclude from translation (avoids infinite recursion).
+ */
+export type Translatable<T, TExcluded = never> = T extends string
     ? string | PreparedTranslation
-    : {
-        [K in keyof T]: T[K] extends string | object
-            ? Translatable<T[K]>
-            : T[K];
-    };
+    : T extends TExcluded
+        ? T
+        : T extends object
+            ? {
+                [K in keyof T]: Translatable<T[K], T>;
+            }
+            : T;
 
 /**
  * Represents context-specific translator, for a specific translation path.

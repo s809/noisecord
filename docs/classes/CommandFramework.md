@@ -58,13 +58,13 @@ Entry point for using a command framework.
 
 `get` **commandRegistry**(): [`CommandRegistry`](CommandRegistry.md)
 
-**`See`**
-
-CommandRegistry
-
 #### Returns
 
 [`CommandRegistry`](CommandRegistry.md)
+
+**`See`**
+
+CommandRegistry
 
 #### Defined in
 
@@ -92,13 +92,13 @@ ___
 
 `get` **translatorManager**(): [`TranslatorManager`](TranslatorManager-1.md)
 
-**`See`**
-
-TranslatorManager
-
 #### Returns
 
 [`TranslatorManager`](TranslatorManager-1.md)
+
+**`See`**
+
+TranslatorManager
 
 #### Defined in
 
@@ -129,12 +129,6 @@ ___
 Creates a new instance of the [CommandFramework](CommandFramework.md) class.
 This is a shortcut for constructing and initializing an instance if your instance will reside in the main file.
 
-**`Remarks`**
-
-Translation checking is not possible using the returned instance, as it uses a window between construction and initialization of an instance.
-See constructor and [init()](CommandFramework.md#init)
-for the case when construction and initialization need to be split.
-
 #### Parameters
 
 | Name | Type |
@@ -145,6 +139,12 @@ for the case when construction and initialization need to be split.
 #### Returns
 
 `Promise`<[`CommandFramework`](CommandFramework.md)\>
+
+**`Remarks`**
+
+Translation checking is not possible using the returned instance, as it uses a window between construction and initialization of an instance.
+See constructor and [init()](CommandFramework.md#init)
+for the case when construction and initialization need to be split.
 
 #### Defined in
 

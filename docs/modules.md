@@ -196,17 +196,33 @@ ___
 
 ### Translatable
 
- **Translatable**<`T`\>: `T` extends `string` ? `string` \| [`PreparedTranslation`](classes/PreparedTranslation.md) : { [K in keyof T]: T[K] extends string \| object ? Translatable<T[K]\> : T[K] }
+ **Translatable**<`T`, `TExcluded`\>: `T` extends `string` ? `string` \| [`PreparedTranslation`](classes/PreparedTranslation.md) : `T` extends `TExcluded` ? `T` : `T` extends `object` ? { [K in keyof T]: Translatable<T[K], T\> } : `T`
+
+Represents a translatable type.
+
+**`Remarks`**
+
+This type allows for the translation of strings or objects with translatable properties.
+Strings will be translated directly, while objects will have their properties translated recursively.
+
+**`Typeparam`**
+
+T - The type of the value to translate.
+
+**`Typeparam`**
+
+TExcluded - A type to exclude from translation (avoids infinite recursion).
 
 #### Type parameters
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `string` \| `object` |
+| `T` | `T` |
+| `TExcluded` | `never` |
 
 #### Defined in
 
-[src/translations/PreparedTranslation.ts:4](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L4)
+[src/translations/PreparedTranslation.ts:14](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L14)
 
 ___
 
@@ -259,6 +275,25 @@ ___
 
 Allows to type check a command definition.
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `OwnerOnly` | extends `boolean` = ``false`` |
+| `AllowDMs` | extends `boolean` = ``true`` |
+| `Args` | extends readonly [`Argument`](modules/CommandDefinition.md#argument)[] = `never`[] |
+| `Translations` | extends [`DeeplyNestedObject`](modules.md#deeplynestedobject)<`boolean`\> = `never` |
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `definition` | [`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\> |
+
+#### Returns
+
+[`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>
+
 **`Example`**
 
 ```
@@ -284,25 +319,6 @@ export default defineCommand({
 });
 ```
 
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `OwnerOnly` | extends `boolean` = ``false`` |
-| `AllowDMs` | extends `boolean` = ``true`` |
-| `Args` | extends readonly [`Argument`](modules/CommandDefinition.md#argument)[] = `never`[] |
-| `Translations` | extends [`DeeplyNestedObject`](modules.md#deeplynestedobject)<`boolean`\> = `never` |
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `definition` | [`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\> |
-
-#### Returns
-
-[`CommandDefinition`](interfaces/CommandDefinition-1.md)<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>
-
 #### Defined in
 
 [src/interfaces/Command.ts:175](https://github.com/s809/noisecord/blob/master/src/interfaces/Command.ts#L175)
@@ -314,21 +330,6 @@ ___
 **defineContextMenuCommand**<`InteractionType`, `AllowDMs`\>(`definition`): [`ContextMenuCommandDefinition`](interfaces/ContextMenuCommandDefinition-1.md)<`InteractionType`, `AllowDMs`\>
 
 Allows to type check a context menu command definition.
-
-**`Example`**
-
-```
-export default defineContextMenuCommand({
-   key: "mycommand",
-
-   type: ApplicationCommandType.Message,
-   allowDMs: false,
-
-   handler: async req => {
-       // implementation of mycommand goes here
-   }
-});
-```
 
 #### Type parameters
 
@@ -346,6 +347,21 @@ export default defineContextMenuCommand({
 #### Returns
 
 [`ContextMenuCommandDefinition`](interfaces/ContextMenuCommandDefinition-1.md)<`InteractionType`, `AllowDMs`\>
+
+**`Example`**
+
+```
+export default defineContextMenuCommand({
+   key: "mycommand",
+
+   type: ApplicationCommandType.Message,
+   allowDMs: false,
+
+   handler: async req => {
+       // implementation of mycommand goes here
+   }
+});
+```
 
 #### Defined in
 
