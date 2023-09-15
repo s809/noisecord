@@ -40,7 +40,7 @@ CommandResponse.content
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:38](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L38)
+[src/handlers/CommandResponse.ts:28](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L28)
 
 ___
 
@@ -60,7 +60,7 @@ CommandResponse.embeds
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:43](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L43)
+[src/handlers/CommandResponse.ts:33](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L33)
 
 ___
 
@@ -80,7 +80,7 @@ CommandResponse.flags
 
 #### Defined in
 
-[src/handlers/CommandResponse.ts:48](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L48)
+[src/handlers/CommandResponse.ts:38](https://github.com/s809/noisecord/blob/master/src/handlers/CommandResponse.ts#L38)
 
 ## Methods
 

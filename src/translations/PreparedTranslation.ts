@@ -1,3 +1,4 @@
+import mapObject from "map-obj";
 import { Translator } from "./Translator.js";
 
 /**
@@ -51,6 +52,27 @@ export class PreparedTranslation {
      */
     translate() {
         return this.translator.translate(this.path, this.args);
+    }
+
+    static translate<T extends string | object>(translatable: Translatable<T>): T {
+        if (typeof translatable === "string")
+            return translatable as T;
+
+        if (translatable instanceof PreparedTranslation)
+            return translatable.translate() as T;
+
+        return mapObject(
+            translatable,
+            (k, v) => [
+                k,
+                v instanceof PreparedTranslation ? v.translate() : v,
+                {
+                    // Recurse only if array or anonymous object
+                    shouldRecurse: [Object, Array].includes(v?.constructor)
+                }
+            ],
+            { deep: true }
+        ) as T;
     }
 }
 

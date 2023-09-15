@@ -668,6 +668,8 @@ export class PreparedTranslation {
     // @internal
     constructor(translator: Translator, path: string, args?: Translator.FormatParameters | undefined);
     translate(): string;
+    // (undocumented)
+    static translate<T extends string | object>(translatable: Translatable<T>): T;
     withArgs(args: Translator.FormatParameters): PreparedTranslation;
 }
 

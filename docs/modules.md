@@ -222,7 +222,7 @@ TExcluded - A type to exclude from translation (avoids infinite recursion).
 
 #### Defined in
 
-[src/translations/PreparedTranslation.ts:14](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L14)
+[src/translations/PreparedTranslation.ts:15](https://github.com/s809/noisecord/blob/master/src/translations/PreparedTranslation.ts#L15)
 
 ___
 
