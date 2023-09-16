@@ -1,11 +1,11 @@
 import { CommandInteraction, InteractionEditReplyOptions, InteractionReplyOptions, Message } from 'discord.js';
-import { Translator } from "../../translations/Translator.js";
 import { Command } from "../../interfaces/Command.js";
-import { CommandRequest } from "../CommandRequest.js";
-import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 import { ContextMenuCommand } from '../../interfaces/ContextMenuCommand.js';
 import { InGuildCacheType, InteractionInGuild } from '../../interfaces/common.js';
-import { PreparedTranslation, Translatable } from '../../translations/PreparedTranslation.js';
+import { Translatable } from "../../translations/Translatable.js";
+import { Translator } from "../../translations/Translator.js";
+import { CommandRequest } from "../CommandRequest.js";
+import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 
 /**
  * Command request data from an interaction.

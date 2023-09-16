@@ -1,5 +1,5 @@
 import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, InteractionCollector, MappedInteractionTypes, InteractionEditReplyOptions } from 'discord.js';
-import { PreparedTranslation, Translatable } from '../index.js';
+import { Translatable } from '../translations/Translatable.js';
 
 /**
  * Abstract instance of response-to-command related data.

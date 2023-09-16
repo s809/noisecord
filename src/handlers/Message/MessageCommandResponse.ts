@@ -1,6 +1,6 @@
-import { InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, TextBasedChannel, MessageCreateOptions, InteractionEditReplyOptions } from 'discord.js';
+import { InteractionEditReplyOptions, InteractionReplyOptions, Message, MessageCollectorOptionsParams, MessageComponentType, MessageCreateOptions, MessageEditOptions, TextBasedChannel } from 'discord.js';
+import { Translatable } from "../../translations/Translatable.js";
 import { CommandResponse } from "../CommandResponse.js";
-import { PreparedTranslation, Translatable } from '../../translations/PreparedTranslation.js';
 
 /** @public */
 export class MessageCommandResponse extends CommandResponse {

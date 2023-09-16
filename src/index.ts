@@ -17,6 +17,7 @@ export * from "./translations/Translator.js";
 export * from "./translations/TranslatorManager.js";
 export * from "./translations/TranslationChecker.js";
 export * from "./translations/PreparedTranslation.js";
+export * from "./translations/Translatable.js";
 
 export * from "./handlers/errors/ArgumentParseError.js";
 export * from "./handlers/EventHandler.js"

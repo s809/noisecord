@@ -1,6 +1,6 @@
 import { InteractionEditReplyOptions, InteractionReplyOptions, Message, MessageCreateOptions, MessageEditOptions } from 'discord.js';
 import { Command } from "../../interfaces/Command.js";
-import { Translatable } from '../../translations/PreparedTranslation.js';
+import { Translatable } from "../../translations/Translatable.js";
 import { Translator } from "../../translations/Translator.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
