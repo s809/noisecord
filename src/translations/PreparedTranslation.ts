@@ -75,8 +75,8 @@ export class PreparedTranslation {
      * @param args - The updated format parameters.
      * @returns A new PreparedTranslator instance with the specified format parameters.
      */
-    withArgs(args: Translator.FormatParameters) {
-        return new PreparedTranslation(this.translator, this.path, args);
+    withArgs(args: Translatable.Value<Translator.FormatParameters>) {
+        return new PreparedTranslation(this.translator, this.path, Translatable.translateValue<Translator.FormatParameters>(args));
     }
 
     /**

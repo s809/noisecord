@@ -666,7 +666,7 @@ export class PreparedTranslation {
     // @internal
     constructor(translator: Translator, path: string, args?: Translator.FormatParameters | undefined);
     translate(): string;
-    withArgs(args: Translator.FormatParameters): PreparedTranslation;
+    withArgs(args: Translatable.Value<Translator.FormatParameters>): PreparedTranslation;
 }
 
 // @public (undocumented)

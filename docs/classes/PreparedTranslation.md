@@ -41,7 +41,7 @@ Create a new PreparedTranslator instance with updated format parameters.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `args` | [`FormatParameters`](../modules/Translator.md#formatparameters) | The updated format parameters. |
+| `args` | `Object` | The updated format parameters. |
 
 #### Returns
 
