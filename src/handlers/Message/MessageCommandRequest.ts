@@ -1,9 +1,9 @@
-import { InteractionEditReplyOptions, InteractionReplyOptions, Message, MessageCreateOptions, MessageEditOptions, MessageReplyOptions, TextBasedChannel } from 'discord.js';
-import { Translator } from "../../translations/Translator.js";
+import { InteractionEditReplyOptions, InteractionReplyOptions, Message, MessageCreateOptions, MessageEditOptions } from 'discord.js';
 import { Command } from "../../interfaces/Command.js";
+import { Translatable } from '../../translations/PreparedTranslation.js';
+import { Translator } from "../../translations/Translator.js";
 import { CommandRequest } from "../CommandRequest.js";
 import { MessageCommandResponse } from "./MessageCommandResponse.js";
-import { PreparedTranslation } from '../../translations/PreparedTranslation.js';
 
 /**
  * Command request data from a message.
@@ -16,7 +16,7 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     }
 
     /** Replies to the command. */
-    async replyOrEdit(options: PreparedTranslation.Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>) {
+    async replyOrEdit(options: Translatable.Value<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>) {
         return this.response.replyOrEdit(options);
     }
 

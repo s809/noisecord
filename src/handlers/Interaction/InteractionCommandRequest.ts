@@ -5,7 +5,7 @@ import { CommandRequest } from "../CommandRequest.js";
 import { InteractionCommandResponse } from "./InteractionCommandResponse.js";
 import { ContextMenuCommand } from '../../interfaces/ContextMenuCommand.js';
 import { InGuildCacheType, InteractionInGuild } from '../../interfaces/common.js';
-import { PreparedTranslation } from '../../translations/PreparedTranslation.js';
+import { PreparedTranslation, Translatable } from '../../translations/PreparedTranslation.js';
 
 /**
  * Command request data from an interaction.
@@ -30,7 +30,7 @@ export class InteractionCommandRequest<
     }
 
     /** Replies to the command. */
-    async replyOrEdit(options: PreparedTranslation.Translatable<string | InteractionReplyOptions | InteractionEditReplyOptions>) {
+    async replyOrEdit(options: Translatable.Value<string | InteractionReplyOptions | InteractionEditReplyOptions>) {
         return this.response?.replyOrEdit(options);
     }
 
@@ -38,7 +38,7 @@ export class InteractionCommandRequest<
      * Sends a follow up message.
      * If interaction is not replied to fully, throws an error.
      */
-    async followUpForce(options: PreparedTranslation.Translatable<string | InteractionReplyOptions>) {
+    async followUpForce(options: Translatable.Value<string | InteractionReplyOptions>) {
         return await this.response.followUpForce(options) as Message<InteractionInGuild<InteractionType>>;
     }
 

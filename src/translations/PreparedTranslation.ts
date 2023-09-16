@@ -2,9 +2,9 @@ import mapObject from "map-obj";
 import { Translator } from "./Translator.js";
 
 /** @public */
-export namespace PreparedTranslation {
+export namespace Translatable {
     /**
-     * Represents a translatable type.
+     * Represents a translatable value.
      *
      * @remarks
      * This type allows for the translation of strings or objects with translatable properties.
@@ -14,15 +14,46 @@ export namespace PreparedTranslation {
      * @typeparam T - The type of the value to translate.
      * @typeparam TExcluded - A type to exclude from translation (avoids infinite recursion).
      */
-    export type Translatable<T, TExcluded = never> = T extends string
+    export type Value<T, TExcluded = never> = T extends string
         ? string | PreparedTranslation
         : T extends TExcluded
             ? T
             : T extends object
                 ? {
-                    [K in keyof T]: Translatable<T[K], T>;
+                    [K in keyof T]: Value<T[K], T>;
                 }
                 : T;
+
+    /**
+     * Translate a translatable value.
+     *
+     * @remarks
+     * Translates the provided translatable value, which can be a string, an object with translatable properties,
+     * or a PreparedTranslation instance.
+     *
+     * @param value - The translatable value to translate.
+     * @returns The translated value.
+     */
+    export function translateValue<T extends string | object>(value: Value<T>): T {
+        if (typeof value === "string")
+            return value as T;
+
+        if (value instanceof PreparedTranslation)
+            return value.translate() as T;
+
+        return mapObject(
+            value,
+            (k, v) => [
+                k,
+                v instanceof PreparedTranslation ? v.translate() : v,
+                {
+                    // Recurse only if array or anonymous object
+                    shouldRecurse: [Object, Array].includes(v?.constructor)
+                }
+            ],
+            { deep: true }
+        ) as T;
+    }
 }
 
 /**
@@ -56,36 +87,4 @@ export class PreparedTranslation {
     translate() {
         return this.translator.translate(this.path, this.args);
     }
-
-    /**
-     * Translate a translatable value.
-     *
-     * @remarks
-     * Translates the provided translatable value, which can be a string, an object with translatable properties,
-     * or a PreparedTranslation instance.
-     *
-     * @param translatable - The translatable value to translate.
-     * @returns The translated value.
-     */
-    static translate<T extends string | object>(translatable: PreparedTranslation.Translatable<T>): T {
-        if (typeof translatable === "string")
-            return translatable as T;
-
-        if (translatable instanceof PreparedTranslation)
-            return translatable.translate() as T;
-
-        return mapObject(
-            translatable,
-            (k, v) => [
-                k,
-                v instanceof PreparedTranslation ? v.translate() : v,
-                {
-                    // Recurse only if array or anonymous object
-                    shouldRecurse: [Object, Array].includes(v?.constructor)
-                }
-            ],
-            { deep: true }
-        ) as T;
-    }
 }
-

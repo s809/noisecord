@@ -1,6 +1,6 @@
 import { CommandInteraction, InteractionReplyOptions, MessageCollectorOptionsParams, MessageComponentType, MessageEditOptions, MessageCreateOptions, MessageFlags, InteractionEditReplyOptions } from 'discord.js';
 import { CommandResponse } from "../CommandResponse.js";
-import { PreparedTranslation } from '../../translations/PreparedTranslation.js';
+import { Translatable } from '../../translations/PreparedTranslation.js';
 
 /** @public */
 export class InteractionCommandResponse extends CommandResponse {
@@ -34,8 +34,8 @@ export class InteractionCommandResponse extends CommandResponse {
     }
 
     /** Replies to interaction or edits it. */
-    async replyOrEdit(options: PreparedTranslation.Translatable<string | InteractionReplyOptions | InteractionEditReplyOptions>) {
-        const translatedOptions = this.translateReplyContent(options);
+    async replyOrEdit(options: Translatable.Value<string | InteractionReplyOptions | InteractionEditReplyOptions>) {
+        const translatedOptions = Translatable.translateValue(options);
 
         const fixedOptions = {
             // if this is a first message, [ephemeral] will be set to what value it was deferred with
@@ -70,8 +70,8 @@ export class InteractionCommandResponse extends CommandResponse {
      * Sends a follow up message.
      * If interaction is not replied to fully, throws an error.
      */
-    async followUpForce(options: PreparedTranslation.Translatable<string | InteractionReplyOptions>) {
-        const translatedOptions = this.translateReplyContent(options);
+    async followUpForce(options: Translatable.Value<string | InteractionReplyOptions>) {
+        const translatedOptions = Translatable.translateValue(options);
 
         if (!this._repliedFully)
             throw new Error("Request must receive a full response before sending follow ups.")

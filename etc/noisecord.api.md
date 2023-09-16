@@ -372,7 +372,7 @@ export abstract class CommandRequest<InGuild extends boolean = boolean, Response
     abstract get member(): If<InGuild, GuildMember>;
     // (undocumented)
     readonly prefix: string;
-    abstract replyOrEdit(options: PreparedTranslation.Translatable<string | InteractionReplyOptions | MessageReplyOptions>): Promise<Response>;
+    abstract replyOrEdit(options: Translatable.Value<string | InteractionReplyOptions | MessageReplyOptions>): Promise<Response>;
     readonly response: Response;
     // (undocumented)
     readonly translator: Translator;
@@ -387,9 +387,7 @@ export abstract class CommandResponse {
     get flags(): Readonly<MessageFlagsBitField> | null;
     // (undocumented)
     protected _message?: Message;
-    abstract replyOrEdit(options: PreparedTranslation.Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
-    // (undocumented)
-    protected translateReplyContent<T extends string | object>(options: PreparedTranslation.Translatable<T>): T;
+    abstract replyOrEdit(options: Translatable.Value<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
 }
 
 // @public (undocumented)
@@ -541,7 +539,7 @@ export class InteractionCommandRequest<CommandType extends Command | ContextMenu
     // (undocumented)
     readonly command: CommandType;
     deferReply(ephemeral?: boolean): Promise<InteractionCommandResponse>;
-    followUpForce(options: PreparedTranslation.Translatable<string | InteractionReplyOptions>): Promise<Message<InteractionInGuild<InteractionType>>>;
+    followUpForce(options: Translatable.Value<string | InteractionReplyOptions>): Promise<Message<InteractionInGuild<InteractionType>>>;
     // (undocumented)
     get guild(): CommandRequest<InteractionInGuild<InteractionType>>["guild"];
     // (undocumented)
@@ -550,7 +548,7 @@ export class InteractionCommandRequest<CommandType extends Command | ContextMenu
     readonly interaction: InteractionType;
     // (undocumented)
     get member(): CommandRequest<InteractionInGuild<InteractionType>>["member"];
-    replyOrEdit(options: PreparedTranslation.Translatable<string | InteractionReplyOptions | InteractionEditReplyOptions>): Promise<InteractionCommandResponse>;
+    replyOrEdit(options: Translatable.Value<string | InteractionReplyOptions | InteractionEditReplyOptions>): Promise<InteractionCommandResponse>;
 }
 
 // @public (undocumented)
@@ -563,12 +561,12 @@ export class InteractionCommandResponse extends CommandResponse {
     // (undocumented)
     get deferredOrReplied(): boolean;
     delete(): Promise<void>;
-    followUpForce(options: PreparedTranslation.Translatable<string | InteractionReplyOptions>): Promise<Message<boolean>>;
+    followUpForce(options: Translatable.Value<string | InteractionReplyOptions>): Promise<Message<boolean>>;
     // (undocumented)
     readonly interaction: CommandInteraction;
     // (undocumented)
     get repliedFully(): boolean;
-    replyOrEdit(options: PreparedTranslation.Translatable<string | InteractionReplyOptions | InteractionEditReplyOptions>): Promise<this>;
+    replyOrEdit(options: Translatable.Value<string | InteractionReplyOptions | InteractionEditReplyOptions>): Promise<this>;
 }
 
 // @internal (undocumented)
@@ -609,7 +607,7 @@ export class MessageCommandRequest<InGuild extends boolean = boolean> extends Co
     get member(): CommandRequest<InGuild>["member"];
     // (undocumented)
     readonly message: Message;
-    replyOrEdit(options: PreparedTranslation.Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<MessageCommandResponse>;
+    replyOrEdit(options: Translatable.Value<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<MessageCommandResponse>;
 }
 
 // @public (undocumented)
@@ -618,7 +616,7 @@ export class MessageCommandResponse extends CommandResponse {
     constructor(channel: TextBasedChannel);
     createMessageComponentCollector<T extends MessageComponentType>(options?: MessageCollectorOptionsParams<T>): InteractionCollector<MappedInteractionTypes<boolean>[T]>;
     delete(): Promise<void>;
-    replyOrEdit(options: PreparedTranslation.Translatable<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
+    replyOrEdit(options: Translatable.Value<string | MessageCreateOptions | MessageEditOptions | InteractionEditReplyOptions | InteractionReplyOptions>): Promise<this>;
 }
 
 // @internal (undocumented)
@@ -663,24 +661,24 @@ export function parseRoleMention(text: string): string | null;
 // @public
 export function parseUserMention(text: string): string | null;
 
-// @public (undocumented)
-export namespace PreparedTranslation {
-    export type Translatable<T, TExcluded = never> = T extends string ? string | PreparedTranslation : T extends TExcluded ? T : T extends object ? {
-        [K in keyof T]: Translatable<T[K], T>;
-    } : T;
-}
-
 // @public
 export class PreparedTranslation {
     // @internal
     constructor(translator: Translator, path: string, args?: Translator.FormatParameters | undefined);
     translate(): string;
-    static translate<T extends string | object>(translatable: PreparedTranslation.Translatable<T>): T;
     withArgs(args: Translator.FormatParameters): PreparedTranslation;
 }
 
 // @public (undocumented)
 export const textChannels: (ChannelType.GuildText | ChannelType.GuildAnnouncement | ChannelType.AnnouncementThread | ChannelType.PublicThread | ChannelType.PrivateThread)[];
+
+// @public (undocumented)
+export namespace Translatable {
+    export function translateValue<T extends string | object>(value: Value<T>): T;
+    export type Value<T, TExcluded = never> = T extends string ? string | PreparedTranslation : T extends TExcluded ? T : T extends object ? {
+        [K in keyof T]: Value<T[K], T>;
+    } : T;
+}
 
 // @public (undocumented)
 export namespace TranslationChecker {

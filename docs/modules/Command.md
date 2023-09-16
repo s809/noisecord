@@ -19,7 +19,7 @@
 
 ### Handler
 
- **Handler**<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>: (`req`: `OwnerOnly` extends ``true`` ? [`MessageCommandRequest`](../classes/MessageCommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> : [`CommandRequest`](../classes/CommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\>, `args`: `Args`, `translations`: [`PreparedTranslations`](Command.md#preparedtranslations)<`Translations`\>) => `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation-1.md) \| `void`\>
+ **Handler**<`OwnerOnly`, `AllowDMs`, `Args`, `Translations`\>: (`req`: `OwnerOnly` extends ``true`` ? [`MessageCommandRequest`](../classes/MessageCommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\> : [`CommandRequest`](../classes/CommandRequest.md)<[`AllowDMsInGuild`](../modules.md#allowdmsinguild)<`AllowDMs`\>\>, `args`: `Args`, `translations`: [`PreparedTranslations`](Command.md#preparedtranslations)<`Translations`\>) => `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
 
 #### Type parameters
 
@@ -32,7 +32,7 @@
 
 #### Type declaration
 
-(`req`, `args`, `translations`): `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation-1.md) \| `void`\>
+(`req`, `args`, `translations`): `Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
 
 ##### Parameters
 
@@ -44,7 +44,7 @@
 
 ##### Returns
 
-`Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation-1.md) \| `void`\>
+`Awaitable`<`string` \| [`PreparedTranslation`](../classes/PreparedTranslation.md) \| `void`\>
 
 #### Defined in
 
