@@ -29,13 +29,7 @@ export namespace Translatable {
      * @param value - The translatable value to translate.
      * @returns The translated value.
      */
-    export function translateValue<T extends string | object>(value: Value<T>): T {
-        if (typeof value === "string")
-            return value as T;
-
-        if (value instanceof PreparedTranslation)
-            return value.translate() as T;
-
+    export function translateValue<T>(value: Value<T>): T {
         function translateIfPossible(value: any): any {
             if (value instanceof PreparedTranslation)
                 return value.translate();
@@ -43,13 +37,17 @@ export namespace Translatable {
             if (Array.isArray(value))
                 return value.map(x => translateIfPossible(x));
 
+            if (typeof value === "object" && value.constructor === Object) {
+                return mapObject(
+                    value,
+                    (k, v) => [k as string, translateIfPossible(v), { shouldRecurse: v?.constructor === Object }],
+                    { deep: true }
+                )
+            }
+
             return value;
         }
 
-        return mapObject(
-            value,
-            (k, v) => [k, translateIfPossible(v), { shouldRecurse: v?.constructor === Object }],
-            { deep: true }
-        ) as T;
+        return translateIfPossible(value);
     }
 }

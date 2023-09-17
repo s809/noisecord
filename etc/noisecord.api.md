@@ -674,7 +674,7 @@ export const textChannels: (ChannelType.GuildText | ChannelType.GuildAnnouncemen
 
 // @public (undocumented)
 export namespace Translatable {
-    export function translateValue<T extends string | object>(value: Value<T>): T;
+    export function translateValue<T>(value: Value<T>): T;
     export type Value<T, TExcluded = never> = T extends string ? string | PreparedTranslation : T extends TExcluded ? T : T extends object ? {
         [K in keyof T]: Value<T[K], T>;
     } : T;
