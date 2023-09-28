@@ -4,9 +4,6 @@ import { TranslatorManager } from "../translations/TranslatorManager.js";
 import { DeeplyNestedObject } from "../util.js";
 import { ErrorCollector } from "../helpers/ErrorCollector.js";
 import { CommandRequest } from "../handlers/CommandRequest.js";
-import flat from "flat";
-const { flatten, unflatten } = flat;
-import assert from "assert";
 
 /** @public */
 export class DefaultLocalePathTranslator {
@@ -80,20 +77,15 @@ export class TranslationChecker extends ErrorCollector {
      * @returns Converted object.
      */
     checkTranslations<Paths extends DeeplyNestedObject<boolean>>(data: Paths, prefix?: string): TranslationChecker.PathTranslators<Paths> {
-        // Dots in keys are not supported
-        const flattened = flatten<Paths, Record<string, boolean>>(data, {
-            transformKey: key => {
-                if (key.includes("."))
-                    throw new Error(`Translation path keys cannot include dots: ${key}`);
-                return key;
-            }
-        });
-
-        const entries = Object.entries(flattened).map(([key, value]) => {
+        const entries = Object.entries(data).map(([key, value]) => {
             if (!key.length)
                 throw new Error("Path cannot be empty.");
+            if (key.includes("."))
+                throw new Error(`Translation path keys cannot include dots: ${key}`);
 
             const fullPath = prefix ? `${prefix}.${key}` : key;
+            if (typeof value === "object")
+                return [key, this.checkTranslations(value, fullPath)];
 
             let newValue;
             if (value) {
@@ -113,7 +105,7 @@ export class TranslationChecker extends ErrorCollector {
             return [key, newValue] as const;
         });
 
-        return unflatten(Object.fromEntries(entries)) as TranslationChecker.PathTranslators<Paths>;
+        return Object.fromEntries(entries) as TranslationChecker.PathTranslators<Paths>;
     }
 
     /** @internal */

@@ -92,7 +92,7 @@ Converted object.
 
 #### Defined in
 
-[src/translations/TranslationChecker.ts:82](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L82)
+[src/translations/TranslationChecker.ts:79](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L79)
 
 ___
 

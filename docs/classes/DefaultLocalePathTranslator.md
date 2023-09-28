@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[src/translations/TranslationChecker.ts:17](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L17)
+[src/translations/TranslationChecker.ts:14](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L14)
 
 ## Methods
 
@@ -40,4 +40,4 @@
 
 #### Defined in
 
-[src/translations/TranslationChecker.ts:19](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L19)
+[src/translations/TranslationChecker.ts:16](https://github.com/s809/noisecord/blob/master/src/translations/TranslationChecker.ts#L16)

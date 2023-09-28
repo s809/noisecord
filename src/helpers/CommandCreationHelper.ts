@@ -6,8 +6,7 @@ import { TranslatorManager } from "../translations/TranslatorManager.js";
 import { castArray } from "lodash-es";
 import { ErrorCollector } from "./ErrorCollector.js";
 import assert from "assert";
-import flat from "flat";
-const { flatten } = flat;
+import { flatten } from "flat";
 
 export namespace CommandCreationHelper {
     export interface InheritableOptions {
